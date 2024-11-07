@@ -24,7 +24,7 @@ const getAdminList = async (getAdminListDTO) => {
 const getAdminById = async (id) => {
     const admin = await Admin.findOne({
         where: {
-            id: id,
+            admin_id: id,
         }
     })
 
@@ -48,7 +48,7 @@ const getAdminByPK = async (adminId) => {
 const getAdminPasswordAndSaltById = async (id) => {
     const admin = await Admin.findOne({
         where: {
-            id: id,
+            admin_id: id,
         }
     })
 
@@ -85,7 +85,7 @@ const createAdmin = async (createAdminDTO) => {
 const findAndCreateRootAdmin = async () => {
     const rootAdmin = await Admin.findOne({
         where: {
-            id: config.rootAdmin.id,
+            admin_id: config.rootAdmin.id,
         }
     })
 
@@ -95,10 +95,13 @@ const findAndCreateRootAdmin = async () => {
         const hashPassword = md5(`khu${salt}${md5password}${salt}mileage`)
 
         await Admin.create({
-            id: config.rootAdmin.id,
+            admin_id: config.rootAdmin.id,
             password: hashPassword,
             salt: config.rootAdmin.salt,
             name: config.rootAdmin.name,
+            // department: "소프트웨어융함대학", // TODO : delete
+            // phone_numnber: "010-3285-3887",
+            
             wallet_address: config.klaytn.adminAddress,
             role: constants.ROLE.ROOT_ADMIN,
         })
@@ -108,13 +111,15 @@ const findAndCreateRootAdmin = async () => {
 }
 
 const updateAdmin = async (adminId, updateAdminDTO) => {
-    return await Admin.update(updateAdminDTO, {
+    const [affectedCount, updatedData] = await Admin.update(updateAdminDTO, {
         where: {
             admin_id: adminId,
         },
         returning: true,
         plain: true
     })
+
+    return updatedData;
 }
 
 const deleteAdmin = async (adminId) => {

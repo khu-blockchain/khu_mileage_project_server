@@ -23,11 +23,11 @@ const envVarSchema = joi.object()
         ADMIN_ADDRESS: joi.string().required(),
         KLAYTN_NETWORK_URL: joi.string().required(),
 
-        // aws s3 key
-        AWS_S3_ACCESS_KEY_ID: joi.string().required(),
-        AWS_S3_SECRET_ACCESS_KEY: joi.string().required(),
-        AWS_S3_BUCKET_NAME: joi.string().required(),
-        AWS_S3_REGION: joi.string().required(),
+        // // aws s3 key
+        // AWS_S3_ACCESS_KEY_ID: joi.string().required(),
+        // AWS_S3_SECRET_ACCESS_KEY: joi.string().required(),
+        // AWS_S3_BUCKET_NAME: joi.string().required(),
+        // AWS_S3_REGION: joi.string().required(),
 
         // jwt key
         JWT_PUBLIC_KEY: joi.string().required(),

@@ -6,19 +6,25 @@ class GetAdminListDTO {
 
 class CreateAdminDTO {
     constructor({
-        id,
+        adminId,
         password,
         salt,
         name,
+        role,
         walletAddress,
-        role,    
+        email,
+        phoneNumber,
+        department,
     }) {
-        this.id = id;
+        this.admin_id = adminId;
         this.password = password;
         this.name = name;
         this.salt = salt;
-        this.wallet_address = walletAddress;
         this.role = role;
+        this.wallet_address = walletAddress;
+        this.department = department;
+        this.email = email;
+        this.phone_number = phoneNumber;
     }
 }
 class GetAdminByIdDTO {
@@ -31,15 +37,19 @@ class GetAdminByIdDTO {
 class AdminDTO {
     constructor({
         admin_id,
-        id,
         name,
         wallet_address,
+        department,
+        phone_number,
+        email,
         role,
     }) {
         this.admin_id = admin_id;
-        this.id = id;
         this.name = name;
         this.wallet_address = wallet_address;
+        this.department = department;
+        this.email = email;
+        this.phone_number = phone_number;
         this.role = role;
     }
 }
@@ -51,14 +61,18 @@ class UpdateAdminDTO {
         salt,
         name,
         walletAddress,
-        role,    
+        department,
+        email,
+        phoneNumber,
+        role,
     }) {
         this.id = id;
         this.password = password;
-        this.salt = salt;
         this.name = name;
         this.walletAddress = walletAddress;
-        this.role = role;
+        this.department = department;
+        this.email = email;
+        this.phone_number = phoneNumber;
     }
 }
 

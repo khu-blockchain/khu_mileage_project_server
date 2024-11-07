@@ -2,6 +2,7 @@ const express = require('express');
 const academicFieldRoute = require('./academicField.route');
 const studentRoute = require('./student.route');
 const authRoute = require('./auth.route');
+const adminRoute = require('./admin.route');
 const swMileageRoute = require('./swMileage.route');
 const swMileageTokenRoute = require('./swMileageToken.route');
 const swMileageTokenHistoryRoute = require('./swMileageTokenHistory.route');
@@ -9,6 +10,10 @@ const swMileageTokenHistoryRoute = require('./swMileageTokenHistory.route');
 const router = express.Router();
 
 const defaultRoutes = [
+    {
+        path : '/admins',
+        route: adminRoute,
+    },
     {
         path : '/academic-field',
         route: academicFieldRoute,
@@ -22,7 +27,7 @@ const defaultRoutes = [
         route: authRoute,
     },
     {
-    path : '/sw-mileages',
+        path : '/sw-mileages',
         route: swMileageRoute,
     },
     {
@@ -32,7 +37,7 @@ const defaultRoutes = [
     {
         path : '/sw-mileage-token-histories',
         route: swMileageTokenHistoryRoute,
-    },
+    }
 ];
 
 defaultRoutes.forEach((route) => {
