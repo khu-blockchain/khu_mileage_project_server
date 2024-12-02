@@ -54,5 +54,6 @@ module.exports = {
     },
     SERVICE_NAME : "KHU",
     MAX_APPROVE_AMOUNT : '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+    // DEPLOY_KIP7_GAS : 5000000,
     DEPLOY_KIP7_GAS : 5000000,
 }

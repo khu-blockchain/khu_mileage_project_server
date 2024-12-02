@@ -1,0 +1,94 @@
+services:
+  # MySQL 서비스
+  mysql:
+    image: mysql:latest
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: sw_admin123!
+      MYSQL_DATABASE: mileage
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Blue Node.js 애플리케이션 서비스
+  app-blue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app-blue
+    environment:
+      - NODE_ENV=test
+      - DB_HOST=127.0.0.1
+      - DB_USER=root
+      - DB_PASSWORD=sw_admin123!
+      - DB_DATABASE=mileage
+      - SQL_DIALECT=mysql
+
+      - KLAYTN_CHIAN_ID=1001
+      - ADMIN_PRIVATE_KEY=0xca4d0494beb6826f6e9ff49407df91571f26112ce13d794243a63adaa69b76b2
+      - ADMIN_ADDRESS=0x5775fF7AFAF1EA237Cfe75B152F39333C66Fa4A7
+
+      - JWT_PUBLIC_KEY="-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAw50bJedog5KKz7utRd0O1wIUdZt14szKAB0Tvq9y9WnXTndMklkhBBxQBtx/ykgNlAsY6FT+JfeyTFIlZzbpv4pz6aY05MnarMTbSKAtdmM+sW7N9zYdkO9EeCoStXRgAf0y7e8IlmKZ3cAiFgA1d70bAuvWaR+eUjGKeWgK+kJFc9HAc5w/++dhdizbxD96kGyvCkqLamdvcCiTQeC6x8xaWiLi4LOcPqUM/94RX0pATm7yMae1btq0x8Er6UGRJ0rieSelhXx8oN1GkpCNCrTQnzusn9dsnk+4P0QlDD0U1UJdZg0xv1/YwsbSOFRhDJvnBuS6qqS6OZYSu3+iVQIDAQAB\n-----END RSA PUBLIC KEY-----\n"
+      - JWT_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAw50bJedog5KKz7utRd0O1wIUdZt14szKAB0Tvq9y9WnXTndMklkhBBxQBtx/ykgNlAsY6FT+JfeyTFIlZzbpv4pz6aY05MnarMTbSKAtdmM+sW7N9zYdkO9EeCoStXRgAf0y7e8IlmKZ3cAiFgA1d70bAuvWaR+eUjGKeWgK+kJFc9HAc5w/++dhdizbxD96kGyvCkqLamdvcCiTQeC6x8xaWiLi4LOcPqUM/94RX0pATm7yMae1btq0x8Er6UGRJ0rieSelhXx8oN1GkpCNCrTQnzusn9dsnk+4P0QlDD0U1UJdZg0xv1/YwsbSOFRhDJvnBuS6qqS6OZYSu3+iVQIDAQABAoIBABhZwRSnmSbR0fZYnFIHWe7RezcFtnfYeufnNrtEz3h157/EkZNhRX8jwCGOhtjpPcl5VS0s0WNsEXW3PyE5YIE/zLyf/FMjvpVFvy9sAyTK53XCf6C/y4/sfRdBU4ljloUA3jtox2ajGRjV71hSR9WjRI7JSWxWK4j7UkvZNA6hg6VHeps1EYgMFFozL6+2FQHkWVKNCV5SD67htGQPG9aUKi5tRNcu6D+cYfnnGajQz5m7qMuWnQge1vjri8ymoNRJRDSL0fmrLaVTrtDCfeOHAv19/VOs75Yg8HogsrUJuFv/jH3HBjwT2vX+RCqKYeZ7bhiyDzx4HgV1JXN0u7ECgYEA/jiDRn/uJz8niipR9rSP6Cgw8ljubSmFdItUgovYVEX/qeTAg2y7IHPHxk9fnAd5drfU1kKnCcAXhFpDXwQxWee0VhcJj5ywsgUCRDpf4E14bVFPElY+FgaTs7SEuNtaf/0dlJyIOsNASPVaL0AhP9cE2CPViYEZ7wAwyxYGHrECgYEAxPuWRpgGB5G3kV/fswm/KRlftuwTK/Z8E2MeKK0zFlnCb5A1D4YNkpTBKFYynNoofsNVNQl/WFL5aN7xTvarXQohZuYVEDjjCJszsLyUGGij9mcJP/L/5qssUCHvejHEF4I04dlXhvcpnBeZDIkVjHvQetHj1fslB/jd4ZMAjuUCgYEAglb1L3Mt5l9h5VvXVDa1RaE9nzNrYvqT2vIIrToH+wU8lJ2c+oUH2BakiY9uhK/sXarY69WWkNA0/n3M5u1eZCsA8daz5za9/TfGNrb7KyRtJxc2BD/Fa0OJ/OwD1Edauh5LSUOMMRykXAO3blxh77pNWIfe1rYjVr9xRN6Q2rECgYBg7IYx8CWvXcTcVDdnChm0aFbPU/PPAvZkN7YkP6zOh5YDfQqOu+A7ytQMO/WldjbMwOJROX4egJ1WO7SyrO7+1bg/wGCG3ebgWjWh9fhM1lgvKt3DSJcf8gPY3gnOr2QUSS4qHt5Re5ZOxtG4+E7RFC8t787SgEPlW1AZ6VIx/QKBgD/t7rZnjrAY6ALJfbXCwvBVNLZMrfYC1VXj4pz+PDctBNG3xoqlSbTteEjHUIq7wNpitIyamc1x6kEodThaPtTaEn0R7cxtE7AEsjMCcWGOHIKvKrfhAVtktqYSrGooVKphSW94XIjiAin4ifZGn58VfbA13Fop5f8CnFNA/qGr\n-----END RSA PRIVATE KEY-----\n"
+      - ACCESS_TOKEN_EXPIRATION_MINUTES=600
+      - REFRESH_TOKEN_EXPIRATION_HOURS=24
+
+      - ROOT_ADMIN_ID=sw_admin
+      - ROOT_ADMIN_DEFAULT_SALT=1524oe
+      - ROOT_ADMIN_DEFAULT_PASSWORD=246377c426b81ef5d3b2098de9ba54f3
+      - ROOT_ADMIN_DEFAULT_NAME=sw_admin
+      - KLAYTN_NETWORK_URL=https://public-en-baobab.klaytn.net/
+    ports:
+      - "3001:3000"  # 외부 포트:내부 포트
+    depends_on:
+      - mysql
+
+  # Green Node.js 애플리케이션 서비스
+  app-green:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app-green
+    environment:
+      - NODE_ENV=test
+      - DB_HOST=127.0.0.1
+      - DB_USER=root
+      - DB_PASSWORD=sw_admin123!
+      - DB_DATABASE=mileage
+      - SQL_DIALECT=mysql
+
+      - KLAYTN_CHIAN_ID=1001
+      - ADMIN_PRIVATE_KEY=0xca4d0494beb6826f6e9ff49407df91571f26112ce13d794243a63adaa69b76b2
+      - ADMIN_ADDRESS=0x5775fF7AFAF1EA237Cfe75B152F39333C66Fa4A7
+
+      - JWT_PUBLIC_KEY="-----BEGIN RSA PUBLIC KEY-----\nMIIBCgKCAQEAw50bJedog5KKz7utRd0O1wIUdZt14szKAB0Tvq9y9WnXTndMklkhBBxQBtx/ykgNlAsY6FT+JfeyTFIlZzbpv4pz6aY05MnarMTbSKAtdmM+sW7N9zYdkO9EeCoStXRgAf0y7e8IlmKZ3cAiFgA1d70bAuvWaR+eUjGKeWgK+kJFc9HAc5w/++dhdizbxD96kGyvCkqLamdvcCiTQeC6x8xaWiLi4LOcPqUM/94RX0pATm7yMae1btq0x8Er6UGRJ0rieSelhXx8oN1GkpCNCrTQnzusn9dsnk+4P0QlDD0U1UJdZg0xv1/YwsbSOFRhDJvnBuS6qqS6OZYSu3+iVQIDAQAB\n-----END RSA PUBLIC KEY-----\n"
+      - JWT_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEAw50bJedog5KKz7utRd0O1wIUdZt14szKAB0Tvq9y9WnXTndMklkhBBxQBtx/ykgNlAsY6FT+JfeyTFIlZzbpv4pz6aY05MnarMTbSKAtdmM+sW7N9zYdkO9EeCoStXRgAf0y7e8IlmKZ3cAiFgA1d70bAuvWaR+eUjGKeWgK+kJFc9HAc5w/++dhdizbxD96kGyvCkqLamdvcCiTQeC6x8xaWiLi4LOcPqUM/94RX0pATm7yMae1btq0x8Er6UGRJ0rieSelhXx8oN1GkpCNCrTQnzusn9dsnk+4P0QlDD0U1UJdZg0xv1/YwsbSOFRhDJvnBuS6qqS6OZYSu3+iVQIDAQABAoIBABhZwRSnmSbR0fZYnFIHWe7RezcFtnfYeufnNrtEz3h157/EkZNhRX8jwCGOhtjpPcl5VS0s0WNsEXW3PyE5YIE/zLyf/FMjvpVFvy9sAyTK53XCf6C/y4/sfRdBU4ljloUA3jtox2ajGRjV71hSR9WjRI7JSWxWK4j7UkvZNA6hg6VHeps1EYgMFFozL6+2FQHkWVKNCV5SD67htGQPG9aUKi5tRNcu6D+cYfnnGajQz5m7qMuWnQge1vjri8ymoNRJRDSL0fmrLaVTrtDCfeOHAv19/VOs75Yg8HogsrUJuFv/jH3HBjwT2vX+RCqKYeZ7bhiyDzx4HgV1JXN0u7ECgYEA/jiDRn/uJz8niipR9rSP6Cgw8ljubSmFdItUgovYVEX/qeTAg2y7IHPHxk9fnAd5drfU1kKnCcAXhFpDXwQxWee0VhcJj5ywsgUCRDpf4E14bVFPElY+FgaTs7SEuNtaf/0dlJyIOsNASPVaL0AhP9cE2CPViYEZ7wAwyxYGHrECgYEAxPuWRpgGB5G3kV/fswm/KRlftuwTK/Z8E2MeKK0zFlnCb5A1D4YNkpTBKFYynNoofsNVNQl/WFL5aN7xTvarXQohZuYVEDjjCJszsLyUGGij9mcJP/L/5qssUCHvejHEF4I04dlXhvcpnBeZDIkVjHvQetHj1fslB/jd4ZMAjuUCgYEAglb1L3Mt5l9h5VvXVDa1RaE9nzNrYvqT2vIIrToH+wU8lJ2c+oUH2BakiY9uhK/sXarY69WWkNA0/n3M5u1eZCsA8daz5za9/TfGNrb7KyRtJxc2BD/Fa0OJ/OwD1Edauh5LSUOMMRykXAO3blxh77pNWIfe1rYjVr9xRN6Q2rECgYBg7IYx8CWvXcTcVDdnChm0aFbPU/PPAvZkN7YkP6zOh5YDfQqOu+A7ytQMO/WldjbMwOJROX4egJ1WO7SyrO7+1bg/wGCG3ebgWjWh9fhM1lgvKt3DSJcf8gPY3gnOr2QUSS4qHt5Re5ZOxtG4+E7RFC8t787SgEPlW1AZ6VIx/QKBgD/t7rZnjrAY6ALJfbXCwvBVNLZMrfYC1VXj4pz+PDctBNG3xoqlSbTteEjHUIq7wNpitIyamc1x6kEodThaPtTaEn0R7cxtE7AEsjMCcWGOHIKvKrfhAVtktqYSrGooVKphSW94XIjiAin4ifZGn58VfbA13Fop5f8CnFNA/qGr\n-----END RSA PRIVATE KEY-----\n"
+      - ACCESS_TOKEN_EXPIRATION_MINUTES=600
+      - REFRESH_TOKEN_EXPIRATION_HOURS=24
+
+      - ROOT_ADMIN_ID=sw_admin
+      - ROOT_ADMIN_DEFAULT_SALT=1524oe
+      - ROOT_ADMIN_DEFAULT_PASSWORD=246377c426b81ef5d3b2098de9ba54f3
+      - ROOT_ADMIN_DEFAULT_NAME=sw_admin
+      - KLAYTN_NETWORK_URL=https://public-en-baobab.klaytn.net/
+
+    ports:
+      - "3002:3000"
+    depends_on:
+      - mysql
+
+  # Nginx 리버스 프록시 서비스
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "1987:80"  # 외부에서 접근하는 포트
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app-blue
+      - app-green
+
+volumes:
+  mysql_data:

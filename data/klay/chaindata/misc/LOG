@@ -1,0 +1,18 @@
+=============== Dec 2, 2024 (UTC) ===============
+12:05:37.805410 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+12:05:37.810939 db@open opening
+12:05:37.813742 version@stat F·[] S·0B[] Sc·[]
+12:05:37.814856 db@janitor F·2 G·0
+12:05:37.815013 db@open done T·3.975167ms
+12:13:39.542445 memdb@flush N·150709 S·7MiB
+12:13:39.979998 memdb@flush created L0@3 N·150709 S·7MiB "B\x00\x00..m\xf0>,v4478":"sup..\x01\x85\x80,v150674"
+12:13:39.980122 version@stat F·[1] S·7MiB[7MiB] Sc·[0.25]
+12:13:39.983653 memdb@flush committed F·1 T·440.736458ms
+12:13:39.985713 journal@remove removed @1
+12:20:21.395810 memdb@flush N·149715 S·7MiB
+12:20:22.019733 memdb@flush created L0@5 N·149715 S·7MiB "B\x00\x00..\x12\x1d\xe3,v153715":"sup..\x03\a\x00,v300297"
+12:20:22.019930 version@stat F·[2] S·15MiB[15MiB] Sc·[0.50]
+12:20:22.021249 memdb@flush committed F·1 T·624.957792ms
+12:20:22.022798 journal@remove removed @2
+12:26:31.591906 db@close closing
+12:26:31.593931 db@close done T·2ms

@@ -1,7 +1,8 @@
 // const AWS = require('aws-sdk');
 // const config = require('./config');
 // const { getS3PathByS3Url } = require('../utils/parseS3Url');
-
+const fs = require('fs')
+const multer = require('multer');
 // const s3Setting = (({ name, ...obj }) => obj)(config.s3);
 
 // const s3 = new AWS.S3(s3Setting);
@@ -125,10 +126,19 @@
 //     });
 //   };
 
-// module.exports = {
+// set multer
+const storage = multer.diskStorage({
+    destination: '../../uploads',
+    filename: (req, file, cb) => {
+      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+  });
+
+module.exports = {
+    storage,
 //     sendFile,
 //     deleteFile,
 //     deleteFileByUrl,
 //     multiUpload,
 //     makePublicRead,
-// };
+};

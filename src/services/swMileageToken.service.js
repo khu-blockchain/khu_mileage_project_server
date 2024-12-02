@@ -105,7 +105,6 @@ const activateSwMileageToken = async (swMileageTokenId) => {
             }
         })
     })
-
 }
 
 module.exports = {

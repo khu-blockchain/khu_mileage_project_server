@@ -18,6 +18,7 @@ const {
     BurnFromKIP7TokenDTO,
 } = require('../dtos/caver.dto');
 const { CreateSwMileageTokenHistoryDTO } = require('../dtos/swMileageTokenHistory.dto');
+const { sortRank } = require('../utils/rank')
 const config = require('../config/config');
 
 const getSwMileageTokenList = catchAsync(async (req, res) => {
@@ -143,6 +144,7 @@ const mintSwMileageToken = catchAsync(async (req, res) => {
     })
     const swMileageTokenHistory = await swMileageTokenHistoryService.createSwMileageTokenHistory(createSwMileageTokenHistoryDTO);
     // kip7 mint
+    console.log(1)
     const mintKIP7TokenDTO = new MintKIP7TokenDTO({
         contractAddress: swMileageToken.contract_address,
         spenderAddress: student.wallet_address,
@@ -258,7 +260,7 @@ const approveSwMileageToken = catchAsync(async (req, res) => {
     }
 
     // todo: 향후 admin이 늘어나면 코드 수정
-    const adminAddress = config.klaytn.adminAddress
+    const adminAddress = config.kaia.adminAddress
 
     // rawTransaction을 깐뒤에 student와 swMileageToken정보와 일치하는지 확인
     const decodedTransaction = await caverService.decodeRawTransaction(rawTransaction)
@@ -290,9 +292,27 @@ const approveSwMileageToken = catchAsync(async (req, res) => {
 const getApproveSwMileageTokenData = catchAsync(async (req, res) => {
     // todo: 향후 admin 추가로 생길시 처리
     return res.json({
-        spenderAddress: config.klaytn.adminAddress,
+        spenderAddress: config.kaia.adminAddress,
         approveAmount: constants.MAX_APPROVE_AMOUNT
     })
+})
+
+const getStudentsRankingRange = catchAsync(async (req, res) => {
+    const {from, to, swMileageTokenId} = {...req.query, ...req.params, ...req.body}
+    const swMileageToken = await swMileageTokenService.getSwMileageTokenById(swMileageTokenId)
+
+    const balance = await caverService.balanceOfKIP7Token(config.kaia.adminAddress, swMileageToken.contract_address)
+
+    const rankList = await caverService.getStudentsRankingRange(from, to, swMileageToken.contract_address)
+    
+    const walletList = rankList.map((data) => {
+        return data.account
+    })
+
+    const studentList = await studentService.getStudentListByWalletAddressList(walletList)
+    const result = sortRank(rankList, studentList, from)
+
+    return res.json({ result })
 })
 
 module.exports = {
@@ -305,5 +325,6 @@ module.exports = {
     mintSwMileageToken,
     burnFromSwMileageToken,
     approveSwMileageToken,
-    getApproveSwMileageTokenData
+    getApproveSwMileageTokenData,
+    getStudentsRankingRange
 }

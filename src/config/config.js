@@ -6,7 +6,7 @@ dotenv.config({path: path.join(__dirname, '../../.env')});
 
 const envVarSchema = joi.object()
     .keys({
-        NODE_ENV: joi.string().valid('production', 'development', 'test').required(),
+        NODE_ENV: joi.string().valid('production', 'development', 'test').default('test'),
         PORT: joi.number().default(1987),
         
         // sql 관련
@@ -61,7 +61,7 @@ module.exports = {
     },
 
     // klaytn
-    klaytn: {
+    kaia: {
         kasAccessKeyId: envVars.KAS_ACCESS_KEY_ID,
         kasSecretAccessKey: envVars.KAS_SECRET_ACCESS_KEY,
         klaytnChainId: envVars.KLAYTN_CHIAN_ID,

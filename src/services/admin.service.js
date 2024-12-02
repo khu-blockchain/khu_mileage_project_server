@@ -102,7 +102,7 @@ const findAndCreateRootAdmin = async () => {
             // department: "소프트웨어융함대학", // TODO : delete
             // phone_numnber: "010-3285-3887",
             
-            wallet_address: config.klaytn.adminAddress,
+            wallet_address: config.kaia.adminAddress,
             role: constants.ROLE.ROOT_ADMIN,
         })
     }

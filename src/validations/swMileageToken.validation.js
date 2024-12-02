@@ -59,7 +59,7 @@ const mintSwMileageToken = {
         swMileageTokenId: joi.number().required(),
     }),
     body: joi.object().keys({
-        studentId: joi.number().required(),
+        studentId: joi.string().required(),
         amount: joi.number().required(),
         comment : joi.string(),
     }),
@@ -117,6 +117,17 @@ const getSwMileageTokenHistoryById = {
     body: joi.object().keys({}),
 }
 
+const getStudentsRankingRange = {
+    query: joi.object().keys({
+        from: joi.number().required(),
+        to: joi.number().required()
+    }),
+    params: joi.object().keys({
+        swMileageTokenId: joi.number().required(),
+    }),
+    body: joi.object().keys({}),    
+}
+
 module.exports = {
     getSwMileageTokenList,
     createSwMileageToken,
@@ -130,4 +141,5 @@ module.exports = {
     getApproveSwMileageTokenData,
     getSwMileageTokenHistoryList,
     getSwMileageTokenHistoryById,
+    getStudentsRankingRange,
 }

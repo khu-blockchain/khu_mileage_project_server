@@ -49,6 +49,11 @@ router
     .route('/approve/data')
     .get(auth(constants.ROLE.STUDENT), validate(swMileageTokenValidation.getApproveSwMileageTokenData), swMileageTokenController.getApproveSwMileageTokenData);
 
+// 마일리지 순위 확인을 위한 API
+router
+    .route('/:swMileageTokenId/ranking')
+    .get(validate(swMileageTokenValidation.getStudentsRankingRange), swMileageTokenController.getStudentsRankingRange);
+
 
 module.exports = router;
 

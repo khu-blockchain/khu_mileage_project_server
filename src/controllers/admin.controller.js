@@ -47,7 +47,7 @@ const createAdmin = catchAsync(async (req, res) => {
 
     const createAdminDTO = new CreateAdminDTO({ ...req.query, ...req.params, ...req.body, role: constants.ROLE.ADMIN, salt, password: hashPassword })
     const admin = await adminService.createAdmin(createAdminDTO);
-    // await caverService.allowanceKIP7Token(config.klaytn.adminAddress, )
+    await caverService.allowanceKIP7Token(config.kaia.adminAddress, )
 
     return res.status(httpStatus.CREATED).json(admin);
 })
@@ -55,8 +55,6 @@ const createAdmin = catchAsync(async (req, res) => {
 const getAdminById = catchAsync(async (req, res) => {
     const { role, adminId: verifiedAdminId } = { ...req.verifiedPayload }
     const { adminId } = { ...req.query, ...req.params, ...req.body }
-    console.log(verifiedAdminId)
-    console.log(verifiedAdminId !== adminId)
 
     if (role === constants.ROLE.ADMIN && verifiedAdminId !== adminId) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized client")

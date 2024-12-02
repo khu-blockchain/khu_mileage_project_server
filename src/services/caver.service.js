@@ -5,17 +5,17 @@ const constants = require('../config/constants');
 const SWMileageABI = require("../utils/data/contract/SwMileageABI.json");
 const SWMileageByte = require("../utils/data/contract/SwMileageByte");
 
-const caver = new Caver(config.klaytn.klaytnNetworkUrl)
+const caver = new Caver(config.kaia.klaytnNetworkUrl)
 
 const keyringCreateFromPrivateKey = async () => {
-    const keyringFromPrivateKey = caver.wallet.keyring.createFromPrivateKey(config.klaytn.adminPrivateKey)
+    const keyringFromPrivateKey = caver.wallet.keyring.createFromPrivateKey(config.kaia.adminPrivateKey)
 
     return keyringFromPrivateKey
 }
 
 // caver에 keyring 추가
 async function addAdminKeyringAtCaverJs() {
-    const addedSingle = caver.wallet.newKeyring(config.klaytn.adminAddress, config.klaytn.adminPrivateKey)
+    const addedSingle = caver.wallet.newKeyring(config.kaia.adminAddress, config.kaia.adminPrivateKey)
     return addedSingle
 }
 
@@ -29,7 +29,7 @@ const deployKIP7Token = async (deployKIP7TokenDTO) => {
         }, {
             from: deployKIP7TokenDTO.deployAddress,
             feeDelegation: true,
-            feePayer: config.klaytn.adminAddress,
+            feePayer: config.kaia.adminAddress,
         })
         return kip7Token
     } catch (error) {
@@ -41,17 +41,23 @@ const deployKIP7Token = async (deployKIP7TokenDTO) => {
 const deployCustomKIP7Token = async (deployKIP7TokenDTO) => {
     try {
         const swMileageTokenContract = new caver.contract.create(SWMileageABI);
+        console.log(swMileageTokenContract)
+        console.log(1)
+        console.log(deployKIP7TokenDTO.deployAddress)
+        console.log(config.kaia.adminAddress)
         const swMileageToken =  await swMileageTokenContract.deploy({
             from: deployKIP7TokenDTO.deployAddress,
             gas: constants.DEPLOY_KIP7_GAS,
             feeDelegation: true,
-            feePayer: config.klaytn.adminAddress,
+            feePayer: config.kaia.adminAddress,
         },`0x${SWMileageByte}`,
           deployKIP7TokenDTO.name,
           deployKIP7TokenDTO.symbol
         )
+        console.log(2)
         return swMileageToken
     } catch (error) {
+        console.log(error)
         throw new ApiError(error.response.status, error.response.data.message ?? error.response.data);
     }
 }
@@ -62,7 +68,7 @@ const mintKIP7Token = async (mintKIP7TokenDTO) => {
     return await kip7.mint(mintKIP7TokenDTO.spenderAddress, caver.utils.toPeb(mintKIP7TokenDTO.amount, 'KLAY'), {
         from: mintKIP7TokenDTO.fromAddress,
         feeDelegation: true,
-        feePayer: config.klaytn.adminAddress
+        feePayer: config.kaia.adminAddress
     })
 }
 
@@ -72,7 +78,7 @@ const burnFromKIP7Token = async (burnFromKIP7TokenDTO) => {
     return await kip7.burnFrom(burnFromKIP7TokenDTO.spenderAddress, caver.utils.toPeb(burnFromKIP7TokenDTO.amount, 'KLAY'), {
         from: burnFromKIP7TokenDTO.fromAddress,
         feeDelegation: true,
-        feePayer: config.klaytn.adminAddress
+        feePayer: config.kaia.adminAddress
     })
 }
 
@@ -103,7 +109,7 @@ const sendRawTransactionWithSignAsFeePayer = async (rawTransaction) => {
     const decodedTransaction = caver.transaction.feeDelegatedSmartContractExecution.decode(rawTransaction)
 
     // feePayer 서명 추가
-    const SignedTransaction = await caver.wallet.signAsFeePayer(config.klaytn.adminAddress, decodedTransaction)
+    const SignedTransaction = await caver.wallet.signAsFeePayer(config.kaia.adminAddress, decodedTransaction)
 
     // 최종 트랜잭션 전송
     const finalRawTransaction = SignedTransaction.getRawTransaction()
@@ -116,6 +122,7 @@ const generateApproveRawTransaction = async (ownerAddress, ownerPrivateKey, spen
     const caver = new Caver('https://public-en-baobab.klaytn.net/')
     caver.wallet.newKeyring(ownerAddress, ownerPrivateKey)
     const kip7 = await caver.kct.kip7.create(contractAddress)
+	
 
     const approveData = kip7.methods.approve(spenderAddress, constants.MAX_APPROVE_AMOUNT).encodeABI()
     const nonce = await caver.rpc.klay.getTransactionCount(ownerAddress)
@@ -169,6 +176,16 @@ const decodeApproveABI = async (inputData) => {
     return { spender: decodedParams.spender, value: decodedParams.value };
 }
 
+const getStudentsRankingRange = async (from, to, contractAddress) => {
+    // todo : test net
+
+    const swMileageTokenContract = new caver.contract.create(SWMileageABI, contractAddress);
+
+    const rankList = await swMileageTokenContract.call('getRankingRange', from, to);
+
+    return rankList
+}
+
 module.exports = {
     keyringCreateFromPrivateKey,
     deployKIP7Token,
@@ -184,7 +201,7 @@ module.exports = {
     balanceOfKIP7Token,
     decodeApproveABI,
 
-    generateApproveRawTransaction,
+    getStudentsRankingRange,
     toBN
 }
 

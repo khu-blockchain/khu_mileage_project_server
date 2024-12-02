@@ -33,12 +33,16 @@ const getAdminById = {
 const updateAdmin = {
     query: joi.object().keys({}),
     params: joi.object().keys({
-        adminId: joi.string().required(),
+      adminId: joi.string().required(),
     }),
     body: joi.object().keys({
-
-    })
-}
+      email: joi.string().custom(emailValidation),
+      phone_number: joi.string(),
+      name: joi.string(),
+      walletAddress: joi.string().custom(walletAddressValidation),
+      department: joi.string(),
+    }),
+  };
 
 const deleteAdmin = {
     query: joi.object().keys({}),

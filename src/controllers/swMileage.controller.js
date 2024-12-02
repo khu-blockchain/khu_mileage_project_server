@@ -42,19 +42,18 @@ const createSwMileage = catchAsync(async (req, res) => {
     if (!student) {
         throw new ApiError(httpStatus.NOT_FOUND, 'student not found')
     }
-
     const createSwMileageDTO = new CreateSwMileageDTO({ ...req.query, ...req.params, ...req.body, ...req.requestData })
     const { result: validateStudentInfoResult, message } = await swMileageService.validateStudentInformation(student, createSwMileageDTO)
     if (!validateStudentInfoResult) {
         throw new ApiError(httpStatus.BAD_REQUEST, message)
     }
 
-    // 1. files 업로드
+    // 1. files 업로드 TODO : local storage
     const files = req.files
     const uploadedFiles = await uploader.uploadFile(files);
     const fileList = uploadedFiles.map(el => {
         return {
-            name: el.info.filename,
+            name: el.filename,
             url: el.url
         }
     })

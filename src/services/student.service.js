@@ -1,3 +1,4 @@
+const { Op } = require('sequelize')
 const {
     sequelize,
     Student,
@@ -64,6 +65,19 @@ const getStudentByWalletAddress = async (walletAddress) => {
     return new StudentDTO(student)
 }
 
+const getStudentListByWalletAddressList = async (walletAddressList) => {
+    const studentList = await Student.findAll({
+        where : {
+            wallet_address : {
+                [Op.in] : walletAddressList
+            }
+        }
+    })
+
+    return studentList.map(studentData => new StudentDTO(studentData))
+    
+}
+
 const createStudent = async (createStudentDTO) => {
     const student = await Student.create(createStudentDTO)
 
@@ -105,4 +119,5 @@ module.exports = {
     createStudent,
     updateStudent,
     deleteStudent,
+    getStudentListByWalletAddressList,
 }

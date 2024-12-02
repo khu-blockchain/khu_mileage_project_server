@@ -35,6 +35,28 @@ class GetSwMileageTokenByIdDTO {
     }
 }
 
+class GetSwMileageTokenRankDTO {
+    constructor({
+        rank,
+        wallet_address,
+        id,
+        name,
+        email,
+        phone_number,
+        department,
+        balance
+     }) {
+        this.rank = rank;
+        this.wallet_address = wallet_address;
+        this.balance = balance;
+        this.id = id,
+        this.name = name,
+        this.email = email,
+        this.phone_number = phone_number,
+        this.department = department
+    }
+}
+
 class SwMileageTokenDTO {
     constructor({
     }) {
@@ -60,4 +82,5 @@ module.exports = {
     CreateSwMileageTokenDTO,
     UpdateSwMileageTokenDTO,
     DeleteSwMileageTokenDTO,
+    GetSwMileageTokenRankDTO,
 };
