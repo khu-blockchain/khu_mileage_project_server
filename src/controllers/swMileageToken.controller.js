@@ -37,7 +37,8 @@ const createSwMileageToken = catchAsync(async (req, res) => {
         throw new ApiError(httpStatus.NOT_FOUND, 'admin not found')
     }
 
-    const deployKIP7TokenDTO = new DeployKIP7TokenDTO({ ...req.query, ...req.params, ...req.body, name: req.body.swMileageTokenName, deployAddress: admin.wallet_address })
+    // deploy 다시
+    const deployKIP7TokenDTO = new DeployKIP7TokenDTO({ ...req.query, ...req.params, ...req.body, name: req.body.swMileageTokenName, deployAddress: config.kaia.adminAddress })
     const KIP7Token = await caverService.deployCustomKIP7Token(deployKIP7TokenDTO)
     const createSwMileageTokenDTO = new CreateSwMileageTokenDTO({
         swMileageTokenName: deployKIP7TokenDTO.name,
