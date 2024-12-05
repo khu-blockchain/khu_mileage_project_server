@@ -41,10 +41,7 @@ const deployKIP7Token = async (deployKIP7TokenDTO) => {
 const deployCustomKIP7Token = async (deployKIP7TokenDTO) => {
     try {
         const swMileageTokenContract = new caver.contract.create(SWMileageABI);
-        console.log(swMileageTokenContract)
-        console.log(1)
-        console.log(deployKIP7TokenDTO.deployAddress)
-        console.log(config.kaia.adminAddress)
+        
         const swMileageToken =  await swMileageTokenContract.deploy({
             from: deployKIP7TokenDTO.deployAddress,
             gas: constants.DEPLOY_KIP7_GAS,
