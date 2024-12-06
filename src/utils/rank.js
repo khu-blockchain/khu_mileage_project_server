@@ -7,8 +7,9 @@ const sortRank = (rankList, studentList, from) => {
     }
 
     const sortedRankList = rankList.map((data, index) => {
-        const matchingStudent = studentList.find(student => (student.wallet_address).upper() === (data.account).upper())
-        
+        const matchingStudent = studentList.find(
+            student => student.wallet_address.toUpperCase() === data.account.toUpperCase()
+        );        
         console.log("RankList Wallet Address:", data.account);
         console.log(typeof(data.account))
         console.log("Student Wallet Addresses:", studentList.map(student => student.wallet_address));
