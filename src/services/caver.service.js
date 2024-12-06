@@ -26,7 +26,6 @@ async function addAdminKeyringAtCaverJs() {
 }
 
 const addAdminKeyring = async (adminKeyring) => {
-    console.log(1)
 
     caver.wallet.add(adminKeyring)
 }

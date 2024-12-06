@@ -9,6 +9,10 @@ const sortRank = (rankList, studentList, from) => {
     const sortedRankList = rankList.map((data, index) => {
         const matchingStudent = studentList.find(student => student.wallet_address === data.account)
         
+        console.log("RankList Wallet Address:", data.account);
+        console.log("Student Wallet Addresses:", studentList.map(student => student.wallet_address));
+        console.log(matchingStudent)
+
         if (!matchingStudent) {
             throw new Error(`No matching student found for wallet address: ${data.account}`);
         }
