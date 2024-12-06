@@ -43,7 +43,7 @@ const login = catchAsync(async (req, res) => {
             throw new ApiError(httpStatus.UNAUTHORIZED, 'wrong password');
         }
         
-        await caverService.addAdminKeyring(keyRing);
+        // await caverService.addAdminKeyring(keyRing);
 
         const tokens = await jwtService.generateAdminAuthTokens(adminDTO);
 
