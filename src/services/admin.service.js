@@ -9,15 +9,16 @@ const config = require('../config/config')
 const constants = require('../config/constants')
 const md5 = require('md5')
 
-const getAdminList = async (getAdminListDTO) => {
+const getAdminList = async () => {
     return await Admin.findAll({
         attributes: {
             exclude: ['password', 'salt'],
         },
-        limit: getAdminListDTO.limit,
-        offset: getAdminListDTO.offset,
+        // limit: getAdminListDTO.limit,
+        // offset: getAdminListDTO.offset,
         where: {},
         order: [['created_at', 'DESC']],
+        raw: true,
     })
 }
 

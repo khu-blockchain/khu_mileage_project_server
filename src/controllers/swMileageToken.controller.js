@@ -53,6 +53,15 @@ const createSwMileageToken = catchAsync(async (req, res) => {
     })
     const swMileageToken = await swMileageTokenService.createSwMileageToken(createSwMileageTokenDTO)
 
+    const adminList = await adminService.getAdminList();
+
+    for (const adminData of adminList) {
+        if (adminData.wallet_address != config.kaia.adminAddress) {
+            console.log(`${adminData.wallet_address}`)
+            await caverService.addAdmin(adminData.wallet_address, swMileageToken.contract_address)
+        }
+    }
+
     return res.status(httpStatus.CREATED).json(swMileageToken);
 })
 
@@ -145,7 +154,7 @@ const mintSwMileageToken = catchAsync(async (req, res) => {
     })
     const swMileageTokenHistory = await swMileageTokenHistoryService.createSwMileageTokenHistory(createSwMileageTokenHistoryDTO);
     // kip7 mint
-    console.log(1)
+
     const mintKIP7TokenDTO = new MintKIP7TokenDTO({
         contractAddress: swMileageToken.contract_address,
         spenderAddress: student.wallet_address,

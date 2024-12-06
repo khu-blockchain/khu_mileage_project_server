@@ -41,10 +41,9 @@ const deployKIP7Token = async (deployKIP7TokenDTO) => {
 const deployCustomKIP7Token = async (deployKIP7TokenDTO) => {
     try {
         const swMileageTokenContract = new caver.contract.create(SWMileageABI);
-        console.log(deployKIP7TokenDTO.deployAddress)
-        console.log(config.kaia.adminAddress)
+  
         const swMileageToken =  await swMileageTokenContract.deploy({
-            from: config.kaia.adminAddress,
+            from: deployKIP7TokenDTO.deployAddress,
             gas: constants.DEPLOY_KIP7_GAS,
             feeDelegation: true,
             feePayer: config.kaia.adminAddress,
@@ -175,7 +174,6 @@ const decodeApproveABI = async (inputData) => {
 }
 
 const getStudentsRankingRange = async (from, to, contractAddress) => {
-    // todo : test net
 
     const swMileageTokenContract = new caver.contract.create(SWMileageABI, contractAddress);
 
@@ -184,6 +182,21 @@ const getStudentsRankingRange = async (from, to, contractAddress) => {
     return rankList
 }
 
+const addAdmin = async (address, contractAddress) => {
+    // try {
+        const swMileageTokenContract = new caver.contract.create(SWMileageABI, contractAddress);
+
+        const result = await swMileageTokenContract.methods.addAdmin(address).send({
+            from: config.kaia.adminAddress,
+            gas: '200000'
+        })
+    
+        return
+    // } catch (error) {
+    //     throw new ApiError(error.response.status, error.response.data.message ?? error.response.data);
+    // }
+  
+}
 module.exports = {
     keyringCreateFromPrivateKey,
     deployKIP7Token,
@@ -200,6 +213,7 @@ module.exports = {
     decodeApproveABI,
 
     getStudentsRankingRange,
-    toBN
+    toBN,
+    addAdmin
 }
 
