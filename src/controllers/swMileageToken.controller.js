@@ -57,7 +57,6 @@ const createSwMileageToken = catchAsync(async (req, res) => {
 
     for (const adminData of adminList) {
         if (adminData.wallet_address != config.kaia.adminAddress) {
-            console.log(`${adminData.wallet_address}`)
             await caverService.addAdmin(adminData.wallet_address, swMileageToken.contract_address)
         }
     }

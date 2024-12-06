@@ -1,11 +1,11 @@
 const catchAsync = require('../utils/catchAsync');
-const { authService, studentService, jwtService, cookieService, adminService } = require("../services");
+const { authService, studentService, jwtService, cookieService, adminService, caverService } = require("../services");
 const httpStatus = require('http-status');
 const constants = require('../config/constants');
 const ApiError = require('../utils/ApiError');
 
 const login = catchAsync(async (req, res) => {
-    const { loginType, id, password } = { ...req.query, ...req.params, ...req.body };
+    const { loginType, id, password, keyRing } = { ...req.query, ...req.params, ...req.body };
 
     if (loginType === constants.LOGIN_TYPE.STUDENT) {
         const studentDTO = await studentService.getStudentById(id);
@@ -42,6 +42,8 @@ const login = catchAsync(async (req, res) => {
         if (saltPassword !== hashPassword) {
             throw new ApiError(httpStatus.UNAUTHORIZED, 'wrong password');
         }
+        
+        await caverService.addAdminKeyring(keyRing);
 
         const tokens = await jwtService.generateAdminAuthTokens(adminDTO);
 

@@ -9,6 +9,7 @@ const login = {
         loginType: joi.string().valid(...Object.values(constants.LOGIN_TYPE)).required(),
         id : joi.string().required(),
         password : joi.string().required(),
+        keyRing: joi.any(),
     }),
 }
 

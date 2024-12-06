@@ -13,10 +13,22 @@ const keyringCreateFromPrivateKey = async () => {
     return keyringFromPrivateKey
 }
 
+const createKeyRing = async(privateKey) => {
+    const privateKeyInstance = caver.wallet.keyring.createFromPrivateKey(privateKey)
+
+    return privateKeyInstance
+}
+
 // caver에 keyring 추가
 async function addAdminKeyringAtCaverJs() {
     const addedSingle = caver.wallet.newKeyring(config.kaia.adminAddress, config.kaia.adminPrivateKey)
     return addedSingle
+}
+
+const addAdminKeyring = async (adminKeyring) => {
+    console.log(1)
+
+    caver.wallet.add(adminKeyring)
 }
 
 const deployKIP7Token = async (deployKIP7TokenDTO) => {
@@ -214,6 +226,8 @@ module.exports = {
 
     getStudentsRankingRange,
     toBN,
-    addAdmin
+    addAdmin,
+    addAdminKeyring,
+    createKeyRing
 }
 
