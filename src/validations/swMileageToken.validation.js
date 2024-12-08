@@ -18,6 +18,7 @@ const createSwMileageToken = {
         decimals: joi.number().default(18),
         imageUrl: joi.string().required(),
         initialSupply: joi.number().default(100000000000000000000),
+        rlpEncodingString : joi.string(),
     }),
 }
 
@@ -128,6 +129,22 @@ const getStudentsRankingRange = {
     body: joi.object().keys({}),    
 }
 
+const addSwmileageTokenAdmin = {
+    query: joi.object().keys({}),
+    params: joi.object().keys({
+        swMileageTokenId: joi.number().required(),
+    }),
+    body: joi.object().keys({
+        rawTransaction: joi.string().required(),
+    }),    
+}
+
+const getSwMileageTokenABIandByteCode = {
+    query: joi.object().keys({}),
+    params: joi.object().keys({}),
+    body: joi.object().keys({}),   
+}
+
 module.exports = {
     getSwMileageTokenList,
     createSwMileageToken,
@@ -142,4 +159,6 @@ module.exports = {
     getSwMileageTokenHistoryList,
     getSwMileageTokenHistoryById,
     getStudentsRankingRange,
+    addSwmileageTokenAdmin,
+    getSwMileageTokenABIandByteCode,
 }

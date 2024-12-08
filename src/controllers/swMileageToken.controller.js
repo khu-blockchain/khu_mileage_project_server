@@ -20,12 +20,22 @@ const {
 const { CreateSwMileageTokenHistoryDTO } = require('../dtos/swMileageTokenHistory.dto');
 const { sortRank } = require('../utils/rank')
 const config = require('../config/config');
+const SWMileageABI = require("../utils/data/contract/SwMileageABI.json");
+const SWMileageByte = require("../utils/data/contract/SwMileageByte");
 
 const getSwMileageTokenList = catchAsync(async (req, res) => {
     const getSwMileageTokenListDTO = new GetSwMileageTokenListDTO({ ...req.query, ...req.params, ...req.body })
     const swMileageList = await swMileageTokenService.getSwMileageTokenList(getSwMileageTokenListDTO);
 
     return res.status(httpStatus.OK).json(swMileageList);
+})
+
+
+// only admin
+const getSwMileageTokenABIandByteCode = catchAsync(async (req, res) => {
+    const contractCode = caverService.getSWMileageContractCode();
+
+    return res.status(httpStatus.OK).json({ result: contractCode });
 })
 
 // only admin
@@ -38,11 +48,14 @@ const createSwMileageToken = catchAsync(async (req, res) => {
     }
 
     // deploy 다시
-    const deployKIP7TokenDTO = new DeployKIP7TokenDTO({ ...req.query, ...req.params, ...req.body, name: req.body.swMileageTokenName, deployAddress: config.kaia.adminAddress })
-    const KIP7Token = await caverService.deployCustomKIP7Token(deployKIP7TokenDTO)
+    const deployKIP7TokenDTO = new DeployKIP7TokenDTO({ ...req.query, ...req.params, ...req.body, name: req.body.swMileageTokenName, deployAddress: admin.wallet_address })
+
+    const KIP7TokenAddress = await caverService.deployCustomKIP7TokenAsFeePayer(req.body.rlpEncodingString)
+    console.log("=== create Sw mileage Token in DB ==")
+    console.log(`contrat Address ${KIP7TokenAddress}`)
     const createSwMileageTokenDTO = new CreateSwMileageTokenDTO({
         swMileageTokenName: deployKIP7TokenDTO.name,
-        contractAddress: KIP7Token._address,
+        contractAddress: KIP7TokenAddress,
         contractOwnerAddress: deployKIP7TokenDTO.deployAddress,
         description: req.body.description,
         swMileageTokenSymbol: deployKIP7TokenDTO.symbol,
@@ -53,7 +66,9 @@ const createSwMileageToken = catchAsync(async (req, res) => {
     })
     const swMileageToken = await swMileageTokenService.createSwMileageToken(createSwMileageTokenDTO)
 
+    console.log("=== add admin === ")
     const adminList = await adminService.getAdminList();
+    console.log(`adminList : ${adminList}`)
 
     for (const adminData of adminList) {
         if (adminData.wallet_address != config.kaia.adminAddress) {
@@ -268,7 +283,7 @@ const approveSwMileageToken = catchAsync(async (req, res) => {
         throw new ApiError(httpStatus.NOT_FOUND, 'swMileageToken not found')
     }
 
-    // todo: 향후 admin이 늘어나면 코드 수정
+    // TODO: 향후 admin이 늘어나면 코드 수정
     const adminAddress = config.kaia.adminAddress
 
     // rawTransaction을 깐뒤에 student와 swMileageToken정보와 일치하는지 확인
@@ -310,8 +325,6 @@ const getStudentsRankingRange = catchAsync(async (req, res) => {
     const {from, to, swMileageTokenId} = {...req.query, ...req.params, ...req.body}
     const swMileageToken = await swMileageTokenService.getSwMileageTokenById(swMileageTokenId)
 
-    const balance = await caverService.balanceOfKIP7Token(config.kaia.adminAddress, swMileageToken.contract_address)
-
     const rankList = await caverService.getStudentsRankingRange(from, to, swMileageToken.contract_address)
     
     const walletList = rankList.map((data) => {
@@ -321,6 +334,15 @@ const getStudentsRankingRange = catchAsync(async (req, res) => {
     const studentList = await studentService.getStudentListByWalletAddressList(walletList)
     const result = sortRank(rankList, studentList, from)
 
+    return res.json({ result })
+})
+
+const addSwmileageTokenAdmin = catchAsync(async (req, res) => {
+    const { swMileageTokenId, rawTransaction } = {...req.query, ...req.params, ...req.body}
+
+    const swMileageToken = await swMileageTokenService.getSwMileageTokenById(swMileageTokenId)
+
+    const result = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
     return res.json({ result })
 })
 
@@ -335,5 +357,7 @@ module.exports = {
     burnFromSwMileageToken,
     approveSwMileageToken,
     getApproveSwMileageTokenData,
-    getStudentsRankingRange
+    getStudentsRankingRange,
+    addSwmileageTokenAdmin,
+    getSwMileageTokenABIandByteCode,
 }

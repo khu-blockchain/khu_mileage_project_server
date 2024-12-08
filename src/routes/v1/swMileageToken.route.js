@@ -16,10 +16,18 @@ router
     .post(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.createSwMileageToken), swMileageTokenController.createSwMileageToken);
 
 router
+    .route('/contract-code')
+    .get(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.getSwMileageTokenABIandByteCode), swMileageTokenController.getSwMileageTokenABIandByteCode)
+
+router
     .route('/:swMileageTokenId')
     .get(validate(swMileageTokenValidation.getSwMileageTokenById), swMileageTokenController.getSwMileageTokenById)
     // .put(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.updateSwMileageToken), swMileageTokenController.updateSwMileageToken)
     // .delete(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.deleteSwMileageToken), swMileageTokenController.deleteSwMileageToken);
+
+router
+    .route('/:swMileageTokenId/add-admin')
+    .post(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.addSwmileageTokenAdmin), swMileageTokenController.addSwmileageTokenAdmin);
 
 // 마일리지 토큰 활성화, 활성화 되는 토큰은 1개만
 router
@@ -28,6 +36,7 @@ router
 
 // router
     // .route('/:swMileageId/deactivate')
+
 
 // 마일리지 지급
 router
@@ -53,7 +62,6 @@ router
 router
     .route('/:swMileageTokenId/ranking')
     .get(validate(swMileageTokenValidation.getStudentsRankingRange), swMileageTokenController.getStudentsRankingRange);
-
 
 module.exports = router;
 

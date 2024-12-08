@@ -62,13 +62,32 @@ const deployCustomKIP7Token = async (deployKIP7TokenDTO) => {
           deployKIP7TokenDTO.name,
           deployKIP7TokenDTO.symbol
         )
-        console.log(2)
         return swMileageToken
     } catch (error) {
         console.log(error)
         throw new ApiError(error.response.status, error.response.data.message ?? error.response.data);
     }
 }
+
+// rlpEncoding 값을 받아서 feepayer의 서명을 통해 배퐇는 함수 입니다.
+const deployCustomKIP7TokenAsFeePayer = async (rlpEncodingString) => {
+    
+    try {
+        const deployTransaction = caver.transaction.decode(rlpEncodingString);
+        
+        const signedTransaction = await caver.wallet.signAsFeePayer(config.kaia.adminAddress, deployTransaction)
+
+        // 최종 트랜잭션 전송
+        const finalRawTransaction = signedTransaction.getRawTransaction()
+        const receipt = await caver.rpc.klay.sendRawTransaction(finalRawTransaction)
+        console.log(`The address of deployed smart contract: ${receipt.contractAddress}`)
+        return receipt.contractAddress
+    } catch (error) {
+        console.log(error)
+        throw new ApiError(error.response.status, error.response.data.message ?? error.response.data);
+    }
+}
+
 
 const mintKIP7Token = async (mintKIP7TokenDTO) => {
     const kip7 = await caver.kct.kip7.create(mintKIP7TokenDTO.contractAddress)
@@ -196,18 +215,29 @@ const getStudentsRankingRange = async (from, to, contractAddress) => {
 const addAdmin = async (address, contractAddress) => {
     // try {
         const swMileageTokenContract = new caver.contract.create(SWMileageABI, contractAddress);
-
+        console.log(`add admin address ${address}`)
+        // todo : 분류
         const result = await swMileageTokenContract.methods.addAdmin(address).send({
             from: config.kaia.adminAddress,
-            gas: '200000'
+            gas: constants.DEPLOY_KIP7_GAS
         })
     
         return
     // } catch (error) {
     //     throw new ApiError(error.response.status, error.response.data.message ?? error.response.data);
     // }
-  
 }
+
+const getSWMileageContractCode = () => {
+    // TODO: ABIcode 다양해 지는 경우 수정
+    const contractCode = {
+        abi: SWMileageABI,
+        bytecode: SWMileageByte,
+      };
+
+    return contractCode
+}
+
 module.exports = {
     keyringCreateFromPrivateKey,
     deployKIP7Token,
@@ -222,11 +252,13 @@ module.exports = {
     allowanceKIP7Token,
     balanceOfKIP7Token,
     decodeApproveABI,
+    deployCustomKIP7TokenAsFeePayer,
 
     getStudentsRankingRange,
     toBN,
     addAdmin,
     addAdminKeyring,
-    createKeyRing
+    createKeyRing,
+    getSWMileageContractCode,
 }
 

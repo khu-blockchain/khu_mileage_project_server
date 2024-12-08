@@ -1,5 +1,5 @@
 const catchAsync = require('../utils/catchAsync');
-const { authService, adminService, caverService } = require("../services");
+const { authService, adminService, caverService, swMileageService, swMileageTokenService } = require("../services");
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status')
 const config = require('../config/config');
@@ -41,12 +41,19 @@ const createAdmin = catchAsync(async (req, res) => {
         throw new ApiError(httpStatus.BAD_REQUEST, 'adminId already used')
     }
 
+
     const md5password = authService.hashPassword(password);
     const salt = authService.generateSalt();
     const hashPassword = authService.getSaltPassword(salt, md5password);
 
     const createAdminDTO = new CreateAdminDTO({ ...req.query, ...req.params, ...req.body, role: constants.ROLE.ADMIN, salt, password: hashPassword })
+
     const admin = await adminService.createAdmin(createAdminDTO);
+
+    // todo: check
+    const swMileageToken = await swMileageTokenService.getActivateSwmielagetoken();
+
+    caverService.addAdmin(admin.wallet_address, swMileageToken.contract_address)
     // await caverService.allowanceKIP7Token(config.kaia.adminAddress, )
 
     return res.status(httpStatus.CREATED).json(admin);
