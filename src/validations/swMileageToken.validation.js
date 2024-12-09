@@ -129,7 +129,7 @@ const getStudentsRankingRange = {
     body: joi.object().keys({}),    
 }
 
-const addSwmileageTokenAdmin = {
+const addSwmileageTokenFeePayer = {
     query: joi.object().keys({}),
     params: joi.object().keys({
         swMileageTokenId: joi.number().required(),
@@ -142,7 +142,7 @@ const addSwmileageTokenAdmin = {
 const getSwMileageTokenABIandByteCode = {
     query: joi.object().keys({}),
     params: joi.object().keys({}),
-    body: joi.object().keys({}),   
+    body: joi.object().keys({}),
 }
 
 module.exports = {
@@ -159,6 +159,6 @@ module.exports = {
     getSwMileageTokenHistoryList,
     getSwMileageTokenHistoryById,
     getStudentsRankingRange,
-    addSwmileageTokenAdmin,
+    addSwmileageTokenFeePayer,
     getSwMileageTokenABIandByteCode,
 }

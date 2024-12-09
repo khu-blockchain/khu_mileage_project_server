@@ -30,7 +30,6 @@ const getSwMileageTokenList = catchAsync(async (req, res) => {
     return res.status(httpStatus.OK).json(swMileageList);
 })
 
-
 // only admin
 const getSwMileageTokenABIandByteCode = catchAsync(async (req, res) => {
     const contractCode = caverService.getSWMileageContractCode();
@@ -51,8 +50,7 @@ const createSwMileageToken = catchAsync(async (req, res) => {
     const deployKIP7TokenDTO = new DeployKIP7TokenDTO({ ...req.query, ...req.params, ...req.body, name: req.body.swMileageTokenName, deployAddress: admin.wallet_address })
 
     const KIP7TokenAddress = await caverService.deployCustomKIP7TokenAsFeePayer(req.body.rlpEncodingString)
-    console.log("=== create Sw mileage Token in DB ==")
-    console.log(`contrat Address ${KIP7TokenAddress}`)
+
     const createSwMileageTokenDTO = new CreateSwMileageTokenDTO({
         swMileageTokenName: deployKIP7TokenDTO.name,
         contractAddress: KIP7TokenAddress,
@@ -65,16 +63,6 @@ const createSwMileageToken = catchAsync(async (req, res) => {
         isActivated: constants.SW_MILEAGE_TOKEN.IS_ACTIVATED.DEACTIVATED,
     })
     const swMileageToken = await swMileageTokenService.createSwMileageToken(createSwMileageTokenDTO)
-
-    console.log("=== add admin === ")
-    const adminList = await adminService.getAdminList();
-    console.log(`adminList : ${adminList}`)
-
-    for (const adminData of adminList) {
-        if (adminData.wallet_address != config.kaia.adminAddress) {
-            await caverService.addAdmin(adminData.wallet_address, swMileageToken.contract_address)
-        }
-    }
 
     return res.status(httpStatus.CREATED).json(swMileageToken);
 })
@@ -337,13 +325,16 @@ const getStudentsRankingRange = catchAsync(async (req, res) => {
     return res.json({ result })
 })
 
-const addSwmileageTokenAdmin = catchAsync(async (req, res) => {
+const addSwmileageTokenFeePayer = catchAsync(async (req, res) => {
     const { swMileageTokenId, rawTransaction } = {...req.query, ...req.params, ...req.body}
 
     const swMileageToken = await swMileageTokenService.getSwMileageTokenById(swMileageTokenId)
 
     const result = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
-    return res.json({ result })
+
+    // TODO: FeePayer가 모든 admin추가
+
+    return res.status(httpStatus.NO_CONTENT)
 })
 
 module.exports = {
@@ -358,6 +349,6 @@ module.exports = {
     approveSwMileageToken,
     getApproveSwMileageTokenData,
     getStudentsRankingRange,
-    addSwmileageTokenAdmin,
+    addSwmileageTokenFeePayer,
     getSwMileageTokenABIandByteCode,
 }

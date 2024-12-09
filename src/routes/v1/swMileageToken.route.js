@@ -27,7 +27,7 @@ router
 
 router
     .route('/:swMileageTokenId/add-admin')
-    .post(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.addSwmileageTokenAdmin), swMileageTokenController.addSwmileageTokenAdmin);
+    .post(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.addSwmileageTokenFeePayer), swMileageTokenController.addSwmileageTokenFeePayer);
 
 // 마일리지 토큰 활성화, 활성화 되는 토큰은 1개만
 router

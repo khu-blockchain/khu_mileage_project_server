@@ -212,7 +212,8 @@ const getStudentsRankingRange = async (from, to, contractAddress) => {
     return rankList
 }
 
-const addAdmin = async (address, contractAddress) => {
+// addAdmin 권한 넘겨준 후 fee Payer가 모두 add 하는 과정
+const addAdminByFeePayer = async (address, contractAddress) => {
     // try {
         const swMileageTokenContract = new caver.contract.create(SWMileageABI, contractAddress);
         console.log(`add admin address ${address}`)
@@ -256,7 +257,6 @@ module.exports = {
 
     getStudentsRankingRange,
     toBN,
-    addAdmin,
     addAdminKeyring,
     createKeyRing,
     getSWMileageContractCode,
