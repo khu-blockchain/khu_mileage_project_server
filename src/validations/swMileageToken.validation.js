@@ -63,6 +63,7 @@ const mintSwMileageToken = {
         studentId: joi.string().required(),
         amount: joi.number().required(),
         comment : joi.string(),
+        rawTransaction: joi.custom(rawTransactionValidation).required(),
     }),
 }
 
@@ -72,9 +73,10 @@ const burnFromSwMileageToken = {
         swMileageTokenId: joi.number().required(),
     }),
     body: joi.object().keys({
-        studentId: joi.number().required(),
+        studentId: joi.string().required(),
         amount: joi.number().required(),
         comment : joi.string(),
+        rawTransaction: joi.custom(rawTransactionValidation).required(),
     }),
 }
 

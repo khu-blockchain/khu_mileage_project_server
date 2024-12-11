@@ -22,6 +22,7 @@ const { sortRank } = require('../utils/rank')
 const config = require('../config/config');
 const SWMileageABI = require("../utils/data/contract/SwMileageABI.json");
 const SWMileageByte = require("../utils/data/contract/SwMileageByte");
+const { addAdminByFeePayer } = require('../services/caver.service');
 
 const getSwMileageTokenList = catchAsync(async (req, res) => {
     const getSwMileageTokenListDTO = new GetSwMileageTokenListDTO({ ...req.query, ...req.params, ...req.body })
@@ -124,7 +125,7 @@ const deleteSwMileageToken = catchAsync(async (req, res) => {
 
 const mintSwMileageToken = catchAsync(async (req, res) => {
     const verifiedPayloadDTO = new VerifiedPayloadDTO({ ...req.verifiedPayload })
-    const { swMileageTokenId, studentId, comment, amount } = { ...req.query, ...req.params, ...req.body }
+    const { swMileageTokenId, studentId, comment, amount, rawTransaction } = { ...req.query, ...req.params, ...req.body }
 
 
     // todo: swMileageToken이 isActivate 일때만 작동
@@ -163,13 +164,16 @@ const mintSwMileageToken = catchAsync(async (req, res) => {
         amount: amount,
         fromAddress: admin.wallet_address,
     })
-    const mintKIP7TokenResult = await caverService.mintKIP7Token(mintKIP7TokenDTO)
+    // const mintKIP7TokenResult = await caverService.mintKIP7Token(mintKIP7TokenDTO) feePayer서명만 처리 하도록 변경
+    const mintKIP7TokenReceipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
+    console.log(`mintKIP7TokenReceipt : ${mintKIP7TokenReceipt}`)
+
     await swMileageTokenHistoryService.updateSwMileageTokenHistory(swMileageTokenHistory.sw_mileage_token_history_id, {
-        transaction_hash: mintKIP7TokenResult.transactionHash
+        transaction_hash: mintKIP7TokenReceipt.transactionHash
     })
 
     // update swMileageTokenHistory success
-    if (mintKIP7TokenResult.status === true) {
+    if (mintKIP7TokenReceipt.status === true) {
         const updatedSwMileageTokenHistory = await swMileageTokenHistoryService.updateSwMileageTokenHistory(swMileageTokenHistory.sw_mileage_token_history_id, {
             status: constants.SW_MILEAGE_TOKEN_HISTORY.STATUS.SUCCESS
         })
@@ -185,7 +189,7 @@ const mintSwMileageToken = catchAsync(async (req, res) => {
 
 const burnFromSwMileageToken = catchAsync(async (req, res) => {
     const verifiedPayloadDTO = new VerifiedPayloadDTO({ ...req.verifiedPayload })
-    const { swMileageTokenId, studentId, amount, comment } = { ...req.query, ...req.params, ...req.body }
+    const { swMileageTokenId, studentId, amount, comment, rawTransaction } = { ...req.query, ...req.params, ...req.body }
 
     const swMileageToken = await swMileageTokenService.getSwMileageTokenById(swMileageTokenId);
     if (!swMileageToken) {
@@ -202,18 +206,21 @@ const burnFromSwMileageToken = catchAsync(async (req, res) => {
         throw new ApiError(httpStatus.NOT_FOUND, 'admin not found')
     }
 
-    const allowanceValue = await caverService.allowanceKIP7Token(student.wallet_address, admin.wallet_address, swMileageToken.contract_address)
-    const studentApproveAmount = await caverService.toBN(allowanceValue);
-    const maxApproveAmount = await caverService.toBN(constants.MAX_APPROVE_AMOUNT);
-    if (!studentApproveAmount.eq(maxApproveAmount)) {
-        throw new ApiError(httpStatus.BAD_REQUEST, "approve amount error")
-    }
+    // 현재 Contract에서는 Admin이 Student 의 토큰 burn할 수 있도록 처리 중
+    // const allowanceValue = await caverService.allowanceKIP7Token(student.wallet_address, admin.wallet_address, swMileageToken.contract_address)
+    // const studentApproveAmount = await caverService.toBN(allowanceValue);
+    // const maxApproveAmount = await caverService.toBN(constants.MAX_APPROVE_AMOUNT);
+    // if (!studentApproveAmount.eq(maxApproveAmount)) {
+    //     throw new ApiError(httpStatus.BAD_REQUEST, "approve amount error")
+    // }
 
     const balanceOfKIP7Token = await caverService.balanceOfKIP7Token(student.wallet_address, swMileageToken.contract_address)
-    if (parseInt(await caverService.fromPeb(balanceOfKIP7Token, constants.PEB_UNIT.KLAY)) < amount) {
-        throw new ApiError(httpStatus.CONFLICT, 'balance error')
-    }
-    // swMileageTokenHistory create
+
+    // TODO :단위 처리 다시 
+    // if (parseInt(await caverService.fromPeb(balanceOfKIP7Token, constants.PEB_UNIT.KLAY)) < amount) {
+    //     throw new ApiError(httpStatus.CONFLICT, 'balance error')
+    // }
+    
     const createSwMileageTokenHistoryDTO = new CreateSwMileageTokenHistoryDTO({
         amount: amount,
         transactionType: constants.SW_MILEAGE_TOKEN_HISTORY.TRANSACTION_TYPE.BURN_FROM,
@@ -225,20 +232,14 @@ const burnFromSwMileageToken = catchAsync(async (req, res) => {
         swMileageTokenId: swMileageToken.sw_mileage_token_id
     })
     const swMileageTokenHistory = await swMileageTokenHistoryService.createSwMileageTokenHistory(createSwMileageTokenHistoryDTO);
-    // kip7 mint
-    const burnFromKIP7TokenDTO = new BurnFromKIP7TokenDTO({
-        contractAddress: swMileageToken.contract_address,
-        spenderAddress: student.wallet_address,
-        amount: amount,
-        fromAddress: admin.wallet_address,
-    })
-    const mintKIP7TokenResult = await caverService.burnFromKIP7Token(burnFromKIP7TokenDTO)
+    
+    const burnKIP7TokenReceipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
     await swMileageTokenHistoryService.updateSwMileageTokenHistory(swMileageTokenHistory.sw_mileage_token_history_id, {
-        transaction_hash: mintKIP7TokenResult.transactionHash
+        transaction_hash: burnKIP7TokenReceipt.transactionHash
     })
 
     // update swMileageTokenHistory success
-    if (mintKIP7TokenResult.status === true) {
+    if (burnKIP7TokenReceipt.status === true) {
         const updatedSwMileageTokenHistory = await swMileageTokenHistoryService.updateSwMileageTokenHistory(swMileageTokenHistory.sw_mileage_token_history_id, {
             status: constants.SW_MILEAGE_TOKEN_HISTORY.STATUS.SUCCESS
         })
@@ -252,6 +253,8 @@ const burnFromSwMileageToken = catchAsync(async (req, res) => {
     }
 })
 
+
+// 현재 Contract에서 필요x (legacy code)
 const approveSwMileageToken = catchAsync(async (req, res) => {
     // todo : approve 트렌젝션도 token history 내역에 저장하기
     const verifiedPayloadDTO = new VerifiedPayloadDTO({ ...req.verifiedPayload })
@@ -330,11 +333,19 @@ const addSwmileageTokenFeePayer = catchAsync(async (req, res) => {
 
     const swMileageToken = await swMileageTokenService.getSwMileageTokenById(swMileageTokenId)
 
-    const result = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
+    const receipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
 
     // TODO: FeePayer가 모든 admin추가
+    const adminList = await adminService.getAdminList();
 
-    return res.status(httpStatus.NO_CONTENT)
+    for (const admin of adminList) {
+        // 추후 한번에 업데이트 하는 contract method 있으면 효율적
+        
+        await caverService.addAdminByFeePayer(admin.wallet_address, swMileageToken.contract_address)
+    }
+    
+
+    return res.sendStatus(httpStatus.NO_CONTENT);
 })
 
 module.exports = {
@@ -350,5 +361,6 @@ module.exports = {
     getApproveSwMileageTokenData,
     getStudentsRankingRange,
     addSwmileageTokenFeePayer,
+
     getSwMileageTokenABIandByteCode,
 }

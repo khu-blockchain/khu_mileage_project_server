@@ -133,6 +133,7 @@ const fromPeb = async (number, unit) => { return parseInt(caver.utils.fromPeb(nu
 const toBN = async (value) => { return caver.utils.toBN(value) }
 
 const sendRawTransactionWithSignAsFeePayer = async (rawTransaction) => {
+    // todo : error 처리
     const decodedTransaction = caver.transaction.feeDelegatedSmartContractExecution.decode(rawTransaction)
 
     // feePayer 서명 추가
@@ -141,6 +142,7 @@ const sendRawTransactionWithSignAsFeePayer = async (rawTransaction) => {
     // 최종 트랜잭션 전송
     const finalRawTransaction = SignedTransaction.getRawTransaction()
     const receipt = await caver.rpc.klay.sendRawTransaction(finalRawTransaction)
+
     return receipt
 }
 
@@ -161,8 +163,8 @@ const generateApproveRawTransaction = async (ownerAddress, ownerPrivateKey, spen
         value: '0',
       })
 
-      const gasLimit = 1000000;
-      const signApproveTx = await caver.transaction.feeDelegatedSmartContractExecution.create({
+    const gasLimit = 1000000;
+    const signApproveTx = await caver.transaction.feeDelegatedSmartContractExecution.create({
         from: ownerAddress,
         to: contractAddress,
         input: approveData,
@@ -217,16 +219,40 @@ const addAdminByFeePayer = async (address, contractAddress) => {
     // try {
         const swMileageTokenContract = new caver.contract.create(SWMileageABI, contractAddress);
         console.log(`add admin address ${address}`)
-        // todo : 분류
-        const result = await swMileageTokenContract.methods.addAdmin(address).send({
-            from: config.kaia.adminAddress,
-            gas: constants.DEPLOY_KIP7_GAS
-        })
-    
-        return
+        const isAdmin = await swMileageTokenContract.call('isAdmin', address);
+
+        if (!isAdmin) {
+            try {
+                const result = await swMileageTokenContract.methods.addAdmin(address).send({
+                    from: config.kaia.adminAddress,
+                    gas: constants.DEPLOY_KIP7_GAS
+                })
+
+                // result false이면 logging
+            } catch (error) {
+                // todo : logging
+                print(`[ERROR] with add admin address ${address}`)
+            }
+        }
+        // todo: 이미 admin이면 method 안 보내기
     // } catch (error) {
     //     throw new ApiError(error.response.status, error.response.data.message ?? error.response.data);
     // }
+}
+
+const removeAdminByFeePayer = async (address, contractAddress) => {
+    try {
+        const swMileageTokenContract = new caver.contract.create(SWMileageABI, contractAddress);
+        console.log(`remove admin address ${address}`)
+        const result = await swMileageTokenContract.methods.removeAdmin(address).send({
+            from: config.kaia.adminAddress,
+            gas: constants.DEPLOY_KIP7_GAS
+        })
+
+        return result
+    } catch (error) {
+        throw new ApiError(error.response.status, error.response.data.message ?? error.response.data);
+    }
 }
 
 const getSWMileageContractCode = () => {
@@ -260,5 +286,7 @@ module.exports = {
     addAdminKeyring,
     createKeyRing,
     getSWMileageContractCode,
+    addAdminByFeePayer,
+    removeAdminByFeePayer,
 }
 

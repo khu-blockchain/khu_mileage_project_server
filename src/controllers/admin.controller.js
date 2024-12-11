@@ -34,7 +34,6 @@ const createAdmin = catchAsync(async (req, res) => {
     // }
 
     // validation : check adminId already used
-    // TODO : root admin의 계좌 Approval하도록 처리
 
     const { adminId } = { ...req.query, ...req.params, ...req.body } // TODO : check adn delete
     if (await adminService.getAdminById(adminId)) {
@@ -50,11 +49,9 @@ const createAdmin = catchAsync(async (req, res) => {
 
     const admin = await adminService.createAdmin(createAdminDTO);
 
-    // todo: check
     const swMileageToken = await swMileageTokenService.getActivateSwmielagetoken();
 
-    caverService.addAdmin(admin.wallet_address, swMileageToken.contract_address)
-    // await caverService.allowanceKIP7Token(config.kaia.adminAddress, )
+    caverService.addAdminByFeePayer(admin.wallet_address, swMileageToken.contract_address)
 
     return res.status(httpStatus.CREATED).json(admin);
 })
@@ -81,7 +78,7 @@ const updateAdmin = catchAsync(async (req, res) => {
     if (role === constants.ROLE.ADMIN && verifiedAdminId !== adminId) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized client")
     }
-
+    // wallet 주소 변경 시 admin 수정
     const admin = await adminService.getAdminById(adminId);
     if (!admin) {
         throw new ApiError(httpStatus.NOT_FOUND, 'admin not found')
@@ -89,6 +86,11 @@ const updateAdmin = catchAsync(async (req, res) => {
 
     const updateAdminDTO = new UpdateAdminDTO({ ...req.query, ...req.params, ...req.body }) // TODO : body require 처리
     const updatedAdmin = await adminService.updateAdmin(adminId, updateAdminDTO);
+
+    if (admin.wallet_address != updateAdminDTO.walletAddress) {
+        await caverService.removeAdminByFeePayer(admin.wallet_address);
+        await caverService.addAdminByFeePayer(updateAdminDTO.walletAddress)
+    }
     
     return res.status(httpStatus.OK).json(updatedAdmin);
 })
@@ -106,6 +108,7 @@ const deleteAdmin = catchAsync(async (req, res) => {
     }
 
     await adminService.deleteAdmin(adminId);
+    await caverService.removeAdminByFeePayer(admin.wallet_address);
 
     return res.sendStatus(httpStatus.NO_CONTENT);
 })
