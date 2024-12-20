@@ -20,7 +20,7 @@ jobs:
         SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
       run: |
         sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
-          cd /path/to/your/project
+          cd khu_mileage_project_server
           git pull origin main
           docker-compose up -d --build
         EOF
