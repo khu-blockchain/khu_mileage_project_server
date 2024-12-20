@@ -1,0 +1,23 @@
+version: '3'
+services:
+  backend:
+    build: .
+    ports:
+      - "1987:1987"
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=your_password
+      - DB_NAME=your_database
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: your_password
+      MYSQL_DATABASE: your_database
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

@@ -1,7 +1,8 @@
-FROM node:22
-
-WORKDIR ./
+FROM node:latest
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
-
-EXPOSE 3000
-CMD ["npm", "start"]
+RUN npm install -g pm2
+COPY . .
+EXPOSE 1987
+CMD ["pm2-runtime", "index.js"]

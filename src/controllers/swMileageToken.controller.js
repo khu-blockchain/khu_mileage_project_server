@@ -51,6 +51,8 @@ const createSwMileageToken = catchAsync(async (req, res) => {
     const deployKIP7TokenDTO = new DeployKIP7TokenDTO({ ...req.query, ...req.params, ...req.body, name: req.body.swMileageTokenName, deployAddress: admin.wallet_address })
 
     const KIP7TokenAddress = await caverService.deployCustomKIP7TokenAsFeePayer(req.body.rlpEncodingString)
+    console.log(KIP7TokenAddress)
+
 
     const createSwMileageTokenDTO = new CreateSwMileageTokenDTO({
         swMileageTokenName: deployKIP7TokenDTO.name,
@@ -348,6 +350,11 @@ const addSwmileageTokenFeePayer = catchAsync(async (req, res) => {
     return res.sendStatus(httpStatus.NO_CONTENT);
 })
 
+const getActivateSwmileagetoken = catchAsync(async (req, res) => {
+    const activateSwMileageToken = swMileageTokenService.getActivateSwmileagetoken();
+    return res.json(activateSwMileageToken);
+})
+
 module.exports = {
     getSwMileageTokenList,
     createSwMileageToken,
@@ -363,4 +370,5 @@ module.exports = {
     addSwmileageTokenFeePayer,
 
     getSwMileageTokenABIandByteCode,
+    getActivateSwmileagetoken,
 }

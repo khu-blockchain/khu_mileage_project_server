@@ -15,6 +15,11 @@ router
     // create 함과 동시에 deploy
     .post(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.createSwMileageToken), swMileageTokenController.createSwMileageToken);
 
+
+router
+    .route('/activate')
+    .get(validate(swMileageTokenValidation.getActivateSwmileagetoken), swMileageTokenController.getActivateSwmileagetoken)
+
 router
     .route('/contract-code')
     .get(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.getSwMileageTokenABIandByteCode), swMileageTokenController.getSwMileageTokenABIandByteCode)

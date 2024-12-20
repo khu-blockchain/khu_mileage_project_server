@@ -107,7 +107,7 @@ const activateSwMileageToken = async (swMileageTokenId) => {
     })
 }
 
-const getActivateSwmielagetoken = async () => {
+const getActivateSwMileagetoken = async () => {
     const token = await SwMileageToken.findOne({
         where: {
             is_activated : true,
@@ -124,5 +124,5 @@ module.exports = {
     updateSwMileageToken,
     deleteSwMileageToken,
     activateSwMileageToken,
-    getActivateSwmielagetoken,
+    getActivateSwMileagetoken,
 }

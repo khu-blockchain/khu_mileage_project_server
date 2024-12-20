@@ -147,6 +147,12 @@ const getSwMileageTokenABIandByteCode = {
     body: joi.object().keys({}),
 }
 
+const getActivateSwmileagetoken = {
+    query: joi.object().keys({}),
+    params: joi.object().keys({}),
+    body: joi.object().keys({}),
+}
+
 module.exports = {
     getSwMileageTokenList,
     createSwMileageToken,
@@ -163,4 +169,5 @@ module.exports = {
     getStudentsRankingRange,
     addSwmileageTokenFeePayer,
     getSwMileageTokenABIandByteCode,
+    getActivateSwmileagetoken,
 }

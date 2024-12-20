@@ -49,7 +49,7 @@ const createAdmin = catchAsync(async (req, res) => {
 
     const admin = await adminService.createAdmin(createAdminDTO);
 
-    const swMileageToken = await swMileageTokenService.getActivateSwmielagetoken();
+    const swMileageToken = await swMileageTokenService.getActivateSwmileagetoken();
 
     caverService.addAdminByFeePayer(admin.wallet_address, swMileageToken.contract_address)
 

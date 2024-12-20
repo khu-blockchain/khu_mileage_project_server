@@ -71,22 +71,23 @@ const deployCustomKIP7Token = async (deployKIP7TokenDTO) => {
 
 // rlpEncoding 값을 받아서 feepayer의 서명을 통해 배퐇는 함수 입니다.
 const deployCustomKIP7TokenAsFeePayer = async (rlpEncodingString) => {
-    
     try {
-        const deployTransaction = caver.transaction.decode(rlpEncodingString);
-        
-        const signedTransaction = await caver.wallet.signAsFeePayer(config.kaia.adminAddress, deployTransaction)
+        // const deployTransaction = caver.transaction.decode(rlpEncodingString);
+        const deployTransaction = caver.transaction.feeDelegatedSmartContractDeploy.decode(rlpEncodingString)
 
-        // 최종 트랜잭션 전송
-        const finalRawTransaction = signedTransaction.getRawTransaction()
-        const receipt = await caver.rpc.klay.sendRawTransaction(finalRawTransaction)
-        console.log(`The address of deployed smart contract: ${receipt.contractAddress}`)
-        return receipt.contractAddress
+        const signedTransaction = await caver.wallet.signAsFeePayer(config.kaia.adminAddress, deployTransaction);
+        const rawTransaction = signedTransaction.getRawTransaction();
+
+        const receipt = await caver.rpc.klay.sendRawTransaction(rawTransaction);
+
+        console.log(`The address of deployed smart contract: ${receipt.contractAddress}`);
+        return receipt.contractAddress;
     } catch (error) {
-        console.log(error)
-        throw new ApiError(error.response.status, error.response.data.message ?? error.response.data);
+        console.error("Transaction error:", error);
+        throw new ApiError(error.response?.status || 500, error.message);
     }
 }
+
 
 
 const mintKIP7Token = async (mintKIP7TokenDTO) => {
@@ -134,16 +135,20 @@ const toBN = async (value) => { return caver.utils.toBN(value) }
 
 const sendRawTransactionWithSignAsFeePayer = async (rawTransaction) => {
     // todo : error 처리
-    const decodedTransaction = caver.transaction.feeDelegatedSmartContractExecution.decode(rawTransaction)
+    try {
+        const decodedTransaction = caver.transaction.feeDelegatedSmartContractExecution.decode(rawTransaction)
+        // feePayer 서명 추가
+        const SignedTransaction = await caver.wallet.signAsFeePayer(config.kaia.adminAddress, decodedTransaction)
 
-    // feePayer 서명 추가
-    const SignedTransaction = await caver.wallet.signAsFeePayer(config.kaia.adminAddress, decodedTransaction)
+        // 최종 트랜잭션 전송
+        const finalRawTransaction = SignedTransaction.getRawTransaction()
+        const receipt = await caver.rpc.klay.sendRawTransaction(finalRawTransaction)
 
-    // 최종 트랜잭션 전송
-    const finalRawTransaction = SignedTransaction.getRawTransaction()
-    const receipt = await caver.rpc.klay.sendRawTransaction(finalRawTransaction)
-
-    return receipt
+        return receipt
+    }
+    catch (error) {
+        console.error("Error sending raw transaction:", error.message)
+    }
 }
 
 // rawTransaction 생성 코드 입니다. 테스트 용 코드입니다
