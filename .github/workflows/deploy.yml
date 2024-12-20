@@ -18,10 +18,11 @@ jobs:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
         SERVER_USER: ${{ secrets.SERVER_USER }}
         SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-    run: |
-      sshpass -p "$SERVER_PASSWORD" ssh -v -tt -o ConnectTimeout=60 -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST -p <포트번호> << 'EOF'
-        cd khu_mileage_project_server
-        git pull origin main
-        docker-compose up -d --build
-        exit
-      EOF
+      run: |
+        sshpass -p "$SERVER_PASSWORD" ssh -v -tt -o ConnectTimeout=60 -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST -p <포트번호> << 'EOF'
+          cd khu_mileage_project_server
+          git pull origin main
+          docker-compose up -d --build
+          exit
+        EOF
+
