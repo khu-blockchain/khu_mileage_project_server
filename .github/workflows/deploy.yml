@@ -1,4 +1,4 @@
-name: Deploy and Diagnose
+name: Deploy to Server
 
 on:
   push:
@@ -10,45 +10,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Install sshpass and telnet
-      run: sudo apt-get update && sudo apt-get install -y sshpass telnet
-
-    - name: Check runner's public IP
-      run: |
-        echo "Runner's public IP:"
-        curl ifconfig.me
-
-    - name: Network diagnostics
-      env:
-        SERVER_HOST: ${{ secrets.SERVER_HOST }}
-      run: |
-        echo "Ping test:"
-        ping -c 4 $SERVER_HOST
-        echo "Telnet test to port 22:"
-        timeout 5 telnet $SERVER_HOST 22
-
-    - name: Test SSH connection
-      env:
-        SERVER_USER: ${{ secrets.SERVER_USER }}
-        SERVER_HOST: ${{ secrets.SERVER_HOST }}
-      run: |
-        ssh -v -o StrictHostKeyChecking=no -o ConnectTimeout=10 $SERVER_USER@$SERVER_HOST
+    - name: Install sshpass
+      run: sudo apt-get install -y sshpass
 
     - name: Deploy to server
       env:
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
         SERVER_USER: ${{ secrets.SERVER_USER }}
         SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
-      run: |
-        sshpass -p "$SERVER_PASSWORD" ssh -o ConnectTimeout=60 -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST << 'EOF'
-          echo "Connected to server"
-          cd khu_mileage_project_server
-          git pull origin main
-          docker-compose up -d --build
-          echo "Deployment completed"
-        EOF
-
-    - name: Deployment status
-      if: failure()
-      run: |
-        echo "Deployment failed. Please check the logs above for more information."
+    run: |
+      sshpass -p "$SERVER_PASSWORD" ssh -v -tt -o ConnectTimeout=60 -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_HOST -p <포트번호> << 'EOF'
+        cd khu_mileage_project_server
+        git pull origin main
+        docker-compose up -d --build
+        exit
+      EOF
