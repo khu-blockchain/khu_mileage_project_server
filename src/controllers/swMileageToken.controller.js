@@ -50,8 +50,8 @@ const createSwMileageToken = catchAsync(async (req, res) => {
     // deploy 다시
     const deployKIP7TokenDTO = new DeployKIP7TokenDTO({ ...req.query, ...req.params, ...req.body, name: req.body.swMileageTokenName, deployAddress: admin.wallet_address })
 
+    // ??
     const KIP7TokenAddress = await caverService.deployCustomKIP7TokenAsFeePayer(req.body.rlpEncodingString)
-    console.log(KIP7TokenAddress)
 
 
     const createSwMileageTokenDTO = new CreateSwMileageTokenDTO({

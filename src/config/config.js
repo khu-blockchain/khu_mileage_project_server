@@ -18,16 +18,10 @@ const envVarSchema = joi.object()
         SQL_DIALECT: joi.string().required().valid('mysql', 'postgres', 'mssql'),
 
         // klaytn api service
-        KLAYTN_CHIAN_ID: joi.number().required(),
+        KAIA_CHIAN_ID: joi.number().required(),
         ADMIN_PRIVATE_KEY: joi.string().required(),
         ADMIN_ADDRESS: joi.string().required(),
-        KLAYTN_NETWORK_URL: joi.string().required(),
-
-        // // aws s3 key
-        // AWS_S3_ACCESS_KEY_ID: joi.string().required(),
-        // AWS_S3_SECRET_ACCESS_KEY: joi.string().required(),
-        // AWS_S3_BUCKET_NAME: joi.string().required(),
-        // AWS_S3_REGION: joi.string().required(),
+        KAIA_RPC_URL: joi.string().required(),
 
         // jwt key
         JWT_PUBLIC_KEY: joi.string().required(),
@@ -62,21 +56,11 @@ module.exports = {
 
     // klaytn
     kaia: {
-        kasAccessKeyId: envVars.KAS_ACCESS_KEY_ID,
-        kasSecretAccessKey: envVars.KAS_SECRET_ACCESS_KEY,
-        klaytnChainId: envVars.KLAYTN_CHIAN_ID,
+        kaiaChainId: envVars.KAIA_CHIAN_ID,
         adminPrivateKey: envVars.ADMIN_PRIVATE_KEY,
         adminAddress: envVars.ADMIN_ADDRESS,
         adminWalletKey: envVars.ADMIN_PRIVATE_KEY + "0x00" + envVars.ADMIN_ADDRESS,
-        klaytnNetworkUrl : envVars.KLAYTN_NETWORK_URL
-    },
-
-    // s3
-    s3: {
-        accessKeyId: envVars.AWS_S3_ACCESS_KEY_ID,
-        secretAccessKey: envVars.AWS_S3_SECRET_ACCESS_KEY,
-        name : envVars.AWS_S3_BUCKET_NAME,
-        region : envVars.AWS_S3_REGION,
+        kaiaRpcUrl : envVars.KAIA_RPC_URL
     },
 
     // jwt
