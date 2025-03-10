@@ -14,7 +14,6 @@ class CreateAdminDTO {
         walletAddress,
         email,
         phoneNumber,
-        department,
     }) {
         this.admin_id = adminId;
         this.password = password;
@@ -22,7 +21,6 @@ class CreateAdminDTO {
         this.salt = salt;
         this.role = role;
         this.wallet_address = walletAddress;
-        this.department = department;
         this.email = email;
         this.phone_number = phoneNumber;
     }
@@ -39,7 +37,6 @@ class AdminDTO {
         admin_id,
         name,
         wallet_address,
-        department,
         phone_number,
         email,
         role,
@@ -47,7 +44,6 @@ class AdminDTO {
         this.admin_id = admin_id;
         this.name = name;
         this.wallet_address = wallet_address;
-        this.department = department;
         this.email = email;
         this.phone_number = phone_number;
         this.role = role;
@@ -58,19 +54,15 @@ class UpdateAdminDTO {
     constructor({
         id,
         password,
-        salt,
         name,
         walletAddress,
-        department,
         email,
         phoneNumber,
-        role,
     }) {
         this.id = id;
         this.password = password;
         this.name = name;
         this.walletAddress = walletAddress;
-        this.department = department;
         this.email = email;
         this.phone_number = phoneNumber;
     }

@@ -14,17 +14,24 @@ const createSchema = async () => {
             if (e) {
                 return reject(e);
             }
-            con.query(`create database ${config.sequelize.database}`, (e, result, fields) => {
-                if (e) {
-                    if (e.code === 'ER_DB_CREATE_EXISTS') {
-                        resolve(true);
-                    } else {
-                        return reject(e);
-                    }
-                }
-                resolve(true);
-            })
-            con.end();
+            con.query(`CREATE DATABASE IF NOT EXISTS ${config.sequelize.database}`, (e, result, fields) => {
+              if (e) {
+                  return reject(e);
+              }
+              con.end(); // 연결 종료는 query 실행 후 수행
+              resolve(true);
+          });
+            // con.query(`create database ${config.sequelize.database}`, (e, result, fields) => {
+            //     if (e) {
+            //         if (e.code === 'ER_DB_CREATE_EXISTS') {
+            //             resolve(true);
+            //         } else {
+            //             return reject(e);
+            //         }
+            //     }
+            //     con.end();
+            //     resolve(true);
+            // })
         })
     })
 }
