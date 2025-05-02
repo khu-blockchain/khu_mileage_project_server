@@ -110,7 +110,7 @@ const activateSwMileageToken = async (swMileageTokenId) => {
 const getActivateSwMileagetoken = async () => {
     const token = await SwMileageToken.findOne({
         where: {
-            is_activated : true,
+            is_activated : constants.SW_MILEAGE_TOKEN.IS_ACTIVATED.ACTIVATED,
         },
     })
 

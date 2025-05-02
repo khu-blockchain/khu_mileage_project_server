@@ -35,7 +35,7 @@ const getSwMileageTokenList = catchAsync(async (req, res) => {
 const getSwMileageTokenABIandByteCode = catchAsync(async (req, res) => {
     const contractCode = caverService.getSWMileageContractCode();
 
-    return res.status(httpStatus.OK).json({ result: contractCode });
+    return res.status(httpStatus.OK).json(contractCode);
 })
 
 // only admin
@@ -338,20 +338,20 @@ const addSwmileageTokenFeePayer = catchAsync(async (req, res) => {
     const receipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
 
     // TODO: FeePayer가 모든 admin추가
-    const adminList = await adminService.getAdminList();
+    // const adminList = await adminService.getAdminList();
 
-    for (const admin of adminList) {
-        // 추후 한번에 업데이트 하는 contract method 있으면 효율적
-        
-        await caverService.addAdminByFeePayer(admin.wallet_address, swMileageToken.contract_address)
-    }
+    // for (const admin of adminList) {
+    //    // 추후 한번에 업데이트 하는 contract method 있으면 효율적
+    //    
+    //    await caverService.addAdminByFeePayer(admin.wallet_address, swMileageToken.contract_address)
+    // }
     
 
-    return res.sendStatus(httpStatus.NO_CONTENT);
+    return res.sendStatus(httpStatus.OK);
 })
 
 const getActivateSwmileagetoken = catchAsync(async (req, res) => {
-    const activateSwMileageToken = swMileageTokenService.getActivateSwmileagetoken();
+    const activateSwMileageToken = await swMileageTokenService.getActivateSwMileagetoken();
     return res.json(activateSwMileageToken);
 })
 

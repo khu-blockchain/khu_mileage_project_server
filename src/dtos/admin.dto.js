@@ -1,83 +1,71 @@
 class GetAdminListDTO {
-    constructor({ }) {
-        // this. = ;
-    }
+  constructor({}) {
+    // this. = ;
+  }
 }
 
 class CreateAdminDTO {
-    constructor({
-        adminId,
-        password,
-        salt,
-        name,
-        role,
-        walletAddress,
-        email,
-        phoneNumber,
-    }) {
-        this.admin_id = adminId;
-        this.password = password;
-        this.name = name;
-        this.salt = salt;
-        this.role = role;
-        this.wallet_address = walletAddress;
-        this.email = email;
-        this.phone_number = phoneNumber;
-    }
+  constructor({
+    adminId,
+    password,
+    salt,
+    name,
+    role,
+    walletAddress,
+    email,
+  }) {
+    this.admin_id = adminId;
+    this.password = password;
+    this.salt = salt;
+    this.name = name;
+    this.role = role;
+    this.wallet_address = walletAddress;
+    this.email = email;
+  }
 }
 class GetAdminByIdDTO {
-    constructor({ }) {
-        // this. = ;
-    }
+  constructor({}) {
+    // this. = ;
+  }
 }
 
 // delete password, salt
 class AdminDTO {
-    constructor({
-        admin_id,
-        name,
-        wallet_address,
-        phone_number,
-        email,
-        role,
-    }) {
-        this.admin_id = admin_id;
-        this.name = name;
-        this.wallet_address = wallet_address;
-        this.email = email;
-        this.phone_number = phone_number;
-        this.role = role;
-    }
+  constructor({
+    admin_id,
+    name,
+    wallet_address,
+    email,
+    role,
+  }) {
+    this.admin_id = admin_id;
+    this.name = name;
+    this.wallet_address = wallet_address;
+    this.email = email;
+    this.role = role;
+  }
 }
 
 class UpdateAdminDTO {
-    constructor({
-        id,
-        password,
-        name,
-        walletAddress,
-        email,
-        phoneNumber,
-    }) {
-        this.id = id;
-        this.password = password;
-        this.name = name;
-        this.walletAddress = walletAddress;
-        this.email = email;
-        this.phone_number = phoneNumber;
-    }
+  constructor({ adminId, password, name, walletAddress, email }) {
+    this.admin_id = adminId;
+    this.password = password;
+    this.name = name;
+    this.wallet_address = walletAddress;
+    this.email = email;
+  }
 }
 
 class DeleteAdminDTO {
-    constructor({ }) {
-        // this. = ;
-    }
+  constructor({}) {
+    // this. = ;
+  }
 }
 module.exports = {
-    GetAdminListDTO,
-    GetAdminByIdDTO,
-    AdminDTO,
-    CreateAdminDTO,
-    UpdateAdminDTO,
-    DeleteAdminDTO,
+  GetAdminListDTO,
+  GetAdminByIdDTO,
+  AdminDTO,
+  CreateAdminDTO,
+  UpdateAdminDTO,
+  DeleteAdminDTO,
 };

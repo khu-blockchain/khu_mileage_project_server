@@ -43,7 +43,7 @@
     "sequelize": "^6.6.5",
     "socket.io": "^4.1.3",
     "socket.io-redis": "^6.1.0",
-    "web3": "^4.9.0",
+    "web3": "^4.16.0",
     "winston": "^3.3.3",
     "xss": "^1.0.8",
     "xss-clean": "^0.1.1"

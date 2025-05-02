@@ -48,10 +48,12 @@ const createAdmin = catchAsync(async (req, res) => {
     const createAdminDTO = new CreateAdminDTO({ ...req.query, ...req.params, ...req.body, role: constants.ROLE.ADMIN, salt, password: hashPassword })
 
     const admin = await adminService.createAdmin(createAdminDTO);
+    
+    // 토큰이 있으면 어드민 추가, 없으면 넘어감
 
-    const swMileageToken = await swMileageTokenService.getActivateSwmileagetoken();
+    // const swMileageToken = await swMileageTokenService.getActivateSwmileagetoken();
 
-    caverService.addAdminByFeePayer(admin.wallet_address, swMileageToken.contract_address)
+    // caverService.addAdminByFeePayer(admin.wallet_address, swMileageToken.contract_address)
 
     return res.status(httpStatus.CREATED).json(admin);
 })
