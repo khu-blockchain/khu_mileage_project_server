@@ -13,7 +13,7 @@ const { GetAdminListDTO, UpdateAdminDTO, CreateAdminDTO } = require('../dtos/adm
 
 const getAdminList = catchAsync(async (req, res) => {
     const getAdminListDTO = new GetAdminListDTO({ ...req.query, ...req.params, ...req.body })
-    const adminList = await adminService.getAdminList(getADminListDTO);
+    const adminList = await adminService.getAdminList(getAdminListDTO);
 
     return res.status(httpStatus.OK).json(adminList);
 })

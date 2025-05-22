@@ -31,6 +31,10 @@ const envVarSchema = joi.object()
         ROOT_ADMIN_DEFAULT_SALT: joi.string().required(),
         ROOT_ADMIN_DEFAULT_NAME: joi.string().required(),
         ROOT_ADMIN_DEFAULT_PASSWORD: joi.string().required(),
+
+        // contract
+        STUDENT_MANAGER_CONTRACT_ADDRESS: joi.string().required(),
+        SW_MILEAGE_CONTRACT_ADDRESS: joi.string().required(),
     })
     .unknown();
 
@@ -78,4 +82,10 @@ module.exports = {
         name: envVars.ROOT_ADMIN_DEFAULT_NAME,
         password: envVars.ROOT_ADMIN_DEFAULT_PASSWORD,
     },
+
+    // contract
+    contract: {
+        studentManagerContractAddress: envVars.STUDENT_MANAGER_CONTRACT_ADDRESS,
+        swMileageContractAddress: envVars.SW_MILEAGE_CONTRACT_ADDRESS,
+    }
 };

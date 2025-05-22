@@ -54,6 +54,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             defaultValue: DataTypes.NOW,
         },
+        is_activate: { //회원가입 이후 폴링 서버를 통해 회원가입 체인 등록 성공 여부 조회.
+            type: DataTypes.TINYINT(1),
+            allowNull: false,
+            defaultValue: 0,
+        }
     };
 
     const modelOptions = {

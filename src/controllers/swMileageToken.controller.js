@@ -50,13 +50,20 @@ const createSwMileageToken = catchAsync(async (req, res) => {
     // deploy 다시
     const deployKIP7TokenDTO = new DeployKIP7TokenDTO({ ...req.query, ...req.params, ...req.body, name: req.body.swMileageTokenName, deployAddress: admin.wallet_address })
 
+    // deploy 코드에서 대납이 필요한 경우
+    // 1번이면 관리자가 지갑에서 서명을 해주어야 한다는 의미?
+    // 2번이면 서버내 코드로 바로 배포
+    // 현재는 2번으로 처리
     // ??
-    const KIP7TokenAddress = await caverService.deployCustomKIP7TokenAsFeePayer(req.body.rlpEncodingString)
-
+    //1
+    //const KIP7TokenAddress = await caverService.deployCustomKIP7TokenAsFeePayer(req.body.rlpEncodingString)
+    
+    //2
+    const KIP7TokenAddress = await caverService.deployCustomKIP7Token(deployKIP7TokenDTO)
 
     const createSwMileageTokenDTO = new CreateSwMileageTokenDTO({
         swMileageTokenName: deployKIP7TokenDTO.name,
-        contractAddress: KIP7TokenAddress,
+        contractAddress: KIP7TokenAddress.options.address,
         contractOwnerAddress: deployKIP7TokenDTO.deployAddress,
         description: req.body.description,
         swMileageTokenSymbol: deployKIP7TokenDTO.symbol,

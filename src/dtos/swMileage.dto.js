@@ -18,6 +18,7 @@ class CreateSwMileageDTO {
         academicField,
         extracurricularActivity,
         extracurricularActivityClassification,
+        rawTransaction
     }) {
         this.student_id = studentId
         this.name = name
@@ -30,6 +31,7 @@ class CreateSwMileageDTO {
         this.extracurricular_activity = extracurricularActivity
         this.extracurricular_activity_classification = extracurricularActivityClassification
         this.status = constants.SW_MILEAGE_STATUS.CREATE
+        this.transaction_hash = rawTransaction
     }
 }
 

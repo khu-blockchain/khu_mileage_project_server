@@ -1,6 +1,7 @@
 const joi = require('joi');
 const { walletAddressValidation, phoneNumberValidation, emailValidation } = require('./custom.validation');
 const constants = require('../config/constants');
+const { raw } = require('mysql2');
 
 const getSwMileageList = {
     query: joi.object().keys({
@@ -26,6 +27,7 @@ const createSwMileage = {
         academicField: joi.string().required(),
         extracurricularActivity: joi.string().required(),
         extracurricularActivityClassification: joi.string(), // 없는 경우 null
+        rawTransaction: joi.string().required(), // DocSubmitted rawTx
     }),
 }
 

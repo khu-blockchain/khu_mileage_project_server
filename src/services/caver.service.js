@@ -5,6 +5,14 @@ const constants = require('../config/constants');
 const SWMileageABI = require("../utils/data/contract/SwMileageABI.json");
 const SWMileageByte = require("../utils/data/contract/SwMileageByte");
 
+// 마일리지 신청관련 로직 테스트를 위한 ABI, BYTE 
+const SWMileageTokenABI = require("../utils/data/contract/SwMileageToken.abi.json");
+const SWMileageTokenByte = require("../utils/data/contract/SwMileageToken.bytecode");
+const StudentManagerABI = require("../utils/data/contract/StudentManager.abi.json");
+const StudentManagerByte = require("../utils/data/contract/StudentManager.bytecode");
+
+
+
 const caver = new Caver(config.kaia.kaiaRpcUrl)
 
 const keyringCreateFromPrivateKey = async () => {
@@ -48,7 +56,7 @@ const deployKIP7Token = async (deployKIP7TokenDTO) => {
   }
 }
 
-// transfer 기능이 막힌 KIP7 contract 를 deploy 하는 함수입니다. 
+// transfer 기능이 막힌 KIP7 contract 를 deploy 하는 함수입니다.
 const deployCustomKIP7Token = async (deployKIP7TokenDTO) => {
   try {
     const swMileageTokenContract = new caver.contract.create(SWMileageABI);
@@ -152,6 +160,7 @@ const sendRawTransactionWithSignAsFeePayer = async (rawTransaction) => {
   }
   catch (error) {
     console.error("Error sending raw transaction:", error.message)
+    throw new ApiError(error.response?.status || 500, error.message);
   }
 }
 
@@ -264,14 +273,82 @@ const removeAdminByFeePayer = async (address, contractAddress) => {
   }
 }
 
+// const getSWMileageContractCode = () => {
+//   // TODO: ABIcode 다양해 지는 경우 수정
+//   const contractCode = {
+//     abi: SWMileageABI,
+//     bytecode: SWMileageByte,
+//   };
+
+//   return contractCode
+// }
 const getSWMileageContractCode = () => {
   // TODO: ABIcode 다양해 지는 경우 수정
+  // 현재 2개로 변경함.
   const contractCode = {
-    abi: SWMileageABI,
-    bytecode: SWMileageByte,
+    studentManager : {
+      abi: StudentManagerABI,
+      bytecode: StudentManagerByte,
+    },
+    swMileageToken: {
+      abi: SWMileageTokenABI,
+      bytecode: SWMileageTokenByte,
+    },
   };
 
   return contractCode
+}
+
+// ====================
+// new functions
+// ====================
+// 1. selector => 함수 ABI mapping 자동 생성
+function buildSelectorMap(abis) {
+    const selectorMap = {};
+    abis.forEach(abi => {
+      abi.forEach(item => {
+          if (item.type === 'function') {
+              // 시그니처 문자열 생성: 함수명(타입1,타입2,...)
+              const types = item.inputs.map(i => i.type).join(',');
+              const signature = `${item.name}(${types})`;
+              // selector 구하기
+              const selector = caver.utils.sha3(signature).slice(0, 10);
+              selectorMap[selector] = item;
+          }
+      });
+    });
+    return selectorMap;
+}
+const selectorMap = buildSelectorMap([StudentManagerABI, SWMileageTokenABI]);
+/**
+ * 트랜잭션 input (data) 자동 디코드
+ * @param {string} input 0x~ 트랜잭션 input 전체 데이터
+ * @returns {Object} { function: '함수명', params: {...}, selector: ... }
+ */
+function decodeTxInputAuto(input) {
+    const selector = input.slice(0, 10);
+    const paramsData = '0x' + input.slice(10);
+
+    if (!selectorMap[selector]) {
+        throw new Error('Unknown function selector: ' + selector);
+    }
+    const abiItem = selectorMap[selector];
+    // 파라미터명, 타입 자동 매핑
+    const paramDefs = abiItem.inputs.map(i => ({ name: i.name, type: i.type }));
+
+    // decode
+    const decoded = caver.abi.decodeParameters(paramDefs, paramsData);
+    // 파라미터명별로 깔끔하게 정리 (caver/web3는 0,1,2... + 이름 키 모두 제공)
+    const params = {};
+    abiItem.inputs.forEach(i => {
+        params[i.name] = decoded[i.name];
+    });
+
+    return {
+        function: abiItem.name,
+        params,
+        selector,
+    };
 }
 
 module.exports = {
@@ -297,5 +374,7 @@ module.exports = {
   getSWMileageContractCode,
   addAdminByFeePayer,
   removeAdminByFeePayer,
+  //new functions
+  decodeTxInputAuto,
 }
 

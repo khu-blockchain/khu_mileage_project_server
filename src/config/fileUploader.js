@@ -9,9 +9,9 @@ const httpStatus = require('http-status');
 
 const uploadFile = async (files) => {
     const savedFiles = [];
-    console.log(files);
+    //console.log(files);
     for (const file of files) {
-        console.log(JSON.stringify(file, null, 2));
+        //console.log(JSON.stringify(file, null, 2));
         const savePath = path.join(__dirname, '../../uploads', file.info.filename);
         
         await new Promise((resolve, reject) => {

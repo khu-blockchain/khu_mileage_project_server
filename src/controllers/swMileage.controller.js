@@ -4,6 +4,7 @@ const uploader = require('../config/fileUploader');
 const constants = require('../config/constants');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status')
+const caverService = require('../services/caver.service');
 const {
     GetSwMileageListDTO,
     CreateSwMileageDTO,
@@ -48,19 +49,35 @@ const createSwMileage = catchAsync(async (req, res) => {
         throw new ApiError(httpStatus.BAD_REQUEST, message)
     }
 
-    // 1. files 업로드 TODO : local storage
-    const files = req.files
-    const uploadedFiles = await uploader.uploadFile(files);
-    const fileList = uploadedFiles.map(el => {
-        return {
-            name: el.filename,
-            url: el.url
-        }
-    })
+    // rawTransaction을 깐뒤에 파일해시가 일치하는지 확인 (필요한지 고민, 파일 여러개면 해시 여러개??)
+    const decodedTransaction = await caverService.decodeRawTransaction(createSwMileageDTO.transaction_hash)
+    const hash = await caverService.decodeTxInputAuto(decodedTransaction.input)
+    console.log(hash.params)
 
-    const { swMileage, swMileageFiles } = await swMileageService.createSwMileageAndFiles(createSwMileageDTO, fileList);
+    //tx전송 및 파일 업로드
+    try {
+        const receipt = await caverService.sendRawTransactionWithSignAsFeePayer(createSwMileageDTO.transaction_hash);
+        console.log(receipt.transactionHash)
+        createSwMileageDTO.transaction_hash = receipt.transactionHash
+        console.log(createSwMileageDTO)
+        
+        // 1. files 업로드 TODO : local storage (이름 주소 그대로 노출되도 괜찮은지))
+        const files = req.files
+        const uploadedFiles = await uploader.uploadFile(files);
+        const fileList = uploadedFiles.map(el => {
+            return {
+                name: el.filename,
+                url: el.url
+            }
+        })
 
-    return res.status(httpStatus.CREATED).json({ swMileage, swMileageFiles });
+        const { swMileage, swMileageFiles } = await swMileageService.createSwMileageAndFiles(createSwMileageDTO, fileList);
+
+        return res.status(httpStatus.CREATED).json({ swMileage, swMileageFiles, receipt });
+    } catch(error){
+        throw new ApiError(error.response?.status || 500, error.message);
+    }
+    
 })
 
 const getSwMileageById = catchAsync(async (req, res) => {
