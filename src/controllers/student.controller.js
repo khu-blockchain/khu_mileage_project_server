@@ -47,10 +47,10 @@ const createStudent = catchAsync(async (req, res) => {
     const createStudentDTO = new CreateStudentDTO({ ...req.query, ...req.params, ...req.body, salt, password: hashPassword })
     const student = await studentService.createStudent(createStudentDTO);
     try{
-        const receipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
+        await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
         return res.status(httpStatus.CREATED).json({
-            student,
-            receipt
+            ...student,
+            // receipt
         });
     } 
     catch(error){

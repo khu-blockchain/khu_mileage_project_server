@@ -13,8 +13,13 @@ router
     .route('/admin/login')
     .post(validate(authValidation.login), authController.adminLogin);
 
+
 router
     .route('/refresh-token')
-    .post(validate(authValidation.refreshToken), authController.refreshToken);
+    .post(validate(), authController.refreshStudentToken);
+
+router
+    .route('/admin/refresh-token')
+    .post(validate(), authController.refreshAdminToken);
 
 module.exports = router;
