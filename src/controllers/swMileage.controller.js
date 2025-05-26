@@ -28,6 +28,7 @@ const getSwMileageList = catchAsync(async (req, res) => {
     }
 
     const getSwMileageListDTO = new GetSwMileageListDTO({ ...req.query, ...req.params, ...req.body })
+    console.log(getSwMileageListDTO);
     const swMileageList = await swMileageService.getSwMileageList(getSwMileageListDTO);
 
     return res.status(httpStatus.OK).json(swMileageList);

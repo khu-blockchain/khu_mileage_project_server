@@ -13,6 +13,7 @@ class CreateAdminDTO {
     role,
     walletAddress,
     email,
+    transactionHash,
   }) {
     this.admin_id = adminId;
     this.password = password;
@@ -21,6 +22,7 @@ class CreateAdminDTO {
     this.role = role;
     this.wallet_address = walletAddress;
     this.email = email;
+    this.transaction_hash = transactionHash;
   }
 }
 class GetAdminByIdDTO {

@@ -1,8 +1,11 @@
 const constants = require("../config/constants")
 class GetSwMileageListDTO {
-    constructor({ studentId, status }) {
+    constructor({ studentId, status, offset, limit, lastId }) {
         this.student_id = studentId;
         this.status = status;
+        this.offset = offset;
+        this.limit = limit;
+        this.lastId = lastId;
     }
 }
 

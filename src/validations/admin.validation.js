@@ -18,7 +18,8 @@ const createAdmin = {
         // phoneNumber: joi.string().custom(phoneNumberValidation),
         name: joi.string().required(),
         walletAddress: joi.string().custom(walletAddressValidation),
-        // department: joi.string().required()
+        // department: joi.string().required(),
+        rawTransaction: joi.string().required(),
     }),
 }
 

@@ -6,6 +6,7 @@ const {
 const { CreateSwMileageFileDTO, SwMileageDTO, SwMileageFileDTO } = require('../dtos/swMileage.dto')
 const ApiError = require('../utils/ApiError')
 const httpStatus = require('http-status')
+const { Op } = require('sequelize')
 
 const getSwMileageList = async (getSwMileageListDTO) => {
     return await SwMileage.findAll({
@@ -14,12 +15,13 @@ const getSwMileageList = async (getSwMileageListDTO) => {
             as: 'sw_mileage_files',
         },
         where: {
+            ...(getSwMileageListDTO.lastId !== null && getSwMileageListDTO.lastId !== undefined && { sw_mileage_id: { [Op.lt]: getSwMileageListDTO.lastId } }),
             ...(getSwMileageListDTO.status !== null && getSwMileageListDTO.status !== undefined && { status: getSwMileageListDTO.status }),
             ...(getSwMileageListDTO.student_id !== null && getSwMileageListDTO.student_id !== undefined && { student_id: getSwMileageListDTO.student_id }),
         },
         limit: getSwMileageListDTO.limit,
-        offset: getSwMileageListDTO.offset,
-        order: [['created_at', 'DESC']],
+        // offset: getSwMileageListDTO.offset,
+        order: [['sw_mileage_id', 'DESC'],['created_at', 'DESC']],
     })
 }
 

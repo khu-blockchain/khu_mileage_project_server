@@ -43,18 +43,21 @@ const createStudent = catchAsync(async (req, res) => {
     const salt = authService.generateSalt();
     const hashPassword = authService.getSaltPassword(salt, md5password);
 
-    // DB create student (polling으로 변경 필요. 일부 정보만 등록하는 방식?)
-    const createStudentDTO = new CreateStudentDTO({ ...req.query, ...req.params, ...req.body, salt, password: hashPassword })
-    const student = await studentService.createStudent(createStudentDTO);
+    // DB create student
+    // tx전송 후 DB에 등록 -> 소켓 폴링에 의해 확정 상태라면 is_active = 1로 변경
     try{
         const receipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
+
+        const createStudentDTO = new CreateStudentDTO({ ...req.query, ...req.params, ...req.body, salt, password: hashPassword, transactionHash: receipt.transactionHash })
+        const student = await studentService.createStudent(createStudentDTO);
+
         return res.status(httpStatus.CREATED).json({
             student,
             receipt
         });
     } 
     catch(error){
-        await studentService.deleteStudent(createStudentDTO.student_id)
+        //await studentService.deleteStudent(createStudentDTO.student_id)
         throw new ApiError(error.response?.status || 500, error.message);
     }
     

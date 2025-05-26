@@ -7,6 +7,9 @@ const getSwMileageList = {
     query: joi.object().keys({
         studentId: joi.string(),
         status: joi.number().min(0).max(2),
+        offset: joi.number().default(0),
+        limit: joi.number().default(3),
+        lastId: joi.number(), 
     }),
     params: joi.object().keys({}),
     body: joi.object().keys({}),
