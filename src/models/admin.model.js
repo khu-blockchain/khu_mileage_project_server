@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     transaction_hash: { // raw transaction && tx 전송 후 tx hash
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
     },
   };
 
