@@ -14,8 +14,8 @@ class CreateSwMileageTokenDTO {
         swMileageTokenDecimals,
         swMileageTokenImageUrl,
         description,
-        isPaused,
-        isActivated,
+        // isPaused,
+        // isActivated,
     }) {
         this.sw_mileage_token_name = swMileageTokenName;
         this.contract_address = contractAddress;
@@ -24,8 +24,8 @@ class CreateSwMileageTokenDTO {
         this.sw_mileage_token_decimals = swMileageTokenDecimals;
         this.sw_mileage_token_image_url = swMileageTokenImageUrl;
         this.description = description;
-        this.is_paused = isPaused;
-        this.is_activated = isActivated;
+        // this.is_paused = isPaused;
+        // this.is_activated = isActivated;
     }
 }
 

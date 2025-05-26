@@ -8,16 +8,13 @@ const httpStatus = require('http-status')
 const constants = require('../config/constants')
 const { Op } = require('sequelize');
 
-const getSwMileageTokenList = async (getSwMileageTokenListDTO) => {
+const getSwMileageTokenList = async () => {
     return await SwMileageToken.findAll({
-        where: {
-            ...(getSwMileageTokenListDTO.status !== null && getSwMileageTokenListDTO.status !== undefined && { status: getSwMileageTokenListDTO.status }),
-            ...(getSwMileageTokenListDTO.student_id !== null && getSwMileageTokenListDTO.student_id !== undefined && { student_id: getSwMileageTokenListDTO.student_id }),
-        },
-        limit: getSwMileageTokenListDTO.limit,
-        offset: getSwMileageTokenListDTO.offset,
-        order: [['created_at', 'DESC']],
-    })
+      attributes: {},
+      where: {},
+      order: [['created_at', 'DESC']],
+      raw: true,
+  })
 }
 
 const getSwMileageTokenById = async (swMileageTokenId) => {
