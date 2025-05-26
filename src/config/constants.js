@@ -15,7 +15,8 @@ module.exports = {
         REFRESH: 2,
     },
     COOKIE: {
-        NAME: 'KHU_MILEAGE'
+        STUDENT: 'KHU_MILEAGE_STUDENT',
+        ADMIN: 'KHU_MILEAGE_ADMIN',
     },
     ROLE: {
         STUDENT: 1,

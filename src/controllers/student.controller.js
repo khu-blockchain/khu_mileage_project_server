@@ -52,8 +52,8 @@ const createStudent = catchAsync(async (req, res) => {
         const student = await studentService.createStudent(createStudentDTO);
 
         return res.status(httpStatus.CREATED).json({
-            student,
-            receipt
+            ...student,
+            // receipt
         });
     } 
     catch(error){

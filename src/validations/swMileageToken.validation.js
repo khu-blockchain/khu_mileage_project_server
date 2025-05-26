@@ -18,7 +18,7 @@ const createSwMileageToken = {
         decimals: joi.number().default(18),
         imageUrl: joi.string().required(),
         initialSupply: joi.number().default(100000000000000000000),
-        rlpEncodingString : joi.string(),
+        rawTransaction : joi.string().required(),
     }),
 }
 
@@ -51,7 +51,9 @@ const activateSwMileageToken = {
     params: joi.object().keys({
         swMileageTokenId: joi.number().required(),
     }),
-    body: joi.object().keys({}),
+    body: joi.object().keys({
+      rawTransaction: joi.custom(rawTransactionValidation).required(),
+    }),
 }
 
 const mintSwMileageToken = {

@@ -33,14 +33,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        is_paused: {
-            type: DataTypes.TINYINT(1),
-            allowNull: false, 
-        },
-        is_activated: { // 2024년도에 사용한 토큰있는 상황에서 2025년에 새로운 2025년 토큰을 등록하고 2025년의 토큰을 사용가능하게 하고 2024년의 토큰은 비활성화 하게 하는 코드
-            type: DataTypes.TINYINT(1),
-            allowNull: false, 
-        }
+        // is_paused: {
+        //     type: DataTypes.TINYINT(1),
+        //     allowNull: true, 
+        // },
+        // is_activated: { // 2024년도에 사용한 토큰있는 상황에서 2025년에 새로운 2025년 토큰을 등록하고 2025년의 토큰을 사용가능하게 하고 2024년의 토큰은 비활성화 하게 하는 코드
+        //     type: DataTypes.TINYINT(1),
+        //     allowNull: true, 
+        // }
         // created_at: {
         //     type: DataTypes.DATE,
         //     allowNull: false,
