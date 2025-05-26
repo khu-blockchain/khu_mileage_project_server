@@ -6,7 +6,7 @@ class GetStudentListDTO {
 
 class CreateStudentDTO {
     constructor({
-        studentId, password, name, email, phoneNumber, department, salt, walletAddress, bankAccountNumber, bankCode, personalInformationConsentStatus
+        studentId, password, name, email, phoneNumber, department, salt, walletAddress, bankAccountNumber, bankCode, personalInformationConsentStatus, transactionHash
     }) {
         this.student_id = studentId;
         this.password = password;
@@ -19,6 +19,7 @@ class CreateStudentDTO {
         this.bank_account_number = bankAccountNumber;
         this.bank_code = bankCode;
         this.personal_information_consent_status = personalInformationConsentStatus;
+        this.transaction_hash = transactionHash;
     }
 }
 class GetStudentByIdDTO {

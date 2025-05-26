@@ -26,7 +26,7 @@ const createAdmin = catchAsync(async (req, res) => {
         throw new ApiError(httpStatus.BAD_REQUEST, 'password and passwordConfirm must be equal')
     }
 
-    // TODO : 배포 전 주석 삭제
+    // TODO : 배포 전 주석 삭제, 컨트랙트 단계에서 확인될 것으로 판단
     // validation : check walletAddress already used
     // const { walletAddress } = { ...req.query, ...req.params, ...req.body }
     // if (await adminService.getAdminByWalletAddress(walletAddress)) {
@@ -35,18 +35,25 @@ const createAdmin = catchAsync(async (req, res) => {
 
     // validation : check adminId already used
 
+
+
     const { adminId } = { ...req.query, ...req.params, ...req.body } // TODO : check adn delete
     if (await adminService.getAdminById(adminId)) {
         throw new ApiError(httpStatus.BAD_REQUEST, 'adminId already used')
     }
 
+    const { rawTransaction} = { ...req.query, ...req.params, ...req.body }
 
     const md5password = authService.hashPassword(password);
     const salt = authService.generateSalt();
     const hashPassword = authService.getSaltPassword(salt, md5password);
 
-    const createAdminDTO = new CreateAdminDTO({ ...req.query, ...req.params, ...req.body, role: constants.ROLE.ADMIN, salt, password: hashPassword })
-
+    try{
+    
+    const receipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
+    const createAdminDTO = new CreateAdminDTO({ ...req.query, ...req.params, ...req.body, role: constants.ROLE.ADMIN, salt, password: hashPassword, transactionHash: receipt.transactionHash })
+    console.log(createAdminDTO);
+    console.log(receipt);
     const admin = await adminService.createAdmin(createAdminDTO);
     
     // 토큰이 있으면 어드민 추가, 없으면 넘어감
@@ -55,7 +62,15 @@ const createAdmin = catchAsync(async (req, res) => {
 
     // caverService.addAdminByFeePayer(admin.wallet_address, swMileageToken.contract_address)
 
-    return res.status(httpStatus.CREATED).json(admin);
+    return res.status(httpStatus.CREATED).json({
+        admin,
+        receipt
+    });
+    }
+    catch(error){
+        //await adminService.deleteAdmin(createAdminDTO.admin_id)
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message)
+    }
 })
 
 const getAdminById = catchAsync(async (req, res) => {

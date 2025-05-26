@@ -118,9 +118,15 @@ function getFileHashSync(filePath) {
 async function createDocSubmitRawTransaction(filePath, senderAddress) {
     // 1) ABI 바인딩
     const sm = new caver.contract.create(smAbi, smAddress);
-
+    let fileHash;
     // 2) 파일 해시 생성
-    const fileHash = getFileHashSync(filePath); // 위 함수 사용
+    if (!filePath || filePath === '0x00') {
+        fileHash = filePath
+    }
+    else{
+        fileHash = getFileHashSync(filePath); // 위 함수 사용
+    }
+    
     // 3) nonce 조회
     const nonce = await caver.rpc.klay.getTransactionCount(senderAddress);
 
@@ -149,7 +155,7 @@ async function createDocSubmitRawTransaction(filePath, senderAddress) {
     return tx.getRLPEncoding();
 }
 
-async function generateSignedDocSubmitTx(filePath) {
+async function generateSignedDocSubmitTx(filePath='0x00') {
     const studentAddress = process.env.TEST_STUDENT_ADDRESS;
     const studentPrivateKey = process.env.TEST_STUDENT_PRIVATE_KEY;
     if (!studentAddress || !studentPrivateKey) {
@@ -160,9 +166,17 @@ async function generateSignedDocSubmitTx(filePath) {
     // 1) unsigned rawTx 생성
     const unsignedRawTx = await createDocSubmitRawTransaction(filePath, studentAddress);
 
-    // 2) Keyring 추가 (개인키)
-    const keyring = caver.wallet.keyring.createFromPrivateKey(studentPrivateKey);
-    caver.wallet.add(keyring);
+    // // 2) Keyring 추가 (개인키)
+    // const keyring = caver.wallet.keyring.createFromPrivateKey(studentPrivateKey);
+    // caver.wallet.add(keyring);
+
+    // 2. 이미 키링이 wallet에 등록되어 있는지 확인
+    if (!caver.wallet.getKeyring(studentAddress)) {
+        // 3. 없으면 등록
+        const keyring = caver.wallet.keyring.createFromPrivateKey(studentPrivateKey);
+        caver.wallet.add(keyring);
+    } else {
+}
 
     // 3) rawTx 디코딩
     const tx = caver.transaction
@@ -180,6 +194,82 @@ async function generateSignedDocSubmitTx(filePath) {
     return studentSignedRawTx;
 }
 
+/**
+ * addAdmin(address) 함수용 unsigned rawTransaction 생성
+ * @param {string} adminAddress 추가할 어드민의 EOA 주소 (0x...)
+ * @param {string} senderAddress 트랜잭션을 보낼 주체의 주소 (보통 어드민 계정, fee payer 등)
+ * @returns {Promise<string>} RLP 인코딩된 unsigned rawTx
+ */
+async function createAddAdminRawTransaction(adminAddress, senderAddress) {
+    // 1) ABI 바인딩
+    const sm = new caver.contract.create(smAbi, smAddress);
+
+    // 2) input 데이터 준비
+    const input = sm.methods.addAdmin(adminAddress).encodeABI();
+
+    // 3) nonce 및 gasPrice 조회
+    const nonce = await caver.rpc.klay.getTransactionCount(senderAddress);
+    const gasPrice = await caver.rpc.klay.getGasPrice();
+
+    // 4) (option) call()로 revert 사전 체크
+    try {
+        await sm.methods.addAdmin(adminAddress)
+            .call({ from: senderAddress });
+        console.log('call() 성공: revert 없이 실행 가능');
+    } catch (err) {
+        console.error('addAdmin :: call()에서 revert됨:', err.message);
+        process.exit(1);
+    }
+
+    // 5) feeDelegatedSmartContractExecution 트랜잭션 생성
+    const tx = caver.transaction.feeDelegatedSmartContractExecution.create({
+        from: senderAddress,
+        to: smAddress,
+        input: input,
+        gas: 300000,  // addAdmin은 보통 gas 많이 안 먹음. 여유있게 조정 가능.
+        nonce: nonce,
+        gasPrice: gasPrice,
+    });
+    return tx.getRLPEncoding();
+}
+
+async function generateSignedAddAdminTx() {
+    const senderAddress = process.env.TEST_ADMIN_ADDRESS; // 트랜잭션 보내는 주체
+    const senderPrivateKey = process.env.TEST_ADMIN_PRIVATE_KEY;
+    const newAdminAddress = process.env.NEW_ADMIN_ADDRESS; // 실제로 add할 어드민 주소
+
+    if (!senderAddress || !senderPrivateKey || !newAdminAddress) {
+        console.error('환경변수 TEST_ADMIN_ADDRESS, TEST_ADMIN_PRIVATE_KEY, NEW_ADMIN_ADDRESS를 설정하세요.');
+        process.exit(1);
+    }
+
+    // 1) unsigned rawTransaction 생성
+    const unsignedRawTx = await createAddAdminRawTransaction(
+        newAdminAddress,
+        senderAddress
+    );
+
+    // 2) Keyring 추가
+    const keyring = caver.wallet.keyring.createFromPrivateKey(senderPrivateKey);
+    caver.wallet.add(keyring);
+
+    // 3) rawTransaction 디코딩
+    const tx = caver.transaction
+        .feeDelegatedSmartContractExecution
+        .decode(unsignedRawTx);
+
+    // 4) 트랜잭션 서명
+    const signedTx = await caver.wallet.sign(
+        senderAddress,
+        tx
+    );
+
+    // 5) 최종 rawTransaction 획득
+    const adminSignedRawTx = signedTx.getRLPEncoding();
+
+    console.log('=== Signed AddAdmin Raw Transaction ===');
+    console.log(adminSignedRawTx);
+}
 
 // ====== 디코딩 테스트 ===
 // 1. selector => 함수 ABI mapping 자동 생성
@@ -252,16 +342,13 @@ async function decode(input) {
 }
 //decode("0x2fe2cdfa78b4ee7f00000000000000000000000000000000000000000000000000000000")
 
-// 학생 회원가입 tx 생성
-//generateSignedRegisterTx().catch(console.error);
-
-// 문서 제출 tx 생성
-//generateSignedDocSubmitTx("./rawTx.jpeg").catch(console.error);
-
+//학생 회원가입 tx 생성
 (async () => {
     try {
-        let rawTx = await generateSignedDocSubmitTx("./rawTx.jpeg");
+        
+        let rawTx = await generateSignedRegisterTx().catch(console.error);
         // decode
+        console.log("학생 회원가입");
         const decoded = caver.transaction.decode(rawTx);
         const info = decodeTxInputAuto(decoded.input);
         console.log("함수명:", info.function);
@@ -271,3 +358,56 @@ async function decode(input) {
         console.error(err);
     }
 })();
+
+// 문서 제출 tx 생성
+//generateSignedDocSubmitTx("./rawTx.jpeg").catch(console.error);
+// (async () => {
+//     try {
+        
+//         let rawTx = await generateSignedDocSubmitTx();
+//         // decode
+//         console.log("문서 제출 with no file");
+//         const decoded = caver.transaction.decode(rawTx);
+//         const info = decodeTxInputAuto(decoded.input);
+//         console.log("함수명:", info.function);
+//         console.log("파라미터:", info.params);
+//         console.log("rawTx: ", rawTx);
+//     } catch (err) {
+//         console.error(err);
+//     }
+// })();
+
+// (async () => {
+//     try {
+        
+//         let rawTx = await generateSignedDocSubmitTx("./rawTx.jpeg");
+//         // decode
+//         console.log("문서 제출 with single(=mutiple) file(s)");
+//         const decoded = caver.transaction.decode(rawTx);
+//         const info = decodeTxInputAuto(decoded.input);
+//         console.log("함수명:", info.function);
+//         console.log("파라미터:", info.params);
+//         console.log("rawTx: ", rawTx);
+//     } catch (err) {
+//         console.error(err);
+//     }
+// })();
+
+
+// //어드민 회원가입
+// (async () => {
+//     try {
+        
+//         let rawTx = await generateSignedAddAdminTx();
+//         // decode
+//         console.log("어드민 회원가입");
+//         const decoded = caver.transaction.decode(rawTx);
+//         const info = decodeTxInputAuto(decoded.input);
+//         console.log("함수명:", info.function);
+//         console.log("파라미터:", info.params);
+//         console.log("rawTx: ", rawTx);
+//     } catch (err) {
+//         console.error(err);
+//     }
+// }
+// )();
