@@ -44,9 +44,8 @@ app.get("/health", (req, res, next) => {
 app.use(morgan.successHandler);
 app.use(morgan.errorHandler);
 
-app.use(helmet({
-  crossOriginResourcePolicy: {policy: "cross-origin"},
-}));
+app.use(helmet());
+
 app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: false }));
