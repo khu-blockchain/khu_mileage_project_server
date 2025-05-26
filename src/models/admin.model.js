@@ -36,10 +36,9 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 2,
     },
-    transaction_hash: {
-      // raw transaction && tx 전송 후 tx hash
-      type: DataTypes.TEXT,
-      allowNull: true, // 최초로 생성되는 root admin은 txHash가 없습니다.
+    transaction_hash: { // raw transaction && tx 전송 후 tx hash
+        type: DataTypes.TEXT,
+        allowNull: true,
     },
   };
 
