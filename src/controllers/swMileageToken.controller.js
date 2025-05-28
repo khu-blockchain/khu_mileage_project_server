@@ -5,6 +5,7 @@ const {
   adminService,
   caverService,
   swMileageTokenHistoryService,
+  swMileageService
 } = require("../services");
 const uploader = require("../config/fileUploader");
 const constants = require("../config/constants");
@@ -89,6 +90,7 @@ const createSwMileageToken = catchAsync(async (req, res) => {
     swMileageTokenSymbol: deployKIP7TokenDTO.symbol,
     swMileageTokenDecimals: deployKIP7TokenDTO.decimals,
     swMileageTokenImageUrl: deployKIP7TokenDTO.imageUrl,
+    transactionHash: receipt.transactionHash,
     // isPaused: constants.SW_MILEAGE_TOKEN.IS_PAUSE.UNPAUSE,
     // isActivated: constants.SW_MILEAGE_TOKEN.IS_ACTIVATED.DEACTIVATED,
   });
@@ -345,6 +347,7 @@ const burnFromSwMileageToken = catchAsync(async (req, res) => {
         swMileageTokenHistory.sw_mileage_token_history_id,
         {
           status: constants.SW_MILEAGE_TOKEN_HISTORY.STATUS.FAIL,
+          comment: comment,
         }
       );
     return res
@@ -422,6 +425,80 @@ const approveSwMileageToken = catchAsync(async (req, res) => {
     rawTransaction
   );
   return res.json({ result });
+});
+
+const approveRejectSwMileageToken = catchAsync(async (req, res) => {
+  // todo : approve 트렌젝션도 token history 내역에 저장하기
+  const verifiedPayloadDTO = new VerifiedPayloadDTO({ ...req.verifiedPayload });
+
+  const { swMileageTokenId, studentId,swMileageId, comment, adminId, rawTransaction } = {
+    ...req.params,
+    ...req.body,
+  };
+  amount = 0
+  console.log("approveRejectSwMileageToken", {
+    swMileageTokenId,
+    studentId,
+    amount,
+    adminId,
+    swMileageId,
+    comment,
+    rawTransaction,
+  });
+  const student = await studentService.getStudentById(studentId);
+  if (!student) {
+    throw new ApiError(httpStatus.NOT_FOUND, "student not found");
+  }
+
+  const admin = await adminService.getAdminById(adminId);
+  if (!admin) {
+    throw new ApiError(httpStatus.NOT_FOUND, "admin not found");
+  }
+
+  if (
+    verifiedPayloadDTO.role === constants.ROLE.ADMIN &&
+    adminId !== verifiedPayloadDTO.adminId
+  ) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized client");
+  }
+
+  const swMileageToken = await swMileageTokenService.getSwMileageTokenById(
+    swMileageTokenId
+  );
+  if (!swMileageToken) {
+    throw new ApiError(httpStatus.NOT_FOUND, "swMileageToken not found");
+  }
+
+  const receipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
+  console.log("receipt", receipt);
+  const createSwMileageTokenHistoryDTO = new CreateSwMileageTokenHistoryDTO({
+    amount: amount,
+    transactionType: constants.SW_MILEAGE_TOKEN_HISTORY.TRANSACTION_TYPE.REJECT,
+    studentId: student.student_id,
+    swMileageId: swMileageId,
+    studentAddress: student.wallet_address,
+    adminId: admin.admin_id,
+    adminAddress: admin.wallet_address,
+    comment: comment,
+    swMileageTokenId: swMileageToken.sw_mileage_token_id,
+    transactionHash: receipt.transactionHash,
+  });
+
+  const swMileageTokenHistory =
+    await swMileageTokenHistoryService.createSwMileageTokenHistory(
+      createSwMileageTokenHistoryDTO
+    );
+
+    const updatedSwMileage = await swMileageService.updateSwMileage(
+      swMileageId,
+      {
+        status: constants.SW_MILEAGE_TOKEN_HISTORY.STATUS.FAIL,
+        comment: comment,
+      }
+    );
+  
+
+  return res.status(httpStatus.CREATED).json({ swMileageTokenHistory });
 });
 
 const getApproveSwMileageTokenData = catchAsync(async (req, res) => {
@@ -509,4 +586,5 @@ module.exports = {
 
   getSwMileageTokenABIandByteCode,
   getActivateSwmileagetoken,
+  approveRejectSwMileageToken
 };

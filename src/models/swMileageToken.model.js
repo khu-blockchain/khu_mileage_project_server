@@ -33,6 +33,19 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        last_block: {
+            type: DataTypes.BIGINT,
+            allowNull: true,
+        },
+        transaction_hash: { // raw transaction && tx 전송 후 tx hash
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        is_activate: { // 트랜잭션 확정 여부
+            type: DataTypes.TINYINT(1),
+            allowNull: false,
+            defaultValue: 2, 
+        },
         // is_paused: {
         //     type: DataTypes.TINYINT(1),
         //     allowNull: true, 

@@ -8,6 +8,7 @@ const httpStatus = require('http-status')
 const config = require('../config/config')
 const constants = require('../config/constants')
 const md5 = require('md5')
+const { Op } = require('sequelize')
 
 const getAdminList = async () => {
     return await Admin.findAll({
@@ -137,6 +138,17 @@ const deleteAdmin = async (adminId) => {
     return result
 }
 
+const isValidAddress = async (adminId, walletAddress) =>{
+    const exists = await Admin.findOne({
+    where: {
+      wallet_address: walletAddress,
+      admin_id: { [Op.ne]: adminId },
+    },
+  });
+  console.log("exists", !exists)
+  return !exists; //있으면 false, 없으면 true
+}
+
 module.exports = {
     getAdminList,
     getAdminById,
@@ -147,4 +159,5 @@ module.exports = {
     findAndCreateRootAdmin,
     updateAdmin,
     deleteAdmin,
+    isValidAddress,
 }

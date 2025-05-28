@@ -2,7 +2,11 @@ const joi = require('joi');
 const { walletAddressValidation, bankCodeValidation, phoneNumberValidation, emailValidation } = require('./custom.validation')
 
 const getStudentList = {
-    query: joi.object().keys({}),
+    query: joi.object().keys({
+        offset: joi.number().default(0),
+        limit: joi.number().default(3),
+        lastId: joi.number(), 
+    }),
     params: joi.object().keys({}),
     body: joi.object().keys({}),
 }

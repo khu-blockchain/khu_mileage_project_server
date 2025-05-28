@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         status: {
             type: DataTypes.TINYINT(1),
             allowNull: false,
+            defaultValue: 2,
         },
         name: { // 이름
             type: DataTypes.STRING,

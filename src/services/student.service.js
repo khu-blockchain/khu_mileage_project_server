@@ -14,9 +14,11 @@ const getStudentList = async (getStudentListDTO) => {
             exclude: ['password', 'salt'],
         },
         limit: getStudentListDTO.limit,
-        offset: getStudentListDTO.offset,
-        where: {},
-        order: [['created_at', 'DESC']],
+        //offset: getStudentListDTO.offset,
+        where: {
+            ...(getStudentListDTO.lastId !== null && getStudentListDTO.lastId !== undefined && { student_id: { [Op.gt]: getStudentListDTO.lastId } }),
+        },
+        order: [['student_id', 'ASC'],['created_at', 'DESC']],
     })
 }
 

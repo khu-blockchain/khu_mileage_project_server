@@ -52,13 +52,13 @@ const createSwMileage = catchAsync(async (req, res) => {
 
     // rawTransaction을 깐뒤에 파일해시가 일치하는지 확인 (필요한지 고민, 파일 여러개면 해시 여러개??)
     const decodedTransaction = await caverService.decodeRawTransaction(createSwMileageDTO.transaction_hash)
-    const hash = await caverService.decodeTxInputAuto(decodedTransaction.input)
-    console.log(hash.params)
+    const hash = caverService.decodeTxInputAuto(decodedTransaction.input)
+    console.log("파일 해시값",hash.params) //해시값
 
     //tx전송 및 파일 업로드
     try {
         const receipt = await caverService.sendRawTransactionWithSignAsFeePayer(createSwMileageDTO.transaction_hash);
-        console.log(receipt.transactionHash)
+        //console.log(receipt.transactionHash)
         createSwMileageDTO.transaction_hash = receipt.transactionHash
         console.log(createSwMileageDTO)
         
@@ -112,7 +112,7 @@ const updateSwMileage = catchAsync(async (req, res) => {
     }
 
     const updateSwMileageDTO = new UpdateSwMileageDTO({ ...req.query, ...req.params, ...req.body })
-    const updatedSwMileage = await swMileageService.updateSwMileage(swMileageId, updateSwMileageDTO);π
+    const updatedSwMileage = await swMileageService.updateSwMileage(swMileageId, updateSwMileageDTO);
 
     return res.status(httpStatus.OK).json(updatedSwMileage);
 })

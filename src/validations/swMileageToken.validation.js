@@ -82,7 +82,7 @@ const burnFromSwMileageToken = {
     }),
 }
 
-const approveSwMileageToken = {
+const approveSwMileageTokenLegacy = {
     query: joi.object().keys({}),
     params: joi.object().keys({
         swMileageTokenId: joi.number().required(),
@@ -90,6 +90,35 @@ const approveSwMileageToken = {
     body: joi.object().keys({
         rawTransaction: joi.custom(rawTransactionValidation).required(),
         studentId: joi.string().required(),
+    }),
+}
+
+const approveSwMileageToken = {
+    query: joi.object().keys({}),
+    params: joi.object().keys({
+        swMileageTokenId: joi.number().required(),
+    }),
+    body: joi.object().keys({
+        studentId: joi.string().required(),
+        adminId: joi.string().required(),
+        swMileageId: joi.number().required().default(null), 
+        amount: joi.number().required().default(0),
+        comment : joi.string(),
+        rawTransaction: joi.custom(rawTransactionValidation).required(),
+    }),
+}
+
+const rejectSwMileageToken = {
+    query: joi.object().keys({}),
+    params: joi.object().keys({
+        swMileageTokenId: joi.number().required(),
+    }),
+    body: joi.object().keys({
+        studentId: joi.string().required(),
+        swMileageId: joi.number().required().default(null), 
+        adminId: joi.string().required(),
+        comment : joi.string(),
+        rawTransaction: joi.custom(rawTransactionValidation).required(),
     }),
 }
 
@@ -172,4 +201,5 @@ module.exports = {
     addSwmileageTokenFeePayer,
     getSwMileageTokenABIandByteCode,
     getActivateSwmileagetoken,
+    rejectSwMileageToken
 }

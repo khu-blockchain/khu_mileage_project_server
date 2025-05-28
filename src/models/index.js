@@ -50,6 +50,18 @@ SwMileageTokenHistory.belongsTo(SwMileageToken, {
     targetKey: 'sw_mileage_token_id',
 });
 
+SwMileage.hasOne(SwMileageTokenHistory, {
+    as: 'token_history',
+    foreignKey: 'sw_mileage_id',
+    sourceKey: 'sw_mileage_id',
+});
+
+SwMileageTokenHistory.belongsTo(SwMileage, {
+    as: 'sw_mileage',
+    foreignKey: 'sw_mileage_id',
+    targetKey: 'sw_mileage_id',
+});
+
 module.exports = {
     sequelize,
     Admin,

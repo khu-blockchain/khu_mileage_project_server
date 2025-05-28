@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path');
 const joi = require('joi');
+const { SW_MILEAGE_TOKEN } = require('./constants');
 
 dotenv.config({path: path.join(__dirname, '../../.env')});
 
@@ -35,6 +36,7 @@ const envVarSchema = joi.object()
         // contract
         STUDENT_MANAGER_CONTRACT_ADDRESS: joi.string().required(),
         SW_MILEAGE_CONTRACT_ADDRESS: joi.string().required(),
+        SW_MILEAGE_TOKEN_FACTORY_ADDRESS: joi.string().required(),
     })
     .unknown();
 
@@ -87,5 +89,6 @@ module.exports = {
     contract: {
         studentManagerContractAddress: envVars.STUDENT_MANAGER_CONTRACT_ADDRESS,
         swMileageContractAddress: envVars.SW_MILEAGE_CONTRACT_ADDRESS,
+        swMileageTokenFactoryAddress: envVars.SW_MILEAGE_TOKEN_FACTORY_ADDRESS,
     }
 };

@@ -115,18 +115,37 @@ const updateAdmin = catchAsync(async (req, res) => {
     ...req.params,
     ...req.body,
   }); // TODO : body require 처리
-  const updatedAdmin = await adminService.updateAdmin(adminId, updateAdminDTO);
 
-  if (admin.wallet_address != updateAdminDTO.walletAddress) {
-    await caverService.removeAdminByFeePayer(admin.wallet_address);
-    await caverService.addAdminByFeePayerLegacy(updateAdminDTO.walletAddress);
+  if (!await adminService.isValidAddress(adminId, updateAdminDTO.wallet_address)) {
+    console.log('init');
+    throw new ApiError(httpStatus.BAD_REQUEST, "Invalid wallet address");
   }
 
-  return res.status(httpStatus.OK).json(updatedAdmin);
+  try {
+    const updatedAdmin = await adminService.updateAdmin(
+      adminId,
+      updateAdminDTO
+    );
+    if (admin.wallet_address != updateAdminDTO.wallet_address) {
+      await caverService.removeAdminByFeePayer(
+        admin.wallet_address,
+        config.contract.studentManagerContractAddress
+      );
+      await caverService.addAdminByFeePayer(
+        updateAdminDTO.wallet_address,
+        config.contract.studentManagerContractAddress
+      );
+    }
+
+    return res.status(httpStatus.OK).json(updatedAdmin);
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
 });
 
 const deleteAdmin = catchAsync(async (req, res) => {
   const { role, adminId: verifiedAdminId } = { ...req.verifiedPayload };
+  console.log(role, verifiedAdminId);
   const { adminId } = { ...req.query, ...req.params, ...req.body };
   if (role === constants.ROLE.ADMIN && verifiedAdminId !== adminId) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized client");
@@ -136,11 +155,18 @@ const deleteAdmin = catchAsync(async (req, res) => {
   if (!admin) {
     throw new ApiError(httpStatus.NOT_FOUND, "admin not found");
   }
+  try {
+    await adminService.deleteAdmin(adminId);
+    const result = await caverService.removeAdminByFeePayer(
+      admin.wallet_address,
+      config.contract.studentManagerContractAddress
+    );
+    console.log("remove admin result", result);
 
-  await adminService.deleteAdmin(adminId);
-  await caverService.removeAdminByFeePayer(admin.wallet_address);
-
-  return res.sendStatus(httpStatus.NO_CONTENT);
+    return res.sendStatus(httpStatus.NO_CONTENT);
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
 });
 
 module.exports = {

@@ -53,15 +53,27 @@ router
     .route('/:swMileageTokenId/burn-from')
     .post(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.burnFromSwMileageToken), swMileageTokenController.burnFromSwMileageToken);
 
-// 마일리지 회수 등록 POST, rawTransaction을 받고 서버에서 sign하고 처리
+// 마일리지 승인
 router
     .route('/:swMileageTokenId/approve')
-    .post(auth(constants.ROLE.STUDENT), validate(swMileageTokenValidation.approveSwMileageToken), swMileageTokenController.approveSwMileageToken);
+    .post(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.approveSwMileageToken), swMileageTokenController.approveRejectSwMileageToken);
 
-// 마일리지 회수 등록 확인 rawTransaction 생성을 위한 data
+// 마일리지 반려(reject)
 router
-    .route('/approve/data')
-    .get(auth(constants.ROLE.STUDENT), validate(swMileageTokenValidation.getApproveSwMileageTokenData), swMileageTokenController.getApproveSwMileageTokenData);
+    .route('/:swMileageTokenId/reject')
+    .post(auth(constants.ROLE.ADMIN), validate(swMileageTokenValidation.rejectSwMileageToken), swMileageTokenController.approveRejectSwMileageToken);
+
+// TODO: 명확한 의도를 확인하지 못함. 사용처가 불분명. 논의 후 삭제 예정
+// 마일리지 승인, 반려 API를 만들기 위해 임시 주석 처리 하였음.
+// // 마일리지 회수 등록 POST, rawTransaction을 받고 서버에서 sign하고 처리
+// router
+//     .route('/:swMileageTokenId/approve')
+//     .post(auth(constants.ROLE.STUDENT), validate(swMileageTokenValidation.approveSwMileageToken), swMileageTokenController.approveSwMileageToken);
+
+// // 마일리지 회수 등록 확인 rawTransaction 생성을 위한 data
+// router
+//     .route('/approve/data')
+//     .get(auth(constants.ROLE.STUDENT), validate(swMileageTokenValidation.getApproveSwMileageTokenData), swMileageTokenController.getApproveSwMileageTokenData);
 
 // 마일리지 순위 확인을 위한 API
 router

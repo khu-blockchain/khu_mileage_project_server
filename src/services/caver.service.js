@@ -347,7 +347,7 @@ const addAdminByFeePayerLegacy = async (address, contractAddress) => {
 const removeAdminByFeePayer = async (address, contractAddress) => {
   try {
     const swMileageTokenContract = new caver.contract.create(
-      SWMileageABI,
+      StudentManagerABI,
       contractAddress
     );
     console.log(`remove admin address ${address}`);
@@ -360,10 +360,14 @@ const removeAdminByFeePayer = async (address, contractAddress) => {
 
     return result;
   } catch (error) {
-    throw new ApiError(
-      error.response.status,
-      error.response.data.message ?? error.response.data
-    );
+    const status = error.response?.status ?? 500;
+    const message =
+      error.response?.data?.message ??
+      error.response?.data ??
+      error.message ??
+      "Unknown error";
+
+    throw new ApiError(status, message);
   }
 };
 
@@ -396,7 +400,8 @@ const getSWMileageContractCode = () => {
 // ====================
 // new functions
 // ====================
-// 1. selector => 함수 ABI mapping 자동 생성
+//파일 해시 확인을 위한 함수
+
 function buildSelectorMap(abis) {
   const selectorMap = {};
   abis.forEach((abi) => {
@@ -414,11 +419,7 @@ function buildSelectorMap(abis) {
   return selectorMap;
 }
 const selectorMap = buildSelectorMap([StudentManagerABI, SWMileageTokenABI]);
-/**
- * 트랜잭션 input (data) 자동 디코드
- * @param {string} input 0x~ 트랜잭션 input 전체 데이터
- * @returns {Object} { function: '함수명', params: {...}, selector: ... }
- */
+
 function decodeTxInputAuto(input) {
   const selector = input.slice(0, 10);
   const paramsData = "0x" + input.slice(10);

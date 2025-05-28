@@ -30,22 +30,26 @@ class CreateSwMileageTokenHistoryDTO {
     constructor({
         swMileageTokenId,
         amount,
+        swMileageId,
         transactionType,
         studentAddress,
         studentId,
         adminAddress,
         adminId,
         comment,
+        transactionHash
     }) {
         this.amount = amount;
         this.transaction_type = transactionType;
         this.student_address = studentAddress;
         this.student_id = studentId;
+        this.sw_mileage_id = swMileageId;
         this.admin_address = adminAddress;
         this.admin_id = adminId;
         this.sw_mileage_token_id = swMileageTokenId;
         this.comment = comment;
         this.status = constants.SW_MILEAGE_TOKEN_HISTORY.STATUS.CREATE
+        this.transaction_hash = transactionHash;
     }
 }
 

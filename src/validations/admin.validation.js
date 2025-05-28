@@ -38,10 +38,10 @@ const updateAdmin = {
     }),
     body: joi.object().keys({
       email: joi.string().custom(emailValidation),
-      phone_number: joi.string(),
+      //phone_number: joi.string(),
       name: joi.string(),
       walletAddress: joi.string().custom(walletAddressValidation),
-      department: joi.string(),
+      //department: joi.string(),
     }),
   };
 

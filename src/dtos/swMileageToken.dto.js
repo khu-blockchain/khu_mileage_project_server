@@ -14,6 +14,7 @@ class CreateSwMileageTokenDTO {
         swMileageTokenDecimals,
         swMileageTokenImageUrl,
         description,
+        transactionHash
         // isPaused,
         // isActivated,
     }) {
@@ -24,6 +25,7 @@ class CreateSwMileageTokenDTO {
         this.sw_mileage_token_decimals = swMileageTokenDecimals;
         this.sw_mileage_token_image_url = swMileageTokenImageUrl;
         this.description = description;
+        this.transaction_hash = transactionHash;
         // this.is_paused = isPaused;
         // this.is_activated = isActivated;
     }
