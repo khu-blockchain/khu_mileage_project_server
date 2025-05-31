@@ -30,15 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 2,
       allowNull: false,
     },
-    is_activate: {
+    is_confirmed: {
       //회원가입 이후 폴링 서버를 통해 회원가입 체인 등록 성공 여부 조회.
       type: DataTypes.TINYINT(1),
       allowNull: false,
-      defaultValue: 2,
-    },
-    transaction_hash: { // raw transaction && tx 전송 후 tx hash
-        type: DataTypes.TEXT,
-        allowNull: true,
+      defaultValue: 0,
     },
   };
 

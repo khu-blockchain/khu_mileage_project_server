@@ -5,31 +5,15 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true,
         },
-        sw_mileage_token_id: {
+        token_contract_address: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        sw_mileage_id: {
+        token_name: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        status: { // "1: create, 2: 완료, 0: 실패",
-            type: DataTypes.TINYINT(1),
-            allowNull: false,
-        },
-        amount: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-        transaction_type: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        admin_id: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        admin_address: {
+        student_id: {
             type: DataTypes.STRING,
             allowNull: false,
         },
@@ -37,22 +21,21 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        student_id: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        transaction_hash: {
+        admin_address: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        comment: {
+        amount: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        note: {
             type: DataTypes.STRING,
             allowNull: true,
-        },
-        is_activate: {
-            type: DataTypes.TINYINT(1),
-            allowNull: false,
-            defaultValue: 2,
         },
     };
 

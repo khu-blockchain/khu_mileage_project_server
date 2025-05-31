@@ -54,18 +54,18 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        transaction_hash: { // raw transaction && tx 전송 후 tx hash
-            type: DataTypes.TEXT,
-            allowNull: false,
-        },
-        docs_index: {
+        doc_index: {
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        is_activate: { //폴링 서버를 통해 확정 체인 등록 여부 조회.
+        doc_hash: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
+        is_confirmed: { //폴링 서버를 통해 확정 체인 등록 여부 조회.
             type: DataTypes.TINYINT(1),
             allowNull: false,
-            defaultValue: 2,
+            defaultValue: 0,
         }
     };
 

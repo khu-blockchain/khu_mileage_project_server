@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
         is_activate: { // 트랜잭션 확정 여부
             type: DataTypes.TINYINT(1),
             allowNull: false,
-            defaultValue: 2, 
+            defaultValue: 0, 
         },
         // is_paused: {
         //     type: DataTypes.TINYINT(1),
