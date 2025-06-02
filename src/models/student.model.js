@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: 0,
         },
         student_hash: { // raw transaction && tx 전송 후 tx hash
-            type: DataTypes.TEXT,
+            type: DataTypes.STRING,
             allowNull: false,
         },
     };

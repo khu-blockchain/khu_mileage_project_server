@@ -12,6 +12,7 @@ const {
   UpdateAdminDTO,
   CreateAdminDTO,
 } = require("../dtos/admin.dto");
+const web3 = require("../utils/web3");
 
 
 const createAdmin = catchAsync(async (req, res) => {
@@ -49,6 +50,7 @@ const createAdmin = catchAsync(async (req, res) => {
       ...req.query,
       ...req.params,
       ...req.body,
+      walletAddress: web3.convertAddressToChecksum(walletAddress),
       role: constants.ROLE.ADMIN,
       salt,
       password: hashPassword,

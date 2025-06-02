@@ -96,6 +96,10 @@ const decimalToHex = (number) => {
     return web3.utils.fromDecimal(number);
 };
 
+const convertAddressToChecksum = (address) => {
+    return web3.utils.toChecksumAddress(address);
+};
+
 module.exports = {
     createAccount,
     getAccount,
@@ -107,5 +111,6 @@ module.exports = {
     toWei,
     fromWei,
     isAddress,
-    decodeParameters
+    decodeParameters,
+    convertAddressToChecksum,
 };

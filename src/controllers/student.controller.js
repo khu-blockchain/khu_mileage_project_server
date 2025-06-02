@@ -9,6 +9,7 @@ const {
 } = require("../dtos/student.dto");
 const constants = require("../config/constants");
 const config = require("../config/config");
+const web3 = require("../utils/web3");
 
 const getStudentList = catchAsync(async (req, res) => {
   const getStudentListDTO = new GetStudentListDTO({
@@ -65,6 +66,7 @@ const createStudent = catchAsync(async (req, res) => {
       ...req.query,
       ...req.params,
       ...req.body,
+      walletAddress: web3.convertAddressToChecksum(walletAddress),
       salt,
       password: hashPassword,
       isConfirmed: 0,
