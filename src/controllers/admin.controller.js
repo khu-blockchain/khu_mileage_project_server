@@ -2,35 +2,17 @@ const catchAsync = require("../utils/catchAsync");
 const {
   authService,
   adminService,
-  caverService,
-  swMileageService,
-  swMileageTokenService,
+  caverService, 
 } = require("../services");
 const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
 const config = require("../config/config");
-const {
-  GetStudentListDTO,
-  CreateStudentDTO,
-  UpdateStudentDTO,
-} = require("../dtos/student.dto");
 const constants = require("../config/constants");
 const {
-  GetAdminListDTO,
   UpdateAdminDTO,
   CreateAdminDTO,
 } = require("../dtos/admin.dto");
 
-const getAdminList = catchAsync(async (req, res) => {
-  const getAdminListDTO = new GetAdminListDTO({
-    ...req.query,
-    ...req.params,
-    ...req.body,
-  });
-  const adminList = await adminService.getAdminList(getAdminListDTO);
-
-  return res.status(httpStatus.OK).json(adminList);
-});
 
 const createAdmin = catchAsync(async (req, res) => {
   // validation : password and passwordConfirm is equal
@@ -70,7 +52,7 @@ const createAdmin = catchAsync(async (req, res) => {
       role: constants.ROLE.ADMIN,
       salt,
       password: hashPassword,
-      transactionHash: result.transactionHash,
+      is_confirmed: 0,
     });
     const admin = await adminService.createAdmin(createAdminDTO);
 
@@ -82,21 +64,6 @@ const createAdmin = catchAsync(async (req, res) => {
   }
 });
 
-const getAdminById = catchAsync(async (req, res) => {
-  const { role, adminId: verifiedAdminId } = { ...req.verifiedPayload };
-  const { adminId } = { ...req.query, ...req.params, ...req.body };
-
-  if (role === constants.ROLE.ADMIN && verifiedAdminId !== adminId) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized client");
-  }
-
-  const admin = await adminService.getAdminById(adminId);
-  if (!admin) {
-    throw new ApiError(httpStatus.NOT_FOUND, "admin not found");
-  }
-
-  return res.status(httpStatus.OK).json(admin);
-});
 
 const updateAdmin = catchAsync(async (req, res) => {
   const { role, adminId: verifiedAdminId } = { ...req.verifiedPayload };
@@ -170,9 +137,7 @@ const deleteAdmin = catchAsync(async (req, res) => {
 });
 
 module.exports = {
-  getAdminList,
   createAdmin,
-  getAdminById,
   updateAdmin,
   deleteAdmin,
 };

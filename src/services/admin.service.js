@@ -15,8 +15,6 @@ const getAdminList = async () => {
         attributes: {
             exclude: ['password', 'salt'],
         },
-        // limit: getAdminListDTO.limit,
-        // offset: getAdminListDTO.offset,
         where: {},
         order: [['created_at', 'DESC']],
         raw: true,
