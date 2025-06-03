@@ -1,5 +1,10 @@
 const catchAsync = require("../utils/catchAsync");
-const { studentService, authService, caverService } = require("../services");
+const {
+  studentService,
+  authService,
+  caverService,
+  adminService,
+} = require("../services");
 const ApiError = require("../utils/ApiError");
 const httpStatus = require("http-status");
 const {
@@ -7,6 +12,7 @@ const {
   CreateStudentDTO,
   UpdateStudentDTO,
 } = require("../dtos/student.dto");
+const { VerifiedPayloadDTO } = require("../dtos/auth.dto");
 const constants = require("../config/constants");
 const config = require("../config/config");
 const web3 = require("../utils/web3");
@@ -58,9 +64,7 @@ const createStudent = catchAsync(async (req, res) => {
   // DB create student
   // tx전송 후 DB에 등록 -> 소켓 폴링에 의해 확정 상태라면 is_active = 1로 변경
   try {
-    await caverService.sendRawTransactionWithSignAsFeePayer(
-      rawTransaction
-    );
+    await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
 
     const createStudentDTO = new CreateStudentDTO({
       ...req.query,
@@ -161,10 +165,74 @@ const deleteStudent = catchAsync(async (req, res) => {
   return res.sendStatus(httpStatus.NO_CONTENT);
 });
 
+const mintSwMileage = catchAsync(async (req, res) => {
+  const verifiedPayloadDTO = new VerifiedPayloadDTO({ ...req.verifiedPayload });
+
+  const admin = await adminService.getAdminByPK(verifiedPayloadDTO.adminId);
+  if (!admin) {
+    throw new ApiError(httpStatus.NOT_FOUND, "admin not found");
+  }
+
+  const { studentId, rawTransaction } = {
+    ...req.query,
+    ...req.params,
+    ...req.body,
+  };
+
+  console.log("studentId", studentId);
+  console.log("rawTransaction", rawTransaction);
+
+  const student = await studentService.getStudentById(studentId);
+  if (!student) {
+    throw new ApiError(httpStatus.NOT_FOUND, "student not found");
+  }
+
+  try {
+    console.log("enter try catch");
+    const txReceipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
+    console.log(txReceipt);
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(error.response?.status || 500, error.message);
+  }
+
+  return res.status(httpStatus.OK).json({ message: "Minted successfully" });
+});
+
+const burnSwMileage = catchAsync(async (req, res) => {
+  const verifiedPayloadDTO = new VerifiedPayloadDTO({ ...req.verifiedPayload });
+
+  const admin = await adminService.getAdminByPK(verifiedPayloadDTO.adminId);
+  if (!admin) {
+    throw new ApiError(httpStatus.NOT_FOUND, "admin not found");
+  }
+
+  const { studentId, rawTransaction } = {
+    ...req.query,
+    ...req.params,
+    ...req.body,
+  };
+
+  const student = await studentService.getStudentById(studentId);
+  if (!student) {
+    throw new ApiError(httpStatus.NOT_FOUND, "student not found");
+  }
+
+  try {
+    await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
+  } catch (error) {
+    throw new ApiError(error.response?.status || 500, error.message);
+  }
+
+  return res.status(httpStatus.OK).json({ message: "Burned successfully" });
+});
+
 module.exports = {
   getStudentList,
   createStudent,
   getStudentById,
   updateStudent,
   deleteStudent,
+  mintSwMileage,
+  burnSwMileage,
 };

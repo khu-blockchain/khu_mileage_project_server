@@ -19,4 +19,13 @@ router
     .delete(auth(constants.ROLE.STUDENT), validate(studentValidation.deleteStudent), studentController.deleteStudent);
 
 
+router
+    .route('/:studentId/mint')
+    .post(auth(constants.ROLE.ADMIN), validate(studentValidation.mintSwMileage), studentController.mintSwMileage)
+
+router
+    .route('/:studentId/burn')
+    .post(auth(constants.ROLE.ADMIN), validate(studentValidation.burnSwMileage), studentController.burnSwMileage)
+
+
 module.exports = router;

@@ -32,11 +32,6 @@ router
     .post(auth(constants.ROLE.ADMIN), validate(swMileageValidation.rejectSwMileage), swMileageController.rejectSwMileage)
 
 router
-    .route('/:swMileageId/status')
-    .patch(auth(constants.ROLE.ADMIN), validate(swMileageValidation.updateSwMileageStatus), swMileageController.updateSwMileageStatus)
-
-
-router
     .route('/')
     .get(auth(constants.ROLE.STUDENT), validate(swMileageValidation.getSwMileageList), swMileageController.getSwMileageList)
     .post(auth(constants.ROLE.STUDENT), formDataParse(), validate(swMileageValidation.createSwMileage), swMileageController.createSwMileage);
