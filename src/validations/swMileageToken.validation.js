@@ -128,28 +128,28 @@ const getApproveSwMileageTokenData = {
     body: joi.object().keys({}),
 }
 
-const getSwMileageTokenHistoryList = {
-    query: joi.object().keys({
-        status: joi.number().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.STATUS)),
-        transactionType: joi.string().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.TRANSACTION_TYPE)),
-        adminId: joi.number(),
-        adminAddress: joi.string(),
-        studentAddress: joi.string(),
-        studentId: joi.string(),
-    }),
-    params: joi.object().keys({
-        swMileageTokenId: joi.string().required(),
-    }),
-    body: joi.object().keys({}),
-}
-const getSwMileageTokenHistoryById = {
-    query: joi.object().keys({}),
-    params: joi.object().keys({
-        swMileageTokenHistoryId: joi.number().required(),
-        swMileageTokenId: joi.string().required(),
-    }),
-    body: joi.object().keys({}),
-}
+// const getSwMileageTokenHistoryList = {
+//     query: joi.object().keys({
+//         status: joi.number().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.STATUS)),
+//         transactionType: joi.string().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.TRANSACTION_TYPE)),
+//         adminId: joi.number(),
+//         adminAddress: joi.string(),
+//         studentAddress: joi.string(),
+//         studentId: joi.string(),
+//     }),
+//     params: joi.object().keys({
+//         swMileageTokenId: joi.string().required(),
+//     }),
+//     body: joi.object().keys({}),
+// }
+// const getSwMileageTokenHistoryById = {
+//     query: joi.object().keys({}),
+//     params: joi.object().keys({
+//         swMileageTokenHistoryId: joi.number().required(),
+//         swMileageTokenId: joi.string().required(),
+//     }),
+//     body: joi.object().keys({}),
+// }
 
 const getStudentsRankingRange = {
     query: joi.object().keys({
@@ -195,8 +195,6 @@ module.exports = {
     burnFromSwMileageToken,
     approveSwMileageToken,
     getApproveSwMileageTokenData,
-    getSwMileageTokenHistoryList,
-    getSwMileageTokenHistoryById,
     getStudentsRankingRange,
     addSwmileageTokenFeePayer,
     getSwMileageTokenABIandByteCode,

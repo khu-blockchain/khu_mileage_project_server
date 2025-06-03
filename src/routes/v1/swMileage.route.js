@@ -24,6 +24,14 @@ router
 // .delete(auth(constants.ROLE.STUDENT), validate(swMileageValidation.deleteSwMileage), swMileageController.deleteSwMileage);
 
 router
+    .route('/:swMileageId/approve')
+    .post(auth(constants.ROLE.ADMIN), validate(swMileageValidation.approveSwMileage), swMileageController.approveSwMileage)
+
+router
+    .route('/:swMileageId/reject')
+    .post(auth(constants.ROLE.ADMIN), validate(swMileageValidation.rejectSwMileage), swMileageController.rejectSwMileage)
+
+router
     .route('/:swMileageId/status')
     .patch(auth(constants.ROLE.ADMIN), validate(swMileageValidation.updateSwMileageStatus), swMileageController.updateSwMileageStatus)
 

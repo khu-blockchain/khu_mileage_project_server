@@ -44,11 +44,11 @@ module.exports = {
             SUCCESS: 1,
             FAIL: 0
         },
-        TRANSACTION_TYPE: {
-            MINT: 'mint',
-            BURN_FROM: 'burnFrom',
-            APPROVE: 'approve',
-            REJECT: 'reject',
+        TYPE: {
+            DOC_APPROVED: 'DOC_APPROVED',
+            DIRECT_MINT: 'DIRECT_MINT',
+            DIRECT_BURN: 'DIRECT_BURN',
+            ACCOUNT_CHANGE: 'ACCOUNT_CHANGE',
         }
     },
     PEB_UNIT: {

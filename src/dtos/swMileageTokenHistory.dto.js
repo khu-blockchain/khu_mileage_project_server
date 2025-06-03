@@ -3,22 +3,20 @@ const constants = require("../config/constants");
 class GetSwMileageTokenHistoryListDTO {
     constructor({ 
         swMileageTokenId,
-        transactionType,
+        type,
         adminAddress,
         studentAddress,
         studentId,
-        adminId,
         lastId,
         order,
         limit,
         offset,
      }) {
         this.sw_mileage_token_id = swMileageTokenId
-        this.transaction_type = transactionType
+        this.type = type
         this.admin_address = adminAddress
         this.student_address = studentAddress
         this.student_id = studentId
-        this.admin_id = adminId
         this.last_id = lastId
         this.order = order
         this.limit = limit

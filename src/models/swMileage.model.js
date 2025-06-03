@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
         },
         doc_hash: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING,
             allowNull: true,
         },
         is_confirmed: { //폴링 서버를 통해 확정 체인 등록 여부 조회.

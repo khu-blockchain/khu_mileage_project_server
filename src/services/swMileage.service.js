@@ -77,6 +77,7 @@ const createSwMileageAndFiles = async (createSwMileageDTO, fileList = []) => {
 }
 
 const updateSwMileage = async (swMileageId, updateSwMileageDTO) => {
+    console.log("enter update swMileage service")
     await SwMileage.update(updateSwMileageDTO, {
         where: {
             sw_mileage_id: swMileageId,
