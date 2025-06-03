@@ -27,6 +27,7 @@ const SwMileage = require('./swMileage.model')(sequelize, Sequelize);
 const SwMileageFile = require('./swMileageFile.model')(sequelize, Sequelize);
 const SwMileageToken = require('./swMileageToken.model')(sequelize, Sequelize);
 const SwMileageTokenHistory = require('./swMileageTokenHistory.model')(sequelize, Sequelize);
+const WalletHistory = require('./walletHistory.model')(sequelize, Sequelize);
 
 SwMileage.hasMany(SwMileageFile, {
     as: 'sw_mileage_files',
@@ -39,7 +40,6 @@ SwMileageFile.belongsTo(SwMileage, {
     targetKey: 'sw_mileage_id',
 });
 
-// DB 구조 수정으로 token은 사용하지 않음.
 // SwMileageToken.hasMany(SwMileageTokenHistory, {
 //     as: 'sw_mileage_token_histories',
 //     foreignKey: 'sw_mileage_token_id',
@@ -50,6 +50,7 @@ SwMileageFile.belongsTo(SwMileage, {
 //     foreignKey: 'sw_mileage_token_id',
 //     targetKey: 'sw_mileage_token_id',
 // });
+
 // SwMileage.hasOne(SwMileageTokenHistory, {
 //     as: 'token_history',
 //     foreignKey: 'sw_mileage_id',
@@ -71,4 +72,5 @@ module.exports = {
     SwMileageFile,
     SwMileageToken,
     SwMileageTokenHistory,
+    WalletHistory,
 }

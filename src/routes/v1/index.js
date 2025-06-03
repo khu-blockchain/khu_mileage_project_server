@@ -6,7 +6,7 @@ const adminRoute = require('./admin.route');
 const swMileageRoute = require('./swMileage.route');
 const swMileageTokenRoute = require('./swMileageToken.route');
 const swMileageTokenHistoryRoute = require('./swMileageTokenHistory.route');
-
+const walletRoute = require('./wallet.route');
 const router = express.Router();
 
 const defaultRoutes = [
@@ -37,6 +37,10 @@ const defaultRoutes = [
     {
         path : '/sw-mileage-token-histories',
         route: swMileageTokenHistoryRoute,
+    },
+    {
+        path : '/wallet',
+        route: walletRoute,
     }
 ];
 

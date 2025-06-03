@@ -5,3 +5,4 @@ module.exports.adminValidation = require('./admin.validation');
 module.exports.swMileageValidation = require('./swMileage.validation');
 module.exports.swMileageTokenValidation = require('./swMileageToken.validation');
 module.exports.swMileageTokenHistoryValidation = require('./swMileageTokenHistory.validation');
+module.exports.walletValidation = require('./wallet.validation');
