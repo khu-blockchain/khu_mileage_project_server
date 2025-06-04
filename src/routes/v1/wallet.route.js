@@ -9,6 +9,10 @@ const {walletController} = require('../../controllers');
 const router = express.Router();
 
 router
+    .route('/approve')
+    .post(auth(constants.ROLE.ADMIN),validate(walletValidation.approveWalletLost), walletController.approveWalletLost)
+
+router
     .route('/:studentId')
     .get(auth(constants.ROLE.STUDENT), validate(walletValidation.getWalletLostByStudentId), walletController.getWalletLostByStudentId);
 

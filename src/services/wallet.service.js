@@ -31,6 +31,18 @@ const getWalletLostByStudentId = async (getWalletLostByStudentIdDTO) => {
     })
 }
 
+const getWalletLostById = async (walletHistoryId) => {
+    const walletHistory = await WalletHistory.findOne({
+        where: {
+            wallet_history_id: walletHistoryId,
+        },
+    })
+    if (!walletHistory) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'Wallet history not found')
+    }
+    return new WalletHistoryDto(walletHistory)
+}
+
 
 const createWalletLost = async (createWalletHistoryDTO) => {
     const walletHistory = await WalletHistory.create(createWalletHistoryDTO)
@@ -42,4 +54,5 @@ module.exports = {
     getWalletLostList,
     createWalletLost,
     getWalletLostByStudentId,
+    getWalletLostById
 }

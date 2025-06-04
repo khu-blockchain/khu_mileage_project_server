@@ -8,6 +8,8 @@ const {
     GetWalletLostByStudentIdDTO
 } = require('../dtos/wallet.dto');
 const constants = require('../config/constants');
+const { VerifiedPayloadDTO } = require("../dtos/auth.dto");
+const caverService = require("../services/caver.service");
 const config = require('../config/config');
 
 const getWalletLostList = catchAsync(async (req, res) => {
@@ -52,8 +54,34 @@ const getWalletLostByStudentId = catchAsync(async (req, res) => {
     return res.status(httpStatus.OK).json(walletLost);
 })
 
+const approveWalletLost = catchAsync(async (req, res) => {
+    const verifiedPayload = new VerifiedPayloadDTO({ ...req.verifiedPayload });
+    if (verifiedPayload.role !== constants.ROLE.ADMIN) {
+        throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized client")
+    }
+
+    const { walletHistoryId, studentId, rawTransaction } = { ...req.query, ...req.params, ...req.body }
+    const student = await studentService.getStudentById(studentId);
+    if (!student) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'student not found')
+    }
+    const walletLost = await walletService.getWalletLostById(walletHistoryId);
+    if (!walletLost) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'wallet lost not found')
+    }
+
+    try{
+        await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
+
+        return res.status(httpStatus.OK).json(walletLost);
+    } catch (error) {
+        throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to approve wallet lost', error);
+    }
+});
+
 module.exports = {
     getWalletLostList,
     createWalletLost,
     getWalletLostByStudentId,
+    approveWalletLost
 };
