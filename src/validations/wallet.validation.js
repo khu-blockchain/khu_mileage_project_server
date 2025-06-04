@@ -31,8 +31,19 @@ const getWalletLostByStudentId = {
     body: joi.object().keys({}),
 }
 
+const approveWalletLost = {
+    query: joi.object().keys({}),
+    params: joi.object().keys({}),
+    body: joi.object().keys({
+        walletHistoryId: joi.string().required(),
+        studentId: joi.string().required(),
+        rawTransaction: joi.string().required(),
+    }),
+}
+
 module.exports = {
     createWalletLost,
     getWalletLostList,
     getWalletLostByStudentId,
+    approveWalletLost
 };
