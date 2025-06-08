@@ -189,7 +189,9 @@ const mintSwMileage = catchAsync(async (req, res) => {
 
   try {
     console.log("enter try catch");
-    const txReceipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
+    const txReceipt = await caverService.sendRawTransactionWithSignAsFeePayer(
+      rawTransaction
+    );
     console.log(txReceipt);
   } catch (error) {
     console.log(error);
@@ -227,6 +229,52 @@ const burnSwMileage = catchAsync(async (req, res) => {
   return res.status(httpStatus.OK).json({ message: "Burned successfully" });
 });
 
+const requestWalletChange = catchAsync(async (req, res) => {
+  const { studentId, rawTransaction } = {
+    ...req.query,
+    ...req.params,
+    ...req.body,
+  };
+
+  const student = await studentService.getStudentById(studentId);
+  if (!student) {
+    throw new ApiError(httpStatus.NOT_FOUND, "student not found");
+  }
+
+  try {
+    await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
+  } catch (error) {
+    throw new ApiError(error.response?.status || 500, error.message);
+  }
+
+  return res
+    .status(httpStatus.OK)
+    .json({ message: "Wallet changed successfully" });
+});
+
+const confirmWalletChange = catchAsync(async (req, res) => {
+  const { studentId, rawTransaction } = {
+    ...req.query,
+    ...req.params,
+    ...req.body,
+  };
+
+  const student = await studentService.getStudentById(studentId);
+  if (!student) {
+    throw new ApiError(httpStatus.NOT_FOUND, "student not found");
+  }
+
+  try {
+    await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction);
+  } catch (error) {
+    throw new ApiError(error.response?.status || 500, error.message);
+  }
+
+  return res
+    .status(httpStatus.OK)
+    .json({ message: "Wallet changed successfully" });
+});
+
 module.exports = {
   getStudentList,
   createStudent,
@@ -235,4 +283,6 @@ module.exports = {
   deleteStudent,
   mintSwMileage,
   burnSwMileage,
+  requestWalletChange,
+  confirmWalletChange,
 };

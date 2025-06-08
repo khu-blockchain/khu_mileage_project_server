@@ -94,6 +94,26 @@ const burnSwMileage = {
   }),
 };
 
+const requestWalletChange = {
+  query: joi.object().keys({}),
+  params: joi.object().keys({
+    studentId: joi.string().required(),
+  }),
+  body: joi.object().keys({
+    rawTransaction: joi.string().custom(rawTransactionValidation),
+  }),
+};
+
+const confirmWalletChange = {
+  query: joi.object().keys({}),
+  params: joi.object().keys({
+    studentId: joi.string().required(),
+  }),
+  body: joi.object().keys({
+    rawTransaction: joi.string().custom(rawTransactionValidation),
+  }),
+};
+
 module.exports = {
   getStudentList,
   createStudent,
@@ -102,4 +122,6 @@ module.exports = {
   deleteStudent,
   mintSwMileage,
   burnSwMileage,
+  requestWalletChange,
+  confirmWalletChange,
 };

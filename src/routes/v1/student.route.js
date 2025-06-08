@@ -28,4 +28,13 @@ router
     .post(auth(constants.ROLE.ADMIN), validate(studentValidation.burnSwMileage), studentController.burnSwMileage)
 
 
+router
+    .route('/:studentId/wallet-change')
+    .post(auth(constants.ROLE.STUDENT), validate(studentValidation.requestWalletChange), studentController.requestWalletChange)
+
+router
+    .route('/:studentId/confirm-change')
+    .post(auth(constants.ROLE.STUDENT), validate(studentValidation.confirmWalletChange), studentController.confirmWalletChange)
+
+
 module.exports = router;
