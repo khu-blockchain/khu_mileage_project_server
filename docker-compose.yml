@@ -23,6 +23,18 @@ services:
       MYSQL_DATABASE: ${SQL_DATABASE}
     volumes:
       - mysql_data:/var/lib/mysql
+  
+  polling:
+    image: polling:1.0.0
+    environment:
+      - SQL_HOST=mysql
+      - SQL_USERNAME=${SQL_USERNAME}
+      - SQL_PASSWORD=${SQL_PASSWORD}
+      - SQL_DATABASE=${SQL_DATABASE}
+      - SQL_PORT=${SQL_PORT}
+    depends_on:
+      - mysql
+      - backend
 
 volumes:
   mysql_data:

@@ -9,6 +9,7 @@ const con = mysql.createConnection({
 })
 
 const createSchema = async () => {
+    console.log('createSchema called at :',config.sequelize.host,config.sequelize.port);
     return new Promise(async (resolve, reject) => {
         con.connect((e) => {
             if (e) {
