@@ -23,6 +23,8 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
+      "http://khunggum.khu.ac.kr",
+      "https://khunggum.khu.ac.kr",
     ],
     credentials: true,
     methods: ["*"],
