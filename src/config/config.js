@@ -9,7 +9,8 @@ const envVarSchema = joi.object()
     .keys({
         NODE_ENV: joi.string().valid('production', 'development', 'test').default('test'),
         PORT: joi.number().default(1987),
-        
+        DOMAIN: joi.string().default('http://localhost'),
+
         // sql 관련
         SQL_HOST: joi.string().required(),
         SQL_PORT: joi.number().required(),
@@ -49,6 +50,7 @@ if (error) {
 module.exports = {
     env: envVars.NODE_ENV,
     port: envVars.PORT,
+    domain: envVars.DOMAIN,
     
     // sql 관련
     sequelize: {
