@@ -18,7 +18,7 @@ const createSwMileageToken = {
         decimals: joi.number().default(18),
         imageUrl: joi.string().required(),
         initialSupply: joi.number().default(100000000000000000000),
-        rlpEncodingString : joi.string(),
+        rawTransaction : joi.string().required(),
     }),
 }
 
@@ -51,7 +51,9 @@ const activateSwMileageToken = {
     params: joi.object().keys({
         swMileageTokenId: joi.number().required(),
     }),
-    body: joi.object().keys({}),
+    body: joi.object().keys({
+      rawTransaction: joi.custom(rawTransactionValidation).required(),
+    }),
 }
 
 const mintSwMileageToken = {
@@ -80,7 +82,7 @@ const burnFromSwMileageToken = {
     }),
 }
 
-const approveSwMileageToken = {
+const approveSwMileageTokenLegacy = {
     query: joi.object().keys({}),
     params: joi.object().keys({
         swMileageTokenId: joi.number().required(),
@@ -91,34 +93,63 @@ const approveSwMileageToken = {
     }),
 }
 
+const approveSwMileageToken = {
+    query: joi.object().keys({}),
+    params: joi.object().keys({
+        swMileageTokenId: joi.number().required(),
+    }),
+    body: joi.object().keys({
+        studentId: joi.string().required(),
+        adminId: joi.string().required(),
+        swMileageId: joi.number().required().default(null), 
+        amount: joi.number().required().default(0),
+        comment : joi.string(),
+        rawTransaction: joi.custom(rawTransactionValidation).required(),
+    }),
+}
+
+const rejectSwMileageToken = {
+    query: joi.object().keys({}),
+    params: joi.object().keys({
+        swMileageTokenId: joi.number().required(),
+    }),
+    body: joi.object().keys({
+        studentId: joi.string().required(),
+        swMileageId: joi.number().required().default(null), 
+        adminId: joi.string().required(),
+        comment : joi.string(),
+        rawTransaction: joi.custom(rawTransactionValidation).required(),
+    }),
+}
+
 const getApproveSwMileageTokenData = {
     query: joi.object().keys({}),
     params: joi.object().keys({}),
     body: joi.object().keys({}),
 }
 
-const getSwMileageTokenHistoryList = {
-    query: joi.object().keys({
-        status: joi.number().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.STATUS)),
-        transactionType: joi.string().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.TRANSACTION_TYPE)),
-        adminId: joi.number(),
-        adminAddress: joi.string(),
-        studentAddress: joi.string(),
-        studentId: joi.string(),
-    }),
-    params: joi.object().keys({
-        swMileageTokenId: joi.string().required(),
-    }),
-    body: joi.object().keys({}),
-}
-const getSwMileageTokenHistoryById = {
-    query: joi.object().keys({}),
-    params: joi.object().keys({
-        swMileageTokenHistoryId: joi.number().required(),
-        swMileageTokenId: joi.string().required(),
-    }),
-    body: joi.object().keys({}),
-}
+// const getSwMileageTokenHistoryList = {
+//     query: joi.object().keys({
+//         status: joi.number().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.STATUS)),
+//         transactionType: joi.string().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.TRANSACTION_TYPE)),
+//         adminId: joi.number(),
+//         adminAddress: joi.string(),
+//         studentAddress: joi.string(),
+//         studentId: joi.string(),
+//     }),
+//     params: joi.object().keys({
+//         swMileageTokenId: joi.string().required(),
+//     }),
+//     body: joi.object().keys({}),
+// }
+// const getSwMileageTokenHistoryById = {
+//     query: joi.object().keys({}),
+//     params: joi.object().keys({
+//         swMileageTokenHistoryId: joi.number().required(),
+//         swMileageTokenId: joi.string().required(),
+//     }),
+//     body: joi.object().keys({}),
+// }
 
 const getStudentsRankingRange = {
     query: joi.object().keys({
@@ -164,10 +195,9 @@ module.exports = {
     burnFromSwMileageToken,
     approveSwMileageToken,
     getApproveSwMileageTokenData,
-    getSwMileageTokenHistoryList,
-    getSwMileageTokenHistoryById,
     getStudentsRankingRange,
     addSwmileageTokenFeePayer,
     getSwMileageTokenABIandByteCode,
     getActivateSwmileagetoken,
+    rejectSwMileageToken
 }

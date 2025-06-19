@@ -15,10 +15,11 @@ const createAdmin = {
         password: joi.string().required(),
         passwordConfirm: joi.string().required(),
         email: joi.string().custom(emailValidation),
-        phoneNumber: joi.string().custom(phoneNumberValidation),
+        // phoneNumber: joi.string().custom(phoneNumberValidation),
         name: joi.string().required(),
         walletAddress: joi.string().custom(walletAddressValidation),
-        department: joi.string().required()
+        // department: joi.string().required(),
+        // rawTransaction: joi.string().required(),
     }),
 }
 
@@ -37,10 +38,10 @@ const updateAdmin = {
     }),
     body: joi.object().keys({
       email: joi.string().custom(emailValidation),
-      phone_number: joi.string(),
+      //phone_number: joi.string(),
       name: joi.string(),
       walletAddress: joi.string().custom(walletAddressValidation),
-      department: joi.string(),
+      //department: joi.string(),
     }),
   };
 

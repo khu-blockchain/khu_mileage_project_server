@@ -13,10 +13,11 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1637.0",
-    "axios": "^0.21.1",
+    "axios": "^1.9.0",
     "busboy": "^1.6.0",
-    "caver-js": "^1.11.0",
-    "cookie": "^0.6.0",
+    "caver-js": "^1.6.0",
+    "cookie": "^1.0.2",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "crypto": "^1.0.1",
@@ -33,7 +34,7 @@
     "md5": "^2.3.0",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "mysql2": "^2.3.0",
+    "mysql2": "^3.14.1",
     "nodemon": "^2.0.12",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -43,9 +44,10 @@
     "sequelize": "^6.6.5",
     "socket.io": "^4.1.3",
     "socket.io-redis": "^6.1.0",
-    "web3": "^4.9.0",
+    "web3": "^4.16.0",
     "winston": "^3.3.3",
     "xss": "^1.0.8",
     "xss-clean": "^0.1.1"
-  }
+  },
+  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
 }

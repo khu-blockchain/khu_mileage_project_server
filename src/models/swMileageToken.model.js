@@ -33,14 +33,27 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        is_paused: {
-            type: DataTypes.TINYINT(1),
-            allowNull: false, 
+        last_block: {
+            type: DataTypes.BIGINT,
+            allowNull: true,
         },
-        is_activated: { // 2024년도에 사용한 토큰있는 상황에서 2025년에 새로운 2025년 토큰을 등록하고 2025년의 토큰을 사용가능하게 하고 2024년의 토큰은 비활성화 하게 하는 코드
+        transaction_hash: { // raw transaction && tx 전송 후 tx hash
+            type: DataTypes.TEXT,
+            allowNull: true,
+        },
+        is_activate: { // 트랜잭션 확정 여부
             type: DataTypes.TINYINT(1),
-            allowNull: false, 
-        }
+            allowNull: false,
+            defaultValue: 0, 
+        },
+        // is_paused: {
+        //     type: DataTypes.TINYINT(1),
+        //     allowNull: true, 
+        // },
+        // is_activated: { // 2024년도에 사용한 토큰있는 상황에서 2025년에 새로운 2025년 토큰을 등록하고 2025년의 토큰을 사용가능하게 하고 2024년의 토큰은 비활성화 하게 하는 코드
+        //     type: DataTypes.TINYINT(1),
+        //     allowNull: true, 
+        // }
         // created_at: {
         //     type: DataTypes.DATE,
         //     allowNull: false,

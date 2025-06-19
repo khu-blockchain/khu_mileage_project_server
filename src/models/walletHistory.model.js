@@ -1,15 +1,15 @@
 module.exports = (sequelize, DataTypes) => {
   const schema = {
-    admin_id: {
-      type: DataTypes.STRING,
+    wallet_history_id: {
+      type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
     },
-    password: {
+    student_id: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // TODO: delete salt
-    salt: {
+    student_hash: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -17,21 +17,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // kaikas wallet address
-    wallet_address: {
+    address: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
+    target_address: {
       type: DataTypes.STRING,
-    },
-    role: {
-      type: DataTypes.TINYINT(1),
-      defaultValue: 2,
       allowNull: false,
     },
     is_confirmed: {
-      //회원가입 이후 폴링 서버를 통해 회원가입 체인 등록 성공 여부 조회.
       type: DataTypes.TINYINT(1),
       allowNull: false,
       defaultValue: 0,
@@ -39,14 +33,9 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   const modelOptions = {
-    tableName: "admin",
-    indexes: [
-      {
-        unique: true,
-        fields: ["admin_id"],
-      },
-    ],
+    tableName: "wallet_history",
+    indexes: [],
   };
 
-  return sequelize.define("Admin", schema, modelOptions);
+  return sequelize.define("WalletHistory", schema, modelOptions);
 };

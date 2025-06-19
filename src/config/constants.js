@@ -15,7 +15,8 @@ module.exports = {
         REFRESH: 2,
     },
     COOKIE: {
-        NAME: 'KHU_MILEAGE'
+        STUDENT: 'KHU_MILEAGE_STUDENT',
+        ADMIN: 'KHU_MILEAGE_ADMIN',
     },
     ROLE: {
         STUDENT: 1,
@@ -23,9 +24,9 @@ module.exports = {
         ROOT_ADMIN: 3,
     },
     SW_MILEAGE_STATUS: {
-        CREATE: 1,
-        APPROVE: 2,
-        DENIED: 3
+        CREATE: 2,
+        APPROVE: 1,
+        DENIED: 0
     },
     SW_MILEAGE_TOKEN: {
         IS_PAUSE: {
@@ -39,14 +40,15 @@ module.exports = {
     },
     SW_MILEAGE_TOKEN_HISTORY: {
         STATUS: {
-            CREATE: 1,
-            SUCCESS: 2,
-            FAIL: 3
+            CREATE: 2,
+            SUCCESS: 1,
+            FAIL: 0
         },
-        TRANSACTION_TYPE: {
-            MINT: 'mint',
-            BURN_FROM: 'burnFrom',
-            APPROVE: 'approve',
+        TYPE: {
+            DOC_APPROVED: 'DOC_APPROVED',
+            DIRECT_MINT: 'DIRECT_MINT',
+            DIRECT_BURN: 'DIRECT_BURN',
+            ACCOUNT_CHANGE: 'ACCOUNT_CHANGE',
         }
     },
     PEB_UNIT: {

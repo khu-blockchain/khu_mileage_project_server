@@ -5,9 +5,9 @@ const setCookie = (res, name, data, expires = null) => {
       httpOnly: true,
       maxAge  : 60 * 60 * 1000,
       path    : '/',
-      sameSite: 'none',
-      secure  : true,
-      domain  : 'localhost',
+      sameSite: 'lax',
+      secure  : false,
+      // domain  : 'localhost',
       expires : expires ? new Date(expires) : undefined
    }));
 }
@@ -17,9 +17,9 @@ const deleteCookie = (res, name) => {
       httpOnly: true,
       maxAge  : 0,
       path    : '/',
-      sameSite: 'none',
-      secure  : true,
-      domain  : 'localhost',
+      sameSite: 'lax',
+      secure  : false,
+      // domain  : 'localhost',
    }));
 }
 

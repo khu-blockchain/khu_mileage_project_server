@@ -6,31 +6,74 @@ const time = require('./time');
 const constants = require('./constants');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
+const config = require('./config');
+
+const UPLOADS_DIR = path.join(__dirname, '../../uploads');
+
 
 const uploadFile = async (files) => {
     const savedFiles = [];
-    console.log(files);
     for (const file of files) {
-        console.log(JSON.stringify(file, null, 2));
-        const savePath = path.join(__dirname, '../../uploads', file.info.filename);
-        
-        await new Promise((resolve, reject) => {
-            fs.writeFile(savePath, file.data, (err) => {
+        try {
+            const ext = path.extname(file.info.filename);
+            const dateStr = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14);
+            const randStr = crypto.randomBytes(4).toString('hex');
+            const safeName = `${dateStr}_${randStr}${ext}`;
+
+            const savePath = path.join(UPLOADS_DIR, safeName);
+            // http/https 프로토콜을 포함한 전체 URL 생성
+            const serverUrl = new URL(`/uploads/${safeName}`, `${config.domain}:${config.port}`).href;
+            
+            await new Promise((resolve, reject) => {
+              fs.writeFile(savePath, file.data, (err) => {
                 if (err) {
                     console.error(`Error saving file ${file.info.filename}:`, err);
                     reject(err);
                 } else {
                     savedFiles.push({
-                        filename: file.info.filename,
-                        url: savePath,
+                        filename: safeName,
+                        url: serverUrl,
                     });
                     resolve();
                 }
+              });
             });
-        });
+        } catch (err) {
+            console.error(`Error saving file ${file.info.filename}:`, err);
+            // 파일 하나가 실패하면 전체를 중단하고 에러를 던짐
+            throw new Error(`Failed to save file ${file.info.filename}.`);
+        }
     }
 
     return savedFiles;
+    //console.log(files);
+    // for (const file of files) {
+    //     //console.log(JSON.stringify(file, null, 2));
+    //     const ext = path.extname(file.info.filename);
+    //     const dateStr = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0,14);
+    //     const randStr = crypto.randomBytes(4).toString('hex'); // 8글자
+    //     const safeName = `${dateStr}_${randStr}${ext}`;
+
+    //     //const savePath = path.join(__dirname, '../../uploads', file.info.filename);
+    //     const savePath = path.join(__dirname, '../../uploads', safeName);
+    //     const serverPath = `${config.domain}:${config.port}/uploads/${safeName}`;
+    //     await new Promise((resolve, reject) => {
+    //         fs.writeFile(savePath, file.data, (err) => {
+    //             if (err) {
+    //                 console.error(`Error saving file ${file.info.filename}:`, err);
+    //                 reject(err);
+    //             } else {
+    //                 savedFiles.push({
+    //                     filename: safeName,
+    //                     url: serverPath,
+    //                 });
+    //                 resolve();
+    //             }
+    //         });
+    //     });
+    // }
+
+    // return savedFiles;
 }
 
 // with AWS

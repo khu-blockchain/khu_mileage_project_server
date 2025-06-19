@@ -4,9 +4,8 @@ const constants = require('../config/constants');
 const getSwMileageTokenHistoryList = {
     query: joi.object().keys({
         swMileageTokenId: joi.number(),
-        status: joi.number().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.STATUS)),
-        transactionType: joi.string().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.TRANSACTION_TYPE)),
-        adminId: joi.number(),
+        type: joi.array().items(joi.string().valid(...Object.values(constants.SW_MILEAGE_TOKEN_HISTORY.TYPE))),
+        // type: joi.string().valid()),
         adminAddress: joi.string(),
         studentAddress: joi.string(),
         studentId: joi.string(),

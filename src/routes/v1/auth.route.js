@@ -8,10 +8,18 @@ const router = express.Router();
 // 학생, 어드민 로그인에 대한 구별은 query의 loginType 진행
 router
     .route('/login')
-    .post(validate(authValidation.login), authController.login);
+    .post(validate(authValidation.login), authController.studentLogin);
+router
+    .route('/admin/login')
+    .post(validate(authValidation.login), authController.adminLogin);
+
 
 router
     .route('/refresh-token')
-    .post(validate(authValidation.refreshToken), authController.refreshToken);
+    .post(validate(), authController.refreshStudentToken);
+
+router
+    .route('/admin/refresh-token')
+    .post(validate(), authController.refreshAdminToken);
 
 module.exports = router;
