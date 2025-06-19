@@ -12,6 +12,8 @@ services:
       - SQL_PASSWORD=${SQL_PASSWORD}
       - SQL_DATABASE=${SQL_DATABASE}
       - SQL_PORT=${SQL_PORT}
+    volumes:
+      - ./uploads:/app/uploads
     depends_on:
       - mysql
   mysql:
@@ -25,7 +27,7 @@ services:
       - mysql_data_0612:/var/lib/mysql
   
   polling:
-    image: polling:1.0.0
+    image: polling:1.2.2
     environment:
       - SQL_HOST=mysql
       - SQL_USERNAME=${SQL_USERNAME}

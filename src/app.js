@@ -19,7 +19,6 @@ const app = express();
 const cors = require("cors");
 const path = require('path');
 
-app.use(express.static(path.join(__dirname, 'uploads')));
 
 app.use(
   cors({
@@ -60,8 +59,7 @@ app.use(passport.initialize());
 passport.use("jwt", jwtStrategy);
 
 app.use("/v1", routes);
-
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, "Not Found"));
