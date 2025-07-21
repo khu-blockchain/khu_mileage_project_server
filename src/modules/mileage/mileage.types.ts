@@ -1,0 +1,30 @@
+import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { MILEAGE_STATUS } from './constants/mileage-status.enum';
+import { Mileage } from './entities/mileage.entity';
+import { Student } from '../student/entities/student.entity';
+import { MileageActivity } from '../mileage-rubric/entities/mileage-activity.entity';
+
+export type CreateMileageInitParams = {
+  mileage_category_name: string;
+  mileage_activity_name: string;
+  mileage_description: string;
+  doc_hash: string;
+  status: MILEAGE_STATUS;
+  transaction_status: TRANSACTION_STATUS;
+  student: Student;
+  mileage_activity: MileageActivity;
+};
+
+export type CreateMileageFileParams = {
+  mileage: Mileage;
+  original_file_name: string;
+  stored_file_name: string;
+  url: string;
+};
+
+export type GetMileagesParams = {
+  take: number;
+  skip: number;
+  student_id?: string;
+  status?: MILEAGE_STATUS;
+};

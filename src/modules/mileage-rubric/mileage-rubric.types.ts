@@ -1,0 +1,27 @@
+import { POINT_TYPE } from './constants/point-type.enum';
+
+export type CreateMileageCategoryParam = {
+  name: string;
+  description: string;
+};
+
+export type CreateMileageActivityParam = {
+  name: string;
+  point_type: POINT_TYPE;
+  point_description: string;
+  fixed_point?: number;
+  mileage_category_id: number;
+};
+
+export type UpdateMileageCategoryParam = {
+  name: string;
+  description?: string;
+};
+
+export type UpdateMileageActivityParam = {
+  mileage_category_id: number;
+  name: string;
+  point_type: POINT_TYPE;
+  point_description: string;
+  fixed_point?: number;
+};

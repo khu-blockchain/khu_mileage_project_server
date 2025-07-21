@@ -1,0 +1,164 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseGuards,
+  UseInterceptors,
+  UploadedFiles,
+  Query,
+} from '@nestjs/common';
+import { MileageService } from './mileage.service';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@/modules/auth/guards/roles.guard';
+import { Roles } from '@/modules/auth/decorators/roles.decorator';
+import { Role } from '@/modules/auth/constants/role.constants';
+import {
+  CreateMileageRequest,
+  CreateMileageResponse,
+  GetMileageResponse,
+  BaseMileageDto,
+  ApproveMileageRequest,
+  RejectMileageRequest,
+  ApproveMileageResponse,
+  RejectMileageResponse,
+  MintMileageRequest,
+  MintMileageResponse,
+  BurnMileageRequest,
+  BurnMileageResponse,
+} from '@/modules/mileage/dto';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
+import { plainToInstance } from 'class-transformer';
+import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
+import { AuthUserContext, StudentJwtPayload } from '@/modules/auth/auth.types';
+import { GetMileagesRequest } from './dto';
+
+@Controller('mileage')
+export class MileageController {
+  constructor(private readonly mileageService: MileageService) {}
+
+  @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.STUDENT)
+  @UseInterceptors(FilesInterceptor('mileageFiles'))
+  async creatMileage(
+    @UploadedFiles() mileageFiles: Express.Multer.File[],
+    @Body() input: CreateMileageRequest,
+  ): Promise<BaseApiResponse<CreateMileageResponse>> {
+    const response = await this.mileageService.create(input, mileageFiles);
+
+    return {
+      data: plainToInstance(CreateMileageResponse, response),
+      meta: {},
+    };
+  }
+
+  @Get('my')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.STUDENT)
+  async getMyMileages(
+    @CurrentUser() user: StudentJwtPayload,
+  ): Promise<BaseApiResponse<BaseMileageDto[]>> {
+    const response = await this.mileageService.getMyMileages(user.student_id);
+
+    return {
+      data: plainToInstance(BaseMileageDto, response),
+      meta: {},
+    };
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async getMileages(
+    @Query() query: GetMileagesRequest,
+  ): Promise<BaseApiResponse<BaseMileageDto[]>> {
+    const { mileages, total } = await this.mileageService.getMileages(query);
+
+    return {
+      data: plainToInstance(BaseMileageDto, mileages, {
+        excludeExtraneousValues: true,
+      }),
+      meta: {
+        total,
+        lastPage: Math.ceil(total / query.limit),
+      },
+    };
+  }
+
+  @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.STUDENT)
+  async getMileage(@Param('id') id: number, @CurrentUser() user: AuthUserContext) {
+    const mileage = await this.mileageService.getMileageByAuth(id, user);
+
+    return {
+      data: plainToInstance(GetMileageResponse, mileage, {
+        excludeExtraneousValues: true,
+      }),
+      meta: {},
+    };
+  }
+
+  @Post(':id/approve')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async approveMileage(
+    @Param('id') id: number,
+    @Body() body: ApproveMileageRequest,
+  ): Promise<BaseApiResponse<ApproveMileageResponse>> {
+    const response = await this.mileageService.approveMileage(id, body);
+
+    return {
+      data: plainToInstance(ApproveMileageResponse, response),
+      meta: {},
+    };
+  }
+
+  @Post(':id/reject')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async rejectMileage(
+    @Param('id') id: number,
+    @Body() body: RejectMileageRequest,
+  ): Promise<BaseApiResponse<RejectMileageResponse>> {
+    const response = await this.mileageService.rejectMileage(id, body);
+
+    return {
+      data: plainToInstance(RejectMileageResponse, response),
+      meta: {},
+    };
+  }
+
+  @Post(':id/mint')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async mintMileage(
+    @Param('id') id: number,
+    @Body() body: MintMileageRequest,
+  ): Promise<BaseApiResponse<MintMileageResponse>> {
+    const response = await this.mileageService.mintMileage(id, body);
+
+    return {
+      data: plainToInstance(MintMileageResponse, response),
+      meta: {},
+    };
+  }
+
+  @Post(':id/burn')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async burnMileage(
+    @Param('id') id: number,
+    @Body() body: BurnMileageRequest,
+  ): Promise<BaseApiResponse<BurnMileageResponse>> {
+    const response = await this.mileageService.burnMileage(id, body);
+
+    return {
+      data: plainToInstance(BurnMileageResponse, response),
+      meta: {},
+    };
+  }
+}

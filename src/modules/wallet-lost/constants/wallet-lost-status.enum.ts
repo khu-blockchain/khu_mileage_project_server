@@ -1,0 +1,4 @@
+export enum WALLET_LOST_STATUS {
+  CREATED = 'CREATED',
+  APPROVED = 'APPROVED',
+}

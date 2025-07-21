@@ -1,0 +1,81 @@
+import { Injectable } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+import { MileagePointHistory } from '../entities/mileage-point-history.entity';
+import {
+  CreateMileagePointHistoryParams,
+  GetMileagePointHistoriesParams,
+} from '../mileage-point-history.types';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+
+@Injectable()
+export class MileagePointHistoryRepository extends Repository<MileagePointHistory> {
+  constructor(private readonly dataSource: DataSource) {
+    super(MileagePointHistory, dataSource.createEntityManager());
+  }
+
+  async getMileagePointHistories(
+    params: GetMileagePointHistoriesParams,
+  ): Promise<[MileagePointHistory[], number]> {
+    const { take, skip, studentId, mileageId, mileageTokenName } = params;
+
+    const [mileagePointHistories, total] = await this.findAndCount({
+      where: {
+        ...(mileageTokenName && { mileage_token_name: mileageTokenName }),
+        ...((mileageId || studentId) && {
+          mileage: {
+            ...(mileageId && { id: mileageId }),
+            ...(studentId && { student: { student_id: studentId } }),
+          },
+        }),
+      },
+      take,
+      skip,
+      order: {
+        created_at: 'DESC',
+      },
+    });
+
+    return [mileagePointHistories, total];
+  }
+
+  async createMileagePointHistoryInit(
+    params: CreateMileagePointHistoryParams,
+  ): Promise<MileagePointHistory> {
+    const newMileagePointHistory = this.create(params);
+    return this.save(newMileagePointHistory);
+  }
+
+  async updateMileagePointHistoryTransactionHash(
+    id: number,
+    transaction_hash: string,
+  ): Promise<MileagePointHistory | null> {
+    const mileagePointHistory = await this.findOneBy({ id });
+    if (!mileagePointHistory) {
+      return null;
+    }
+    return this.save({ ...mileagePointHistory, transaction_hash });
+  }
+
+  async getMileagePointHistoryByTransactionHash(
+    transaction_hash: string,
+  ): Promise<MileagePointHistory | null> {
+    const mileagePointHistory = await this.findOneBy({ transaction_hash });
+    if (!mileagePointHistory) {
+      return null;
+    }
+    return mileagePointHistory;
+  }
+
+  //========== Event Callback ============
+
+  async confirmMileagePointHistory(
+    id: number,
+    transaction_status: TRANSACTION_STATUS,
+  ): Promise<MileagePointHistory | null> {
+    const mileagePointHistory = await this.findOneBy({ id });
+    if (!mileagePointHistory) {
+      return null;
+    }
+    return this.save({ ...mileagePointHistory, transaction_status });
+  }
+}
