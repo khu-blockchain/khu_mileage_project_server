@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsString, IsEmail, IsEthereumAddress } from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail } from 'class-validator';
 import { Address } from '@kaiachain/viem-ext';
-import { Match } from '@/shared/validators/match.validator';
+import { IsAddress, Match } from '@/shared/validators';
 
 export class CreateAdminRequest {
   @IsString()
@@ -24,7 +24,7 @@ export class CreateAdminRequest {
   @IsNotEmpty()
   email: string;
 
-  @IsEthereumAddress()
+  @IsAddress()
   @IsNotEmpty()
   walletAddress: Address;
 }

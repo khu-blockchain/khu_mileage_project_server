@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { Address } from '@kaiachain/viem-ext';
 
 export class BaseAdminDto {

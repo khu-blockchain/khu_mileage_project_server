@@ -1,6 +1,8 @@
-import { Expose } from 'class-transformer';
+import { SuccessResponse } from '@/shared/dtos';
 
-export class DeleteMileageCategoryResponse {
-  @Expose()
-  success: boolean;
+export class DeleteMileageCategoryResponse extends SuccessResponse {
+  constructor(partial: Partial<DeleteMileageCategoryResponse>) {
+    super();
+    Object.assign(this, partial);
+  }
 }

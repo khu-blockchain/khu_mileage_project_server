@@ -1,4 +1,4 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { MILEAGE_STATUS } from './constants/mileage-status.enum';
 import { Mileage } from './entities/mileage.entity';
 import { Student } from '@/modules/student/entities/student.entity';

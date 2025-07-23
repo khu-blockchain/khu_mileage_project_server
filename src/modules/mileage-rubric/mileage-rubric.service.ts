@@ -4,6 +4,8 @@ import {
   CreateMileageActivityRequest,
   DeleteMileageCategoryResponse,
   DeleteMileageActivityResponse,
+  UpdateMileageActivityRequest,
+  UpdateMileageCategoryRequest,
 } from '@/modules/mileage-rubric/dto';
 import { MileageCategoryRepository } from '@/modules/mileage-rubric/repository/mileage-category.repository';
 import { MileageActivityRepository } from '@/modules/mileage-rubric/repository/mileage-activity.repository';
@@ -34,21 +36,21 @@ export class MileageRubricService {
 
   async createActivity(input: CreateMileageActivityRequest): Promise<MileageActivity> {
     const category = await this.mileageCategoryRepository.findCategoryById(
-      input.mileage_category_id,
+      input.mileageCategoryId,
     );
 
     if (!category) {
       throw new NotFoundException('Category not found');
     }
 
-    this.validateActivityFixedPoint(input.point_type, input.fixed_point);
+    this.validateActivityFixedPoint(input.pointType, input.fixedPoint);
 
     const activityParams: CreateMileageActivityParam = {
       name: input.name,
-      point_type: input.point_type,
-      point_description: input.point_description,
-      fixed_point: input.fixed_point,
-      mileage_category_id: input.mileage_category_id,
+      point_type: input.pointType,
+      point_description: input.pointDescription,
+      fixed_point: input.fixedPoint,
+      mileage_category_id: input.mileageCategoryId,
     };
 
     return await this.mileageActivityRepository.createActivity(activityParams);
@@ -62,22 +64,37 @@ export class MileageRubricService {
     return this.mileageCategoryRepository.findCategoryById(id);
   }
 
-  async updateCategory(id: number, input: UpdateMileageCategoryParam): Promise<MileageCategory> {
-    return this.mileageCategoryRepository.updateCategory(id, input);
+  async updateCategory(id: number, input: UpdateMileageCategoryRequest): Promise<MileageCategory> {
+    const categoryParams: UpdateMileageCategoryParam = {
+      name: input.name,
+      description: input.description,
+    };
+    return this.mileageCategoryRepository.updateCategory(id, categoryParams);
   }
 
-  async updateActivity(id: number, input: UpdateMileageActivityParam): Promise<MileageActivity> {
+  async updateActivity(id: number, input: UpdateMileageActivityRequest): Promise<{success: boolean}> {
     const category = await this.mileageCategoryRepository.findCategoryById(
-      input.mileage_category_id,
+      input.mileageCategoryId,
     );
 
     if (!category) {
       throw new NotFoundException('Category not found');
     }
 
-    this.validateActivityFixedPoint(input.point_type, input.fixed_point);
+    this.validateActivityFixedPoint(input.pointType, input.fixedPoint);
 
-    return this.mileageActivityRepository.updateActivity(id, input);
+    const activityParams: UpdateMileageActivityParam = {
+      mileage_category_id: input.mileageCategoryId,
+      name: input.name,
+      point_type: input.pointType,
+      point_description: input.pointDescription,
+      fixed_point: input.fixedPoint,
+    };
+
+    await this.mileageActivityRepository.updateActivity(id, activityParams);
+    return {
+      success: true,
+    };
   }
 
   async deleteCategory(id: number): Promise<DeleteMileageCategoryResponse> {

@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { POINT_TYPE } from '@/modules/mileage-rubric/constants/point-type.enum';
 
-export class CreateMileageActivityRequest {
+export class UpdateMileageActivityRequest {
   @IsNotEmpty()
   @IsNumber()
   mileageCategoryId: number;
@@ -18,7 +18,7 @@ export class CreateMileageActivityRequest {
   @IsString()
   pointDescription: string;
 
-  @IsNumber()
   @IsOptional()
+  @IsNumber()
   fixedPoint?: number;
 }

@@ -1,4 +1,4 @@
-import { SuccessResponse } from '@/shared/dtos/success-response.dto';
+import { SuccessResponse } from '@/shared/dtos';
 
 export class ApproveMileageResponse extends SuccessResponse {
   constructor(partial: Partial<ApproveMileageResponse>) {

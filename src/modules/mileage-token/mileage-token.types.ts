@@ -1,4 +1,4 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 export type CreateMileageTokenParams = {
   name: string;

@@ -1,9 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { MileagePointHistoryService } from './mileage-point-history.service';
 import { ApiTags } from '@nestjs/swagger';
-import { GetMileagePointHistoriesRequest } from './dto/request/get-mileage-point-history.dto';
 import { plainToInstance } from 'class-transformer';
-import { BaseMileagePointHistoryDto } from './dto/response/base-mileage-point-history.dto';
+import { GetMileagePointHistoriesRequest, BaseMileagePointHistoryDto } from './dto';
 
 @ApiTags('Mileage Point History API (Not Implemented)')
 @Controller('mileage-point-history')

@@ -1,4 +1,4 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { Address } from '@kaiachain/viem-ext';

@@ -1,3 +1,3 @@
-import { SuccessResponse } from '@/shared/dtos/success-response.dto';
+import { SuccessResponse } from '@/shared/dtos';
 
 export class CreateMileageResponse extends SuccessResponse {}

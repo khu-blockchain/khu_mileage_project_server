@@ -3,9 +3,9 @@ import { DataSource, Repository } from 'typeorm';
 import { Address } from '@kaiachain/viem-ext';
 
 import { Admin } from '@/modules/admin/entities/admin.entity';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
-import { CreateAdminParams } from '../admin.types';
+import { CreateAdminParams } from '@/modules/admin/admin.types';
 
 @Injectable()
 export class AdminRepository extends Repository<Admin> {

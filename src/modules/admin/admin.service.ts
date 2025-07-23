@@ -7,7 +7,7 @@ import {
 import { Address } from '@kaiachain/viem-ext';
 import { Transactional } from 'typeorm-transactional';
 
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { hashPassword } from '@/modules/auth/utils/hash.utils';
 import { KaiaService } from '@/modules/kaia/kaia.service';
 import { Admin } from '@/modules/admin/entities/admin.entity';

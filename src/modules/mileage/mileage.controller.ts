@@ -12,12 +12,10 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { plainToInstance } from 'class-transformer';
 
-import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
+import { BaseApiResponse } from '@/shared/dtos';
 import { Role } from '@/modules/auth/constants/role.constants';
-import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
-import { Roles } from '@/modules/auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
-import { RolesGuard } from '@/modules/auth/guards/roles.guard';
+import { CurrentUser, Roles } from '@/modules/auth/decorators';
+import { JwtAuthGuard, RolesGuard } from '@/modules/auth/guards';
 import { AuthUserContext, StudentJwtPayload } from '@/modules/auth/auth.types';
 import {
   CreateMileageRequest,
@@ -32,10 +30,10 @@ import {
   MintMileageResponse,
   BurnMileageRequest,
   BurnMileageResponse,
+  GetMileagesRequest,
 } from '@/modules/mileage/dto';
 
 import { MileageService } from './mileage.service';
-import { GetMileagesRequest } from './dto';
 
 @Controller('mileage')
 export class MileageController {

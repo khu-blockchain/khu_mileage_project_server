@@ -1,9 +1,9 @@
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { Mileage } from '../entities/mileage.entity';
-import { CreateMileageInitParams, GetMileagesParams } from '../mileage.types';
-import { MILEAGE_STATUS } from '../constants/mileage-status.enum';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { Mileage } from '@/modules/mileage/entities/mileage.entity';
+import { CreateMileageInitParams, GetMileagesParams } from '@/modules/mileage/mileage.types';
+import { MILEAGE_STATUS } from '@/modules/mileage/constants/mileage-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 @Injectable()
 export class MileageRepository extends Repository<Mileage> {

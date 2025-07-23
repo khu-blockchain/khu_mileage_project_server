@@ -3,11 +3,9 @@ import { plainToInstance } from 'class-transformer';
 
 import { AdminJwtPayload } from '@/modules/auth/auth.types';
 import { Role } from '@/modules/auth/constants/role.constants';
-import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
-import { Roles } from '@/modules/auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
-import { RolesGuard } from '@/modules/auth/guards/roles.guard';
-import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
+import { CurrentUser, Roles } from '@/modules/auth/decorators';
+import { JwtAuthGuard, RolesGuard } from '@/modules/auth/guards';
+import { BaseApiResponse } from '@/shared/dtos';
 
 import { AdminService } from './admin.service';
 import { BaseAdminDto, CreateAdminRequest, UpdateEmailRequest } from './dto';

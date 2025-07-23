@@ -8,7 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { MILEAGE_POINT_HISTORY_TYPE } from '../constants/mileage-point-history-type.enum';
+import { MILEAGE_POINT_HISTORY_TYPE } from '@/modules/mileage-point-history/constants/mileage-point-history-type.enum';
 
 @Entity('mileage_point_history')
 export class MileagePointHistory {

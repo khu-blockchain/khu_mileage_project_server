@@ -8,24 +8,24 @@ import { ConfigService } from '@nestjs/config';
 import { Hex } from '@kaiachain/viem-ext';
 import { Transactional, runOnTransactionRollback } from 'typeorm-transactional';
 
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { cleanupUploadedFiles } from '@/shared/utils/file.utils';
 
-import { AuthUserContext } from '../auth/auth.types';
-import { Role } from '../auth/constants/role.constants';
-import { KaiaService } from '../kaia/kaia.service';
-import { MileageRubricService } from '../mileage-rubric/mileage-rubric.service';
-import { StudentService } from '../student/student.service';
-import { MileagePointHistoryService } from '../mileage-point-history/mileage-point-history.service';
-import { MILEAGE_POINT_HISTORY_TYPE } from '../mileage-point-history/constants/mileage-point-history-type.enum';
-import { MileageTokenService } from '../mileage-token/mileage-token.service';
+import { AuthUserContext } from '@/modules/auth/auth.types';
+import { Role } from '@/modules/auth/constants/role.constants';
+import { KaiaService } from '@/modules/kaia/kaia.service';
+import { MileageRubricService } from '@/modules/mileage-rubric/mileage-rubric.service';
+import { StudentService } from '@/modules/student/student.service';
+import { MileagePointHistoryService } from '@/modules/mileage-point-history/mileage-point-history.service';
+import { MILEAGE_POINT_HISTORY_TYPE } from '@/modules/mileage-point-history/constants/mileage-point-history-type.enum';
+import { MileageTokenService } from '@/modules/mileage-token/mileage-token.service';
 
 import { MILEAGE_STATUS } from './constants/mileage-status.enum';
 import { Mileage } from './entities/mileage.entity';
-import { CreateMileageRequest } from './dto/request/create-mileage.dto';
-import { CreateMileageResponse } from './dto/response/create-mileage.dto';
-import { ApproveMileageResponse } from './dto/response/approve-mileage.dto';
 import {
+  CreateMileageRequest,
+  CreateMileageResponse,
+  ApproveMileageResponse,
   ApproveMileageRequest,
   GetMileagesRequest,
   MintMileageResponse,
@@ -176,12 +176,12 @@ export class MileageService {
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_APPROVED,
-      mileage_token_name: currentToken.name,
-      mileage_activity_name: mileage.mileage_activity_name,
-      mileage_category_name: mileage.mileage_category_name,
-      mileage_point: mileagePoint,
-      transaction_status: TRANSACTION_STATUS.PROCESSING,
-      transaction_hash: txHash,
+      mileageTokenName  : currentToken.name,
+      mileageActivityName: mileage.mileage_activity_name,
+      mileageCategoryName: mileage.mileage_category_name,
+      mileagePoint: mileagePoint,
+      transactionStatus: TRANSACTION_STATUS.PROCESSING,
+      transactionHash: txHash,
       mileage,
     });
 
@@ -232,12 +232,12 @@ export class MileageService {
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_MINTED,
-      mileage_token_name: currentToken.name,
-      mileage_activity_name: mileage.mileage_activity_name,
-      mileage_category_name: mileage.mileage_category_name,
-      mileage_point: mileagePoint,
-      transaction_status: TRANSACTION_STATUS.PROCESSING,
-      transaction_hash: txHash,
+      mileageTokenName: currentToken.name,
+      mileageActivityName: mileage.mileage_activity_name,
+      mileageCategoryName: mileage.mileage_category_name,
+      mileagePoint: mileagePoint,
+      transactionStatus: TRANSACTION_STATUS.PROCESSING,
+      transactionHash: txHash,
       note,
       mileage,
     });
@@ -263,12 +263,12 @@ export class MileageService {
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_BURNED,
-      mileage_token_name: currentToken.name,
-      mileage_activity_name: mileage.mileage_activity_name,
-      mileage_category_name: mileage.mileage_category_name,
-      mileage_point: mileagePoint,
-      transaction_status: TRANSACTION_STATUS.PROCESSING,
-      transaction_hash: txHash,
+      mileageTokenName: currentToken.name,
+      mileageActivityName: mileage.mileage_activity_name,
+      mileageCategoryName: mileage.mileage_category_name,
+      mileagePoint: mileagePoint,
+      transactionStatus: TRANSACTION_STATUS.PROCESSING,
+      transactionHash: txHash,
       note,
       mileage,
     });

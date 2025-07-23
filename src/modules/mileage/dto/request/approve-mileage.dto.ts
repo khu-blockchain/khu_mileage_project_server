@@ -1,4 +1,4 @@
-import { RawTransactionBodyDto } from '@/shared/dtos/raw-transaction-body.dto';
+import { RawTransactionBodyDto } from '@/shared/dtos';
 import { IsNumber } from 'class-validator';
 
 export class ApproveMileageRequest extends RawTransactionBodyDto {

@@ -1,15 +1,15 @@
 import { Body, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 
-import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
+import { BaseApiResponse } from '@/shared/dtos';
 import { CookieInterceptor } from '@/shared/interceptors/cookie.interceptor';
 
 import { AuthUserContext } from './auth.types';
 import { AuthService } from './auth.service';
-import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUser } from './decorators';
 import { AuthStudentDto, StudentLoginRequest } from './dto';
 import { AdminLoginRequest } from './dto/request/admin-login.dto';
 import { AuthAdminDto } from './dto/response/auth-admin.dto';
-import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
+import { JwtRefreshGuard } from './guards';
 
 @Controller('auth')
 export class AuthController {

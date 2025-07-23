@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { Student } from '@/modules/student/entities/student.entity';
 import { MILEAGE_STATUS } from '@/modules/mileage/constants/mileage-status.enum';
 import { MileageActivity } from '@/modules/mileage-rubric/entities/mileage-activity.entity';

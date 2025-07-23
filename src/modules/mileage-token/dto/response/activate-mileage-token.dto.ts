@@ -1,3 +1,8 @@
-import { SuccessResponse } from '@/shared/dtos/success-response.dto';
+import { SuccessResponse } from '@/shared/dtos';
 
-export class ActivateMileageTokenResponse extends SuccessResponse {}
+export class ActivateMileageTokenResponse extends SuccessResponse {
+  constructor(partial: Partial<ActivateMileageTokenResponse>) {
+    super();
+    Object.assign(this, partial);
+  }
+}

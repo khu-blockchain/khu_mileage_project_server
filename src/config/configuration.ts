@@ -28,7 +28,6 @@ export default (): any => ({
   kairos: {
     chainId: parseInt(process.env.KAIROS_CHAIN_ID!, 10),
     rpcUrl: process.env.KAIROS_RPC_URL,
-    wssUrl: process.env.KAIROS_WSS_URL,
   },
   contract: {
     studentManager: process.env.STUDENT_MANAGER_CONTRACT_ADDRESS,

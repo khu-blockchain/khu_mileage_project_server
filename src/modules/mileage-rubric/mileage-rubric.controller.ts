@@ -7,15 +7,16 @@ import {
   CreateMileageActivityResponse,
   UpdateMileageCategoryRequest,
   UpdateMileageCategoryResponse,
+  UpdateMileageActivityRequest,
+  UpdateMileageActivityResponse,
   DeleteMileageCategoryResponse,
   DeleteMileageActivityResponse,
   GetRubricResponse,
 } from '@/modules/mileage-rubric/dto';
-import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
-import { RolesGuard } from '@/modules/auth/guards/roles.guard';
-import { Roles } from '@/modules/auth/decorators/roles.decorator';
+import { JwtAuthGuard, RolesGuard } from '@/modules/auth/guards';
+import { Roles } from '@/modules/auth/decorators';
 import { Role } from '@/modules/auth/constants/role.constants';
-import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
+import { BaseApiResponse } from '@/shared/dtos';
 import { plainToInstance } from 'class-transformer';
 
 @Controller('mileage-rubric')
@@ -72,11 +73,11 @@ export class MileageRubricController {
   @Roles(Role.ADMIN)
   async updateActivity(
     @Param('id') id: number,
-    @Body() input: CreateMileageActivityRequest,
-  ): Promise<BaseApiResponse<CreateMileageActivityResponse>> {
+    @Body() input: UpdateMileageActivityRequest,
+  ): Promise<BaseApiResponse<UpdateMileageActivityResponse>> {
     const result = await this.mileageRubricService.updateActivity(id, input);
     return {
-      data: plainToInstance(CreateMileageActivityResponse, result),
+      data: plainToInstance(UpdateMileageActivityResponse, result),
       meta: {},
     };
   }

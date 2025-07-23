@@ -1,6 +1,6 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
-import { Mileage } from '../mileage/entities/mileage.entity';
-import { MILEAGE_POINT_HISTORY_TYPE } from './constants/mileage-point-history-type.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
+import { Mileage } from '@/modules/mileage/entities/mileage.entity';
+import { MILEAGE_POINT_HISTORY_TYPE } from '@/modules/mileage-point-history/constants/mileage-point-history-type.enum';
 
 export type GetMileagePointHistoriesParams = {
   take: number;

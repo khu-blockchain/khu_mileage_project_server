@@ -1,4 +1,4 @@
-import { PaginationParamsDto } from '@/shared/dtos/pagination-params.dto';
+import { PaginationParamsDto } from '@/shared/dtos';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class GetMileagePointHistoriesRequest extends PaginationParamsDto {

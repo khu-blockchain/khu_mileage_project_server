@@ -4,7 +4,7 @@ import {
   ActivateMileageTokenRequest,
 } from '@/modules/mileage-token/dto';
 import { MileageTokenRepository } from '@/modules/mileage-token/repository/mileage-token.repository';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { Transactional } from 'typeorm-transactional';
 import { KaiaService } from '@/modules/kaia/kaia.service';
 import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';

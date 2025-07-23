@@ -5,11 +5,10 @@ import {
   ActivateMileageTokenRequest,
   ActivateMileageTokenResponse,
 } from '@/modules/mileage-token/dto';
-import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
-import { RolesGuard } from '@/modules/auth/guards/roles.guard';
+import { JwtAuthGuard, RolesGuard } from '@/modules/auth/guards';
 import { Role } from '@/modules/auth/constants/role.constants';
-import { Roles } from '@/modules/auth/decorators/roles.decorator';
-import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
+import { Roles } from '@/modules/auth/decorators';
+import { BaseApiResponse } from '@/shared/dtos';
 import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';
 import { Hex } from '@kaiachain/viem-ext';
 import { plainToInstance } from 'class-transformer';

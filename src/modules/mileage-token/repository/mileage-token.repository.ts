@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { MileageToken } from '../entities/mileage-token.entity';
-import { CreateMileageTokenParams } from '../mileage-token.types';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';
+import { CreateMileageTokenParams } from '@/modules/mileage-token/mileage-token.types';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { Hex } from '@kaiachain/viem-ext';
 
 @Injectable()

@@ -6,7 +6,7 @@ import {
 import { MileagePointHistory } from './entities/mileage-point-history.entity';
 import { CreateMileagePointHistoryRequest, GetMileagePointHistoriesRequest } from './dto';
 import { MileagePointHistoryRepository } from './repository/mileage-point-history.repository';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 @Injectable()
 export class MileagePointHistoryService {
@@ -40,13 +40,13 @@ export class MileagePointHistoryService {
   ): Promise<MileagePointHistory> {
     const params: CreateMileagePointHistoryParams = {
       type: mileagePointHistory.type,
-      mileage_token_name: mileagePointHistory.mileage_token_name,
-      mileage_activity_name: mileagePointHistory.mileage_activity_name,
-      mileage_category_name: mileagePointHistory.mileage_category_name,
-      mileage_point: mileagePointHistory.mileage_point,
-      transaction_status: mileagePointHistory.transaction_status,
+      mileage_token_name: mileagePointHistory.mileageTokenName,
+      mileage_activity_name: mileagePointHistory.mileageActivityName,
+      mileage_category_name: mileagePointHistory.mileageCategoryName,
+      mileage_point: mileagePointHistory.mileagePoint,
+      transaction_status: mileagePointHistory.transactionStatus,
       note: mileagePointHistory.note ?? '-',
-      transaction_hash: mileagePointHistory.transaction_hash,
+      transaction_hash: mileagePointHistory.transactionHash,
       mileage: mileagePointHistory.mileage,
     };
 

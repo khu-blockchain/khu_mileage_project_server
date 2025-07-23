@@ -1,5 +1,5 @@
 import { Expose } from 'class-transformer';
-import { MileageActivity } from '../../entities/mileage-activity.entity';
+import { MileageActivity } from '@/modules/mileage-rubric/entities/mileage-activity.entity';
 
 export class GetRubricResponse {
   @Expose()

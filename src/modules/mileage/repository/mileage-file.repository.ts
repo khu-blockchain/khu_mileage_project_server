@@ -1,7 +1,7 @@
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { MileageFile } from '../entities/mileage-file.entity';
-import { CreateMileageFileParams } from '../mileage.types';
+import { MileageFile } from '@/modules/mileage/entities/mileage-file.entity';
+import { CreateMileageFileParams } from '@/modules/mileage/mileage.types';
 
 @Injectable()
 export class MileageFileRepository extends Repository<MileageFile> {

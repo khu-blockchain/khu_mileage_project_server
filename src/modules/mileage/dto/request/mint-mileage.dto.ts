@@ -1,4 +1,4 @@
-import { RawTransactionBodyDto } from '@/shared/dtos/raw-transaction-body.dto';
+import { RawTransactionBodyDto } from '@/shared/dtos';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class MintMileageRequest extends RawTransactionBodyDto {
