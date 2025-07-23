@@ -8,7 +8,7 @@ import {
 import { StudentRepository } from './repository/student.repository';
 import { hashPassword } from '../auth/utils/hash.utils';
 import { KaiaService } from '@/modules/kaia/kaia.service';
-import { Address, Hex } from '@kaiachain/viem-ext';
+import { Address } from '@kaiachain/viem-ext';
 import { Transactional } from 'typeorm-transactional';
 import { CreateStudentParams, GetStudentsParams } from './student.types';
 import { Student } from './entities/student.entity';
@@ -50,9 +50,7 @@ export class StudentService {
 
     const student = await this.studentRepository.createStudent(newStudentParams);
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(
-      request.rawTransaction as Hex,
-    );
+    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(request.rawTransaction);
 
     const updatedStudent = await this.studentRepository.updateStudent(student.student_id, {
       transaction_hash: txHash,

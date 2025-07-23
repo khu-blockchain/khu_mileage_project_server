@@ -1,8 +1,8 @@
 import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
 import { MILEAGE_STATUS } from './constants/mileage-status.enum';
 import { Mileage } from './entities/mileage.entity';
-import { Student } from '../student/entities/student.entity';
-import { MileageActivity } from '../mileage-rubric/entities/mileage-activity.entity';
+import { Student } from '@/modules/student/entities/student.entity';
+import { MileageActivity } from '@/modules/mileage-rubric/entities/mileage-activity.entity';
 
 export type CreateMileageInitParams = {
   mileage_category_name: string;

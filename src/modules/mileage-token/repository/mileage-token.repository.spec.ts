@@ -23,4 +23,4 @@ describe('MileageTokenRepository', () => {
   it('should be defined', () => {
     expect(repository).toBeDefined();
   });
-}); 
+});

@@ -1,16 +1,15 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Body, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+
 import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { CurrentUser } from './decorators/current-user.decorator';
-import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { Response } from 'express';
-import { AuthUserContext } from './auth.types';
 import { CookieInterceptor } from '@/shared/interceptors/cookie.interceptor';
-import { UseInterceptors } from '@nestjs/common';
+
+import { AuthUserContext } from './auth.types';
+import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthStudentDto, StudentLoginRequest } from './dto';
 import { AdminLoginRequest } from './dto/request/admin-login.dto';
 import { AuthAdminDto } from './dto/response/auth-admin.dto';
+import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {

@@ -1,5 +1,5 @@
 import { RawTransactionBodyDto } from '@/shared/dtos/raw-transaction-body.dto';
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class ApproveMileageRequest extends RawTransactionBodyDto {
   constructor(partial: Partial<ApproveMileageRequest>) {

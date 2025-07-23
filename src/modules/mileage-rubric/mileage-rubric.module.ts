@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { MileageRubricService } from '@/modules/mileage-rubric/mileage-rubric.service';
 import { MileageRubricController } from '@/modules/mileage-rubric/mileage-rubric.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';

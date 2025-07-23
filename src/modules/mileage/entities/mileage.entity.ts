@@ -1,5 +1,3 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
-import { Student } from '@/modules/student/entities/student.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,10 +8,14 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { Student } from '@/modules/student/entities/student.entity';
 import { MILEAGE_STATUS } from '@/modules/mileage/constants/mileage-status.enum';
 import { MileageActivity } from '@/modules/mileage-rubric/entities/mileage-activity.entity';
-import { MileageFile } from './mileage-file.entity';
 import { MileagePointHistory } from '@/modules/mileage-point-history/entities/mileage-point-history.entity';
+
+import { MileageFile } from './mileage-file.entity';
 
 // SW 마일리지 배점 항목 변동에 따라 기존의 비교과 활동 구분을 삭제하고
 // 활동 분야, 활동만 저장하도록 변경되었습니다.

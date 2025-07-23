@@ -4,25 +4,27 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateMileageRequest } from './dto/request/create-mileage.dto';
 import { ConfigService } from '@nestjs/config';
-import { cleanupUploadedFiles } from '@/shared/utils/file.utils';
+import { Hex } from '@kaiachain/viem-ext';
 import { Transactional, runOnTransactionRollback } from 'typeorm-transactional';
-import { MileageRepository } from './repository/mileage.repository';
-import { MileageFileRepository } from './repository/mileage-file.repository';
+
+import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { cleanupUploadedFiles } from '@/shared/utils/file.utils';
+
+import { AuthUserContext } from '../auth/auth.types';
+import { Role } from '../auth/constants/role.constants';
+import { KaiaService } from '../kaia/kaia.service';
 import { MileageRubricService } from '../mileage-rubric/mileage-rubric.service';
 import { StudentService } from '../student/student.service';
-import {
-  CreateMileageFileParams,
-  CreateMileageInitParams,
-  GetMileagesParams,
-} from './mileage.types';
+import { MileagePointHistoryService } from '../mileage-point-history/mileage-point-history.service';
+import { MILEAGE_POINT_HISTORY_TYPE } from '../mileage-point-history/constants/mileage-point-history-type.enum';
+import { MileageTokenService } from '../mileage-token/mileage-token.service';
+
 import { MILEAGE_STATUS } from './constants/mileage-status.enum';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
-import { KaiaService } from '../kaia/kaia.service';
-import { Hex } from '@kaiachain/viem-ext';
-import { CreateMileageResponse } from './dto/response/create-mileage.dto';
 import { Mileage } from './entities/mileage.entity';
+import { CreateMileageRequest } from './dto/request/create-mileage.dto';
+import { CreateMileageResponse } from './dto/response/create-mileage.dto';
+import { ApproveMileageResponse } from './dto/response/approve-mileage.dto';
 import {
   ApproveMileageRequest,
   GetMileagesRequest,
@@ -33,12 +35,13 @@ import {
   BurnMileageResponse,
   BurnMileageRequest,
 } from './dto';
-import { AuthUserContext } from '../auth/auth.types';
-import { Role } from '../auth/constants/role.constants';
-import { ApproveMileageResponse } from './dto/response/approve-mileage.dto';
-import { MileagePointHistoryService } from '../mileage-point-history/mileage-point-history.service';
-import { MileageTokenService } from '../mileage-token/mileage-token.service';
-import { MILEAGE_POINT_HISTORY_TYPE } from '../mileage-point-history/constants/mileage-point-history-type.enum';
+import {
+  CreateMileageFileParams,
+  CreateMileageInitParams,
+  GetMileagesParams,
+} from './mileage.types';
+import { MileageRepository } from './repository/mileage.repository';
+import { MileageFileRepository } from './repository/mileage-file.repository';
 
 @Injectable()
 export class MileageService {
@@ -169,7 +172,7 @@ export class MileageService {
       TRANSACTION_STATUS.PROCESSING,
     );
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction as Hex);
+    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_APPROVED,
@@ -201,7 +204,7 @@ export class MileageService {
       adminComment,
     );
 
-    await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction as Hex);
+    await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
     // DocIndex로 추적 가능
     // Doc Status: Rejected, TxStatus: Processing으로 처리 후
@@ -225,7 +228,7 @@ export class MileageService {
     const currentToken =
       await this.mileageTokenService.getMileageTokenByContractAddress(currentTokenAddress);
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction as Hex);
+    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_MINTED,
@@ -256,7 +259,7 @@ export class MileageService {
     const currentToken =
       await this.mileageTokenService.getMileageTokenByContractAddress(currentTokenAddress);
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction as Hex);
+    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_BURNED,

@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { StudentController } from './student.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,11 +8,7 @@ import { KaiaModule } from '../kaia/kaia.module';
 import { AppConfigModule } from '@/config/config.module';
 
 @Module({
-  imports: [
-    AppConfigModule,
-    TypeOrmModule.forFeature([Student]),
-    KaiaModule,
-  ],
+  imports: [AppConfigModule, TypeOrmModule.forFeature([Student]), KaiaModule],
   controllers: [StudentController],
   providers: [StudentService, StudentRepository],
   exports: [StudentService],

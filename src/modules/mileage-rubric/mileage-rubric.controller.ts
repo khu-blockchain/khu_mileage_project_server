@@ -81,7 +81,6 @@ export class MileageRubricController {
     };
   }
 
- 
   @Delete('category/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)

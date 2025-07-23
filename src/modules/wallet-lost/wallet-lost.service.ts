@@ -104,7 +104,8 @@ export class WalletLostService {
   //========== Event handler ==========/
 
   async handleAccountChangedEvent(transactionHash: string): Promise<WalletLost> {
-    const walletLost = await this.walletLostRepository.getWalletLostByTransactionHash(transactionHash);
+    const walletLost =
+      await this.walletLostRepository.getWalletLostByTransactionHash(transactionHash);
     if (!walletLost) {
       throw new NotFoundException('Wallet lost not found');
     }

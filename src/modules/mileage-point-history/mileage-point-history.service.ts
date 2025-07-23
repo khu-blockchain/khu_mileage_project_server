@@ -7,14 +7,10 @@ import { MileagePointHistory } from './entities/mileage-point-history.entity';
 import { CreateMileagePointHistoryRequest, GetMileagePointHistoriesRequest } from './dto';
 import { MileagePointHistoryRepository } from './repository/mileage-point-history.repository';
 import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
-import { MileageService } from '../mileage/mileage.service';
 
 @Injectable()
 export class MileagePointHistoryService {
-  constructor(
-    private readonly mileagePointHistoryRepository: MileagePointHistoryRepository,
-    private readonly mileageService: MileageService,
-  ) {}
+  constructor(private readonly mileagePointHistoryRepository: MileagePointHistoryRepository) {}
 
   async getMileagePointHistories(query: GetMileagePointHistoriesRequest): Promise<{
     mileagePointHistories: MileagePointHistory[];
@@ -42,11 +38,6 @@ export class MileagePointHistoryService {
   async createMileagePointHistoryInit(
     mileagePointHistory: CreateMileagePointHistoryRequest,
   ): Promise<MileagePointHistory> {
-    const mileage = await this.mileageService.getMileageById(mileagePointHistory.mileage.id);
-    if (!mileage) {
-      throw new NotFoundException('Mileage not found');
-    }
-
     const params: CreateMileagePointHistoryParams = {
       type: mileagePointHistory.type,
       mileage_token_name: mileagePointHistory.mileage_token_name,
@@ -56,7 +47,7 @@ export class MileagePointHistoryService {
       transaction_status: mileagePointHistory.transaction_status,
       note: mileagePointHistory.note ?? '-',
       transaction_hash: mileagePointHistory.transaction_hash,
-      mileage,
+      mileage: mileagePointHistory.mileage,
     };
 
     return this.mileagePointHistoryRepository.createMileagePointHistoryInit(params);

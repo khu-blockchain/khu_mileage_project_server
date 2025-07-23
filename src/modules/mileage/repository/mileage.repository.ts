@@ -1,5 +1,5 @@
 import { DataSource, Repository } from 'typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Mileage } from '../entities/mileage.entity';
 import { CreateMileageInitParams, GetMileagesParams } from '../mileage.types';
 import { MILEAGE_STATUS } from '../constants/mileage-status.enum';
@@ -58,7 +58,7 @@ export class MileageRepository extends Repository<Mileage> {
     });
     return mileage;
   }
-  
+
   async findMileageByDocHash(doc_hash: string): Promise<Mileage | null> {
     const mileage = await this.findOneBy({ doc_hash });
     if (!mileage) {

@@ -9,6 +9,11 @@ import { BlockRepository } from './repository/block.repository';
 import { KaiaModule } from '../kaia/kaia.module';
 import { AppConfigModule } from '@/config/config.module';
 import { EventService } from './event.service';
+import { AdminModule } from '../admin/admin.module';
+import { StudentModule } from '../student/student.module';
+import { MileageModule } from '../mileage/mileage.module';
+import { MileagePointHistoryModule } from '../mileage-point-history/mileage-point-history.module';
+import { WalletLostModule } from '../wallet-lost/wallet-lost.module';
 
 @Module({
   imports: [
@@ -16,6 +21,11 @@ import { EventService } from './event.service';
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([EventLog, Block]),
     KaiaModule,
+    AdminModule,
+    StudentModule,
+    MileageModule,
+    MileagePointHistoryModule,
+    WalletLostModule,
   ],
   providers: [PollingService, EventService, EventLogRepository, BlockRepository],
   exports: [PollingService],

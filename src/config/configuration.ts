@@ -1,6 +1,7 @@
 export default (): any => ({
   app: {
     env: process.env.APP_ENV,
+    type: process.env.APP_TYPE || 'main',
     port: process.env.APP_PORT,
     cors: {
       origin: process.env.CORS_ORIGIN || '*',
@@ -31,6 +32,5 @@ export default (): any => ({
   },
   contract: {
     studentManager: process.env.STUDENT_MANAGER_CONTRACT_ADDRESS,
-    abiPath: process.env.CONTRACT_ABI_PATH || '@/shared/constants/contract/StudentManager.abi.json',
   },
 });

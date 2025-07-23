@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { STRATEGY_JWT_REFRESH } from '../constants/strategy.constant';
+import { Strategy } from 'passport-jwt';
+import { STRATEGY_JWT_REFRESH } from '@/modules/auth/constants/strategy.constant';
 import { Request } from 'express';
-import { JwtPayload } from '../auth.types';
+import { JwtPayload } from '@/modules/auth/auth.types';
 
 const cookieExtractor = (req: Request): string | null => {
   if (req && req.cookies) {
@@ -25,4 +25,4 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, STRATEGY_JWT_
   async validate(payload: JwtPayload) {
     return { ...payload.sub };
   }
-} 
+}

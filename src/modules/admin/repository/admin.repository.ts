@@ -1,9 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { Admin } from '@/modules/admin/entities/admin.entity';
-import { CreateAdminParams } from '../admin.types';
 import { Address } from '@kaiachain/viem-ext';
+
+import { Admin } from '@/modules/admin/entities/admin.entity';
 import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+
+import { CreateAdminParams } from '../admin.types';
 
 @Injectable()
 export class AdminRepository extends Repository<Admin> {
@@ -11,19 +13,23 @@ export class AdminRepository extends Repository<Admin> {
     super(Admin, dataSource.createEntityManager());
   }
 
-  async createPendingAdmin(data: CreateAdminParams): Promise<Admin> {
+  async createAdmin(data: CreateAdminParams): Promise<Admin> {
     const newAdmin = this.create({
       ...data,
     });
     return this.save(newAdmin);
   }
 
-  async updatePendingAdmin(adminId: string, transaction_hash: string): Promise<Admin> {
-    const admin = await this.findOneBy({ admin_id: adminId });
+  async updateAdmin(adminId: string, data: Partial<Admin>): Promise<Admin | null> {
+    const admin = await this.findAdminByAdminId(adminId);
     if (!admin) {
-      throw new NotFoundException();
+      return null;
     }
-    return this.save({ ...admin, transaction_hash });
+    return this.save({ ...admin, ...data });
+  }
+
+  async updateAdminTxHash(adminId: string, transaction_hash: string): Promise<Admin | null> {
+    return this.updateAdmin(adminId, { transaction_hash });
   }
 
   async findAdminByAdminId(adminId: string): Promise<Admin | null> {
@@ -34,23 +40,12 @@ export class AdminRepository extends Repository<Admin> {
     return this.findOneBy({ wallet_address: walletAddress });
   }
 
-  async updateEmail(adminId: string, email: string): Promise<Admin> {
-    const admin = await this.findOneBy({ admin_id: adminId });
-    if (!admin) {
-      throw new NotFoundException();
-    }
-    return this.save({ ...admin, email });
+  async updateEmail(adminId: string, email: string): Promise<Admin | null> {
+    return this.updateAdmin(adminId, { email });
   }
 
   //========== Event Callback ============
-  async handleAdminAddedEvent(
-    walletAddress: Address,
-    status: TRANSACTION_STATUS,
-  ): Promise<Admin | null> {
-    const admin = await this.findAdminByWalletAddress(walletAddress);
-    if (!admin) {
-      return null;
-    }
-    return this.save({ ...admin, transaction_status: status });
+  async handleAdminAddedEvent(adminId: string, status: TRANSACTION_STATUS): Promise<Admin | null> {
+    return this.updateAdmin(adminId, { transaction_status: status });
   }
 }

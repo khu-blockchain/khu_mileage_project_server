@@ -9,10 +9,11 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
+    "start:dev": "APP_TYPE=main nest start --watch",
+    "start:poller:dev": "APP_TYPE=poller ts-node -r tsconfig-paths/register src/poller.ts",
+    "start:debug": "APP_TYPE=main nest start --debug --watch",
     "start:prod": "APP_TYPE=main node dist/src/main",
-    "start:poller": "APP_TYPE=poller node dist/src/poller.js",
+    "start:poller:prod": "APP_TYPE=poller node dist/src/poller.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "migration:init": "ts-node -r tsconfig-paths/register node_modules/.bin/typeorm migration:generate -d ormconfig.ts migrations/init",
@@ -22,7 +23,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "lint:imports": "eslint --fix \"src/**/*.ts\"",
+    "format:imports": "eslint --fix-type suggestion \"src/**/*.ts\" 2>/dev/null || true"
   },
   "dependencies": {
     "@kaiachain/viem-ext": "^2.0.8",
@@ -76,6 +79,7 @@
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "globals": "^16.0.0",
     "jest": "^29.7.0",
     "prettier": "^3.4.2",
@@ -86,6 +90,7 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.20.0",
+    "concurrently": "^8.2.2"
   }
 }

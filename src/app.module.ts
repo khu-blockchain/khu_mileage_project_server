@@ -1,21 +1,23 @@
 import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { addTransactionalDataSource } from 'typeorm-transactional';
+
+import { AppConfigModule } from '@/config/config.module';
 import { SharedModule } from '@/shared/shared.module';
 import { AdminModule } from '@/modules/admin/admin.module';
-import { AppConfigModule } from '@/config/config.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config';
-import { addTransactionalDataSource } from 'typeorm-transactional';
-import { DataSource } from 'typeorm';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { StudentModule } from '@/modules/student/student.module';
 import { MileageRubricModule } from '@/modules/mileage-rubric/mileage-rubric.module';
 import { MileageModule } from '@/modules/mileage/mileage.module';
-import { WalletLostModule } from './modules/wallet-lost/wallet-lost.module';
-import { PollingModule } from './modules/polling/polling.module';
+import { WalletLostModule } from '@/modules/wallet-lost/wallet-lost.module';
+import { PollingModule } from '@/modules/polling/polling.module';
+import { MileagePointHistoryModule } from '@/modules/mileage-point-history/mileage-point-history.module';
 
 const imports: any[] = [];
 
-const baseImports = [
+const coreImports = [
   AppConfigModule,
   TypeOrmModule.forRootAsync({
     imports: [AppConfigModule],
@@ -40,18 +42,37 @@ const baseImports = [
     },
   }),
   SharedModule,
+];
+
+const mainImports = [
+  ...coreImports,
   AuthModule,
   StudentModule,
   AdminModule,
   MileageRubricModule,
   MileageModule,
   WalletLostModule,
+  MileagePointHistoryModule,
 ];
 
-const pollerImports = [...baseImports, PollingModule];
+const pollerImports = [
+  ...coreImports,
+  // PollingModule의 의존성 모듈들
+  AdminModule,
+  StudentModule,
+  MileageRubricModule,
+  MileageModule,
+  MileagePointHistoryModule,
+  WalletLostModule,
+  PollingModule,
+];
 
-if (process.env.APP_TYPE === 'poller') imports.push(...pollerImports);
-if (process.env.APP_TYPE === 'main') imports.push(...baseImports);
+if (process.env.APP_TYPE === 'poller') {
+  imports.push(...pollerImports);
+} else {
+  // APP_TYPE이 'main'이거나 설정되지 않은 경우 main app 모듈들을 로드
+  imports.push(...mainImports);
+}
 
 @Module({
   imports,

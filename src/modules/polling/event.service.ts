@@ -1,12 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EventLogRepository } from './repository/event-log.repository';
 import { Log, decodeEventLog, Abi, Hex } from '@kaiachain/viem-ext';
-import { EventStatus } from './constants/event-status.enum';
-import { Event } from './constants/event.enum';
+
 import StudentManagerAbi from '@/shared/constants/contract/StudentManager.abi.json';
-import { EventArgsMap, EventHandlers } from './event.types';
 import { AdminService } from '@/modules/admin/admin.service';
 import { StudentService } from '@/modules/student/student.service';
+
+import { EventLogRepository } from './repository/event-log.repository';
+import { EventStatus } from './constants/event-status.enum';
+import { Event } from './constants/event.enum';
+import { EventArgsMap, EventHandlers } from './event.types';
 import { MileageService } from '../mileage/mileage.service';
 import { MileagePointHistoryService } from '../mileage-point-history/mileage-point-history.service';
 import { WalletLostService } from '../wallet-lost/wallet-lost.service';
@@ -121,7 +123,7 @@ export class EventService {
     }
   }
 
-  private async AdminAdded(args: EventArgsMap[Event.AdminAdded], transaction_hash: Hex) {
+  private async AdminAdded(args: EventArgsMap[Event.AdminAdded]) {
     this.logger.debug('Handling AdminAdded event...', args);
     const account = args[0];
     await this.adminService.handleAdminAddedEvent(account);

@@ -1,8 +1,10 @@
-import { MILEAGE_STATUS } from '../../constants/mileage-status.enum';
+import { Expose } from 'class-transformer';
+
 import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
 import { Student } from '@/modules/student/entities/student.entity';
+
+import { MILEAGE_STATUS } from '../../constants/mileage-status.enum';
 import { MileageFile } from '../../entities/mileage-file.entity';
-import { Expose } from 'class-transformer';
 
 export class BaseMileageDto {
   @Expose()

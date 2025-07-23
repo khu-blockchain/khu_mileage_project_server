@@ -14,9 +14,7 @@ export const generateSafeFilename = (file: Express.Multer.File): string => {
   return safeName;
 };
 
-export const cleanupUploadedFiles = async (
-  files: Express.Multer.File[],
-): Promise<void> => {
+export const cleanupUploadedFiles = async (files: Express.Multer.File[]): Promise<void> => {
   console.error('An error occurred, starting file cleanup...');
 
   await Promise.all(
@@ -29,4 +27,4 @@ export const cleanupUploadedFiles = async (
       }
     }),
   );
-}; 
+};

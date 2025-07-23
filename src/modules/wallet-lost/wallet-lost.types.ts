@@ -1,5 +1,3 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
-
 export type CreateWalletLostParams = {
   student_id: string;
   student_name: string;

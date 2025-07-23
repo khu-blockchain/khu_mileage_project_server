@@ -1,10 +1,8 @@
 import { Expose } from 'class-transformer';
 import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { Address } from '@kaiachain/viem-ext';
 
 export class BaseAdminDto {
-  @Expose()
-  id: number;
-
   @Expose()
   admin_id: string;
 
@@ -15,7 +13,7 @@ export class BaseAdminDto {
   email: string;
 
   @Expose()
-  wallet_address: string;
+  wallet_address: Address;
 
   @Expose()
   transaction_status: TRANSACTION_STATUS;

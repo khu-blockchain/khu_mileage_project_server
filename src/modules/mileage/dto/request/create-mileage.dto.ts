@@ -1,9 +1,8 @@
-import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { Hex } from 'viem';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateMileageRequest {
   @IsString()
-  @IsNotEmpty() 
+  @IsNotEmpty()
   studentId: string;
 
   @IsString()

@@ -1,5 +1,12 @@
 import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Mileage } from '@/modules/mileage/entities/mileage.entity';
 import { Exclude } from 'class-transformer';
 

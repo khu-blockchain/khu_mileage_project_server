@@ -1,23 +1,24 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { plainToInstance } from 'class-transformer';
+
+import { AdminService } from '@/modules/admin/admin.service';
+import { StudentService } from '@/modules/student/student.service';
 import {
   StudentLoginRequest,
   AdminLoginRequest,
   AuthStudentDto,
   AuthAdminDto,
 } from '@/modules/auth/dto';
-import { StudentService } from '@/modules/student/student.service';
-import { comparePassword } from '@/modules/auth/utils/hash.utils';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
-import { plainToInstance } from 'class-transformer';
-import { AdminService } from '@/modules/admin/admin.service';
-import { Role } from '@/modules/auth/constants/role.constants';
 import {
   AdminJwtPayload,
   AuthUserContext,
   JwtPayload,
   StudentJwtPayload,
 } from '@/modules/auth/auth.types';
+import { Role } from '@/modules/auth/constants/role.constants';
+import { comparePassword } from '@/modules/auth/utils/hash.utils';
 
 @Injectable()
 export class AuthService {
@@ -72,11 +73,11 @@ export class AuthService {
 
   async refreshToken(user: AuthUserContext): Promise<AuthStudentDto | AuthAdminDto> {
     if (user.role === Role.STUDENT) {
-      return this.processStudentRefresh(user as StudentJwtPayload);
+      return this.processStudentRefresh(user);
     }
 
     if (user.role === Role.ADMIN) {
-      return this.processAdminRefresh(user as AdminJwtPayload);
+      return this.processAdminRefresh(user);
     }
 
     throw new UnauthorizedException('Invalid user role for token refresh.');

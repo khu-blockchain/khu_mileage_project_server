@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { http, kairos, PublicClient, fallback, FallbackTransport, Hex } from '@kaiachain/viem-ext';
 import { createPublicClient } from 'viem';
+
 import { BlockRepository } from './repository/block.repository';
 import { EventService } from './event.service';
 
@@ -22,6 +23,8 @@ export class PollingService implements OnModuleInit, OnModuleDestroy {
   async onModuleInit() {
     this.logger.log('Initializing viem public client for polling...');
 
+    this.initHttpProvider();
+
     const lastProcessedBlockNumber: bigint = await this.blockRepository.getLastProcessedBlock();
     if (lastProcessedBlockNumber === 0n) {
       this.logger.log('No last processed block found, starting from the latest block');
@@ -31,8 +34,6 @@ export class PollingService implements OnModuleInit, OnModuleDestroy {
 
     this.studentManagerContractAddress =
       this.configService.getOrThrow<Hex>('contract.studentManager');
-
-    this.initHttpProvider();
   }
 
   onModuleDestroy() {

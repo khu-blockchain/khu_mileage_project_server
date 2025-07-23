@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { initializeTransactionalContext } from 'typeorm-transactional';
+
+import { AppModule } from './app.module';
 
 /**
  * @description
@@ -27,4 +28,4 @@ async function bootstrap() {
 bootstrap().catch((err) => {
   console.error('Error starting polling application:', err);
   process.exit(1);
-}); 
+});

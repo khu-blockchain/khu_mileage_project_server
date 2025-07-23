@@ -1,14 +1,16 @@
 import { Body, Controller, Post, Put, UseGuards } from '@nestjs/common';
-import { AdminService } from './admin.service';
-import { CreateAdminRequest, BaseAdminDto, UpdateEmailRequest } from './dto';
-import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
 import { plainToInstance } from 'class-transformer';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { Role } from '../auth/constants/role.constants';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
+
 import { AdminJwtPayload } from '@/modules/auth/auth.types';
+import { Role } from '@/modules/auth/constants/role.constants';
+import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
+import { Roles } from '@/modules/auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { RolesGuard } from '@/modules/auth/guards/roles.guard';
+import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
+
+import { AdminService } from './admin.service';
+import { BaseAdminDto, CreateAdminRequest, UpdateEmailRequest } from './dto';
 
 @Controller('admin')
 export class AdminController {

@@ -1,14 +1,13 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { json } from 'express';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { initializeTransactionalContext } from 'typeorm-transactional';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   initializeTransactionalContext();
@@ -41,4 +40,4 @@ async function bootstrap() {
 
   await app.listen(port);
 }
-bootstrap();
+void bootstrap();

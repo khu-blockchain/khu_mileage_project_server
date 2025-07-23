@@ -29,7 +29,7 @@ export class MatchConstraint implements ValidatorConstraintInterface {
  * @param validationOptions - 유효성 검사 옵션
  */
 export function Match(property: string, validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,
@@ -38,4 +38,4 @@ export function Match(property: string, validationOptions?: ValidationOptions) {
       validator: MatchConstraint,
     });
   };
-} 
+}

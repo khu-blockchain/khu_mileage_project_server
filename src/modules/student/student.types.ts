@@ -1,4 +1,4 @@
-import { Address } from "@kaiachain/viem-ext";
+import { Address } from '@kaiachain/viem-ext';
 
 export type CreateStudentParams = {
   student_id: string;
@@ -18,4 +18,4 @@ export type GetStudentsParams = {
   skip: number;
   student_id?: string;
   name?: string;
-}
+};

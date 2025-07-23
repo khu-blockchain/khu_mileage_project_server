@@ -9,4 +9,3 @@ export enum Event {
   AccountChanged = 'AccountChanged',
   AccountChangeConfirmed = 'AccountChangeConfirmed',
 }
-
