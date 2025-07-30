@@ -4,13 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { plainToInstance } from 'class-transformer';
 
 import { AdminService } from '@/modules/admin/admin.service';
-import { StudentService } from '@/modules/student/student.service';
-import {
-  StudentLoginRequest,
-  AdminLoginRequest,
-  AuthStudentDto,
-  AuthAdminDto,
-} from '@/modules/auth/dto';
 import {
   AdminJwtPayload,
   AuthUserContext,
@@ -18,7 +11,14 @@ import {
   StudentJwtPayload,
 } from '@/modules/auth/auth.types';
 import { Role } from '@/modules/auth/constants/role.constants';
+import {
+  AdminLoginRequest,
+  AuthAdminDto,
+  AuthStudentDto,
+  StudentLoginRequest,
+} from '@/modules/auth/dto';
 import { comparePassword } from '@/modules/auth/utils/hash.utils';
+import { StudentService } from '@/modules/student/student.service';
 
 @Injectable()
 export class AuthService {

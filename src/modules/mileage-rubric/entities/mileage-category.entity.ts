@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
 import { MileageActivity } from './mileage-activity.entity';
 
 // 마일리지 분야에 대한 데이터입니다.

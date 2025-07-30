@@ -1,9 +1,11 @@
+import { Address } from '@kaiachain/viem-ext';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Like, Repository } from 'typeorm';
+
 import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+
 import { Student } from '../entities/student.entity';
 import { CreateStudentParams, GetStudentsParams } from '../student.types';
-import { Address } from '@kaiachain/viem-ext';
 
 @Injectable()
 export class StudentRepository extends Repository<Student> {

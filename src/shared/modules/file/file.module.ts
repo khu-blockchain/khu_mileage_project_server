@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { MulterModule } from '@nestjs/platform-express';
 import { ConfigModule } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
+import * as fs from 'fs';
 import * as multer from 'multer';
 import * as path from 'path';
-import * as fs from 'fs';
+
 import { generateSafeFilename } from '@/shared/utils/file.utils';
 
 @Module({

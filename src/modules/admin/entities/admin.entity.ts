@@ -1,7 +1,8 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums';
+import { Address } from '@kaiachain/viem-ext';
 import { Exclude } from 'class-transformer';
 import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
-import { Address } from '@kaiachain/viem-ext';
+
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 @Entity('admin')
 export class Admin {

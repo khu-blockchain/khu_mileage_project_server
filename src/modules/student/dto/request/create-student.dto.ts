@@ -1,5 +1,5 @@
-import { IsString, IsNotEmpty, IsEthereumAddress, IsEmail, IsBoolean } from 'class-validator';
 import { Address, Hex } from '@kaiachain/viem-ext';
+import { IsBoolean, IsEmail, IsEthereumAddress, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateStudentRequest {
   @IsString()

@@ -1,14 +1,15 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+
+import { POINT_TYPE } from '@/modules/mileage-rubric/constants/point-type.enum';
 import {
-  CreateMileageCategoryRequest,
   CreateMileageActivityRequest,
-  DeleteMileageCategoryResponse,
+  CreateMileageCategoryRequest,
   DeleteMileageActivityResponse,
+  DeleteMileageCategoryResponse,
   UpdateMileageActivityRequest,
   UpdateMileageCategoryRequest,
 } from '@/modules/mileage-rubric/dto';
-import { MileageCategoryRepository } from '@/modules/mileage-rubric/repository/mileage-category.repository';
-import { MileageActivityRepository } from '@/modules/mileage-rubric/repository/mileage-activity.repository';
+import { MileageActivity } from '@/modules/mileage-rubric/entities/mileage-activity.entity';
 import { MileageCategory } from '@/modules/mileage-rubric/entities/mileage-category.entity';
 import {
   CreateMileageActivityParam,
@@ -16,8 +17,8 @@ import {
   UpdateMileageActivityParam,
   UpdateMileageCategoryParam,
 } from '@/modules/mileage-rubric/mileage-rubric.types';
-import { MileageActivity } from '@/modules/mileage-rubric/entities/mileage-activity.entity';
-import { POINT_TYPE } from '@/modules/mileage-rubric/constants/point-type.enum';
+import { MileageActivityRepository } from '@/modules/mileage-rubric/repository/mileage-activity.repository';
+import { MileageCategoryRepository } from '@/modules/mileage-rubric/repository/mileage-category.repository';
 
 @Injectable()
 export class MileageRubricService {
@@ -35,9 +36,7 @@ export class MileageRubricService {
   }
 
   async createActivity(input: CreateMileageActivityRequest): Promise<MileageActivity> {
-    const category = await this.mileageCategoryRepository.findCategoryById(
-      input.mileageCategoryId,
-    );
+    const category = await this.mileageCategoryRepository.findCategoryById(input.mileageCategoryId);
 
     if (!category) {
       throw new NotFoundException('Category not found');
@@ -72,10 +71,11 @@ export class MileageRubricService {
     return this.mileageCategoryRepository.updateCategory(id, categoryParams);
   }
 
-  async updateActivity(id: number, input: UpdateMileageActivityRequest): Promise<{success: boolean}> {
-    const category = await this.mileageCategoryRepository.findCategoryById(
-      input.mileageCategoryId,
-    );
+  async updateActivity(
+    id: number,
+    input: UpdateMileageActivityRequest,
+  ): Promise<{ success: boolean }> {
+    const category = await this.mileageCategoryRepository.findCategoryById(input.mileageCategoryId);
 
     if (!category) {
       throw new NotFoundException('Category not found');

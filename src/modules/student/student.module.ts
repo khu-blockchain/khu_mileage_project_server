@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { StudentService } from './student.service';
-import { StudentController } from './student.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { AppConfigModule } from '@/config/config.module';
+
+import { KaiaModule } from '../kaia/kaia.module';
 import { Student } from './entities/student.entity';
 import { StudentRepository } from './repository/student.repository';
-import { KaiaModule } from '../kaia/kaia.module';
-import { AppConfigModule } from '@/config/config.module';
+import { StudentController } from './student.controller';
+import { StudentService } from './student.service';
 
 @Module({
   imports: [AppConfigModule, TypeOrmModule.forFeature([Student]), KaiaModule],

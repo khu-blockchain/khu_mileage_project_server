@@ -1,4 +1,5 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+
 import { POINT_TYPE } from '@/modules/mileage-rubric/constants/point-type.enum';
 
 export class CreateMileageActivityRequest {

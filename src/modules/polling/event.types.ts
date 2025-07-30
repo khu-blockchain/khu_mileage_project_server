@@ -1,4 +1,5 @@
 import { Address, Hex } from '@kaiachain/viem-ext';
+
 import { Event } from './constants/event.enum';
 
 type account = Address;

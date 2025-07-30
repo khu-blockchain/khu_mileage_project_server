@@ -1,7 +1,8 @@
-import { Injectable, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import { createWalletClient, Hex, http, kairos, privateKeyToAccount } from '@kaiachain/viem-ext';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { createWalletClient, http, kairos, Hex, privateKeyToAccount } from '@kaiachain/viem-ext';
 import { Address, createPublicClient } from 'viem';
+
 import StudentManagerABI from '@/shared/constants/contract/StudentManager.abi.json';
 
 @Injectable()

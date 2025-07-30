@@ -1,7 +1,8 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
 import { Mileage } from '@/modules/mileage/entities/mileage.entity';
-import { MileageCategory } from '@/modules/mileage-rubric/entities/mileage-category.entity';
 import { POINT_TYPE } from '@/modules/mileage-rubric/constants/point-type.enum';
+import { MileageCategory } from '@/modules/mileage-rubric/entities/mileage-category.entity';
 
 @Entity('mileage_activity')
 export class MileageActivity {

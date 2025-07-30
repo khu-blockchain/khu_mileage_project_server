@@ -5,15 +5,15 @@ import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 
 import { AppConfigModule } from '@/config/config.module';
-import { SharedModule } from '@/shared/shared.module';
 import { AdminModule } from '@/modules/admin/admin.module';
 import { AuthModule } from '@/modules/auth/auth.module';
-import { StudentModule } from '@/modules/student/student.module';
-import { MileageRubricModule } from '@/modules/mileage-rubric/mileage-rubric.module';
 import { MileageModule } from '@/modules/mileage/mileage.module';
-import { WalletLostModule } from '@/modules/wallet-lost/wallet-lost.module';
-import { PollingModule } from '@/modules/polling/polling.module';
 import { MileagePointHistoryModule } from '@/modules/mileage-point-history/mileage-point-history.module';
+import { MileageRubricModule } from '@/modules/mileage-rubric/mileage-rubric.module';
+import { PollingModule } from '@/modules/polling/polling.module';
+import { StudentModule } from '@/modules/student/student.module';
+import { WalletLostModule } from '@/modules/wallet-lost/wallet-lost.module';
+import { SharedModule } from '@/shared/shared.module';
 
 const imports: any[] = [];
 

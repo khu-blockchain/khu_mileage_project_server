@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
+
 import { MileageCategory } from '@/modules/mileage-rubric/entities/mileage-category.entity';
 import { CreateMileageCategoryParam } from '@/modules/mileage-rubric/mileage-rubric.types';
 

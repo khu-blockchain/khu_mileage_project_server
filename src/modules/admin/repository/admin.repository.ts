@@ -1,11 +1,10 @@
+import { Address } from '@kaiachain/viem-ext';
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { Address } from '@kaiachain/viem-ext';
-
-import { Admin } from '@/modules/admin/entities/admin.entity';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 import { CreateAdminParams } from '@/modules/admin/admin.types';
+import { Admin } from '@/modules/admin/entities/admin.entity';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 @Injectable()
 export class AdminRepository extends Repository<Admin> {

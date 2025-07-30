@@ -1,4 +1,3 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
 import {
   Column,
   CreateDateColumn,
@@ -6,6 +5,9 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+
 import { WALLET_LOST_STATUS } from '../constants/wallet-lost-status.enum';
 
 @Entity('wallet_lost')

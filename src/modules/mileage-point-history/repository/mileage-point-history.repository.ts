@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
+
+import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+
 import { MileagePointHistory } from '../entities/mileage-point-history.entity';
 import {
   CreateMileagePointHistoryParams,
   GetMileagePointHistoriesParams,
 } from '../mileage-point-history.types';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
 
 @Injectable()
 export class MileagePointHistoryRepository extends Repository<MileagePointHistory> {

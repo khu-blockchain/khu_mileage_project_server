@@ -1,4 +1,3 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import {
   Column,
   CreateDateColumn,
@@ -6,6 +5,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 @Entity('mileage_token')
 export class MileageToken {

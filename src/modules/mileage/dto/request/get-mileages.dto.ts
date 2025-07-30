@@ -1,6 +1,7 @@
-import { PaginationParamsDto } from '@/shared/dtos';
-import { IsOptional, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
 import { MILEAGE_STATUS } from '@/modules/mileage/constants/mileage-status.enum';
+import { PaginationParamsDto } from '@/shared/dtos';
 
 export class GetMileagesRequest extends PaginationParamsDto {
   constructor(partial: Partial<GetMileagesRequest>) {

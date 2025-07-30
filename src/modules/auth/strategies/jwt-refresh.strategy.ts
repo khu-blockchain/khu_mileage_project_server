@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-jwt';
-import { STRATEGY_JWT_REFRESH } from '@/modules/auth/constants/strategy.constant';
 import { Request } from 'express';
+import { Strategy } from 'passport-jwt';
+
 import { JwtPayload } from '@/modules/auth/auth.types';
+import { STRATEGY_JWT_REFRESH } from '@/modules/auth/constants/strategy.constant';
 
 const cookieExtractor = (req: Request): string | null => {
   if (req && req.cookies) {

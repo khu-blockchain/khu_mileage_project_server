@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
+
+import { WALLET_LOST_STATUS } from '../constants/wallet-lost-status.enum';
 import { WalletLost } from '../entities/wallet-lost.entity';
 import { CreateWalletLostParams, GetWalletLostListQuery } from '../wallet-lost.types';
-import { WALLET_LOST_STATUS } from '../constants/wallet-lost-status.enum';
 
 @Injectable()
 export class WalletLostRepository extends Repository<WalletLost> {

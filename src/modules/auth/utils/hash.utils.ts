@@ -1,5 +1,5 @@
-import { randomBytes } from 'crypto';
 import * as bcrypt from 'bcrypt';
+import { randomBytes } from 'crypto';
 
 export const hashPassword = async (password: string): Promise<string> => {
   const saltRounds = 10;

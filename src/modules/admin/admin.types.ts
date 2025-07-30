@@ -1,5 +1,6 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { Address } from '@kaiachain/viem-ext';
+
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 export type CreateAdminParams = {
   admin_id: string;

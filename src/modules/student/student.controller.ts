@@ -1,11 +1,15 @@
-import { Controller, Get, Post, Body, UseGuards, Query, Param } from '@nestjs/common';
-import { StudentService } from './student.service';
-import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+
+import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
+import { SuccessResponse } from '@/shared/dtos/success-response.dto';
+
+import { StudentJwtPayload } from '../auth/auth.types';
+import { Role } from '../auth/constants/role.constants';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { Roles } from '../auth/decorators/roles.decorator';
-import { Role } from '../auth/constants/role.constants';
 import {
   BaseStudentDto,
   ConfirmWalletChangeRequest,
@@ -13,9 +17,7 @@ import {
   CreateWalletChangeRequest,
   GetStudentsRequest,
 } from './dto';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { StudentJwtPayload } from '../auth/auth.types';
-import { SuccessResponse } from '@/shared/dtos/success-response.dto';
+import { StudentService } from './student.service';
 
 @Controller('student')
 export class StudentController {

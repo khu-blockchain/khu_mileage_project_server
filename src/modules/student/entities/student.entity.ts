@@ -1,4 +1,4 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -7,8 +7,9 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
 import { Mileage } from '@/modules/mileage/entities/mileage.entity';
-import { Exclude } from 'class-transformer';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
 
 @Entity('student')
 export class Student {

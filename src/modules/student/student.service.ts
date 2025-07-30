@@ -1,18 +1,20 @@
+import { Address } from '@kaiachain/viem-ext';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Transactional } from 'typeorm-transactional';
+
+import { KaiaService } from '@/modules/kaia/kaia.service';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+
+import { hashPassword } from '../auth/utils/hash.utils';
 import {
   ConfirmWalletChangeRequest,
   CreateStudentRequest,
   CreateWalletChangeRequest,
   GetStudentsRequest,
 } from './dto';
-import { StudentRepository } from './repository/student.repository';
-import { hashPassword } from '../auth/utils/hash.utils';
-import { KaiaService } from '@/modules/kaia/kaia.service';
-import { Address } from '@kaiachain/viem-ext';
-import { Transactional } from 'typeorm-transactional';
-import { CreateStudentParams, GetStudentsParams } from './student.types';
 import { Student } from './entities/student.entity';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { StudentRepository } from './repository/student.repository';
+import { CreateStudentParams, GetStudentsParams } from './student.types';
 
 @Injectable()
 export class StudentService {

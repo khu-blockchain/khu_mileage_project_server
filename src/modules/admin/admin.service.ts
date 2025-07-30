@@ -1,19 +1,19 @@
-import {
-  Injectable,
-  ConflictException,
-  NotFoundException,
-  InternalServerErrorException,
-} from '@nestjs/common';
 import { Address } from '@kaiachain/viem-ext';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Transactional } from 'typeorm-transactional';
 
-import { TRANSACTION_STATUS } from '@/shared/constants/enums';
+import { CreateAdminParams } from '@/modules/admin/admin.types';
+import { CreateAdminRequest, UpdateEmailRequest } from '@/modules/admin/dto';
+import { Admin } from '@/modules/admin/entities/admin.entity';
+import { AdminRepository } from '@/modules/admin/repository/admin.repository';
 import { hashPassword } from '@/modules/auth/utils/hash.utils';
 import { KaiaService } from '@/modules/kaia/kaia.service';
-import { Admin } from '@/modules/admin/entities/admin.entity';
-import { CreateAdminRequest, UpdateEmailRequest } from '@/modules/admin/dto';
-import { AdminRepository } from '@/modules/admin/repository/admin.repository';
-import { CreateAdminParams } from '@/modules/admin/admin.types';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 @Injectable()
 export class AdminService {

@@ -1,5 +1,6 @@
-import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { Expose } from 'class-transformer';
+
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 export class BaseMileageTokenDto {
   @Expose()

@@ -1,5 +1,6 @@
-import { RawTransactionBodyDto } from '@/shared/dtos';
 import { IsNumber, IsOptional, IsString } from 'class-validator';
+
+import { RawTransactionBodyDto } from '@/shared/dtos';
 
 export class MintMileageRequest extends RawTransactionBodyDto {
   constructor(partial: Partial<MintMileageRequest>) {

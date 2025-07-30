@@ -1,11 +1,11 @@
-import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import { fallback, FallbackTransport, Hex, http, kairos, PublicClient } from '@kaiachain/viem-ext';
+import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { http, kairos, PublicClient, fallback, FallbackTransport, Hex } from '@kaiachain/viem-ext';
 import { createPublicClient } from 'viem';
 
-import { BlockRepository } from './repository/block.repository';
 import { EventService } from './event.service';
+import { BlockRepository } from './repository/block.repository';
 
 @Injectable()
 export class PollingService implements OnModuleInit, OnModuleDestroy {

@@ -1,4 +1,5 @@
 import { Abi } from '@kaiachain/viem-ext';
+
 import studentManagerAbiJson from './StudentManager.abi.json';
 import swMileageTokenAbiJson from './SwMileageToken.abi.json';
 import swMileageTokenFactoryAbiJson from './SwMileageTokenFactory.abi.json';

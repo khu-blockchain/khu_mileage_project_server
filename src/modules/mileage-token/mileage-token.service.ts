@@ -1,15 +1,16 @@
+import { Hex } from '@kaiachain/viem-ext';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  CreateMileageTokenRequest,
-  ActivateMileageTokenRequest,
-} from '@/modules/mileage-token/dto';
-import { MileageTokenRepository } from '@/modules/mileage-token/repository/mileage-token.repository';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 import { Transactional } from 'typeorm-transactional';
+
 import { KaiaService } from '@/modules/kaia/kaia.service';
+import {
+  ActivateMileageTokenRequest,
+  CreateMileageTokenRequest,
+} from '@/modules/mileage-token/dto';
 import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';
 import { CreateMileageTokenParams } from '@/modules/mileage-token/mileage-token.types';
-import { Hex } from '@kaiachain/viem-ext';
+import { MileageTokenRepository } from '@/modules/mileage-token/repository/mileage-token.repository';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 @Injectable()
 export class MileageTokenService {

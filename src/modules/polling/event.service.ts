@@ -1,17 +1,17 @@
+import { Abi, decodeEventLog, Hex, Log } from '@kaiachain/viem-ext';
 import { Injectable, Logger } from '@nestjs/common';
-import { Log, decodeEventLog, Abi, Hex } from '@kaiachain/viem-ext';
 
-import StudentManagerAbi from '@/shared/constants/contract/StudentManager.abi.json';
 import { AdminService } from '@/modules/admin/admin.service';
 import { StudentService } from '@/modules/student/student.service';
+import StudentManagerAbi from '@/shared/constants/contract/StudentManager.abi.json';
 
-import { EventLogRepository } from './repository/event-log.repository';
-import { EventStatus } from './constants/event-status.enum';
-import { Event } from './constants/event.enum';
-import { EventArgsMap, EventHandlers } from './event.types';
 import { MileageService } from '../mileage/mileage.service';
 import { MileagePointHistoryService } from '../mileage-point-history/mileage-point-history.service';
 import { WalletLostService } from '../wallet-lost/wallet-lost.service';
+import { Event } from './constants/event.enum';
+import { EventStatus } from './constants/event-status.enum';
+import { EventArgsMap, EventHandlers } from './event.types';
+import { EventLogRepository } from './repository/event-log.repository';
 
 @Injectable()
 export class EventService {

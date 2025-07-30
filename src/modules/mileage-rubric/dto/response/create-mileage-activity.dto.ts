@@ -1,4 +1,5 @@
 import { Expose } from 'class-transformer';
+
 import { POINT_TYPE } from '@/modules/mileage-rubric/constants/point-type.enum';
 
 export class CreateMileageActivityResponse {

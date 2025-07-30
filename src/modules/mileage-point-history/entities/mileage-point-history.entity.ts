@@ -1,4 +1,3 @@
-import { Mileage } from '@/modules/mileage/entities/mileage.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +7,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { Mileage } from '@/modules/mileage/entities/mileage.entity';
 import { MILEAGE_POINT_HISTORY_TYPE } from '@/modules/mileage-point-history/constants/mileage-point-history-type.enum';
 
 @Entity('mileage_point_history')

@@ -1,10 +1,10 @@
+import { isAddress } from '@kaiachain/viem-ext';
 import {
   registerDecorator,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { isAddress } from '@kaiachain/viem-ext';
 
 /**
  * @description 주소 형식이 올바른지 검사하는 Constraint

@@ -1,9 +1,10 @@
+import { Hex } from '@kaiachain/viem-ext';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
+
 import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';
 import { CreateMileageTokenParams } from '@/modules/mileage-token/mileage-token.types';
 import { TRANSACTION_STATUS } from '@/shared/constants/enums';
-import { Hex } from '@kaiachain/viem-ext';
 
 @Injectable()
 export class MileageTokenRepository extends Repository<MileageToken> {

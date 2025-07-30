@@ -1,23 +1,24 @@
-import { Controller, Get, Post, Body, Param, Delete, UseGuards, Patch } from '@nestjs/common';
-import { MileageRubricService } from '@/modules/mileage-rubric/mileage-rubric.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+
+import { Role } from '@/modules/auth/constants/role.constants';
+import { Roles } from '@/modules/auth/decorators';
+import { JwtAuthGuard, RolesGuard } from '@/modules/auth/guards';
 import {
-  CreateMileageCategoryRequest,
-  CreateMileageCategoryResponse,
   CreateMileageActivityRequest,
   CreateMileageActivityResponse,
-  UpdateMileageCategoryRequest,
-  UpdateMileageCategoryResponse,
+  CreateMileageCategoryRequest,
+  CreateMileageCategoryResponse,
+  DeleteMileageActivityResponse,
+  DeleteMileageCategoryResponse,
+  GetRubricResponse,
   UpdateMileageActivityRequest,
   UpdateMileageActivityResponse,
-  DeleteMileageCategoryResponse,
-  DeleteMileageActivityResponse,
-  GetRubricResponse,
+  UpdateMileageCategoryRequest,
+  UpdateMileageCategoryResponse,
 } from '@/modules/mileage-rubric/dto';
-import { JwtAuthGuard, RolesGuard } from '@/modules/auth/guards';
-import { Roles } from '@/modules/auth/decorators';
-import { Role } from '@/modules/auth/constants/role.constants';
+import { MileageRubricService } from '@/modules/mileage-rubric/mileage-rubric.service';
 import { BaseApiResponse } from '@/shared/dtos';
-import { plainToInstance } from 'class-transformer';
 
 @Controller('mileage-rubric')
 export class MileageRubricController {

@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
-import { MileageTokenService } from './mileage-token.service';
-import { MileageTokenController } from './mileage-token.controller';
+
 import { KaiaModule } from '@/modules/kaia/kaia.module';
+
+import { MileageTokenController } from './mileage-token.controller';
+import { MileageTokenService } from './mileage-token.service';
 import { MileageTokenRepository } from './repository/mileage-token.repository';
 
 @Module({

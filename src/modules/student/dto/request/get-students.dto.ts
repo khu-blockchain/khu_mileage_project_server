@@ -1,4 +1,5 @@
 import { IsOptional, IsString } from 'class-validator';
+
 import { PaginationParamsDto } from '@/shared/dtos/pagination-params.dto';
 
 export class GetStudentsRequest extends PaginationParamsDto {

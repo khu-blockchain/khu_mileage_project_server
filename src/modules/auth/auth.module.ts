@@ -5,12 +5,12 @@ import { PassportModule } from '@nestjs/passport';
 
 import { AppConfigModule } from '@/config/config.module';
 import { AdminModule } from '@/modules/admin/admin.module';
-import { StudentModule } from '@/modules/student/student.module';
-import { STRATEGY_JWT_AUTH } from '@/modules/auth/constants/strategy.constant';
-import { AuthService } from '@/modules/auth/auth.service';
 import { AuthController } from '@/modules/auth/auth.controller';
+import { AuthService } from '@/modules/auth/auth.service';
+import { STRATEGY_JWT_AUTH } from '@/modules/auth/constants/strategy.constant';
 import { JwtAuthStrategy } from '@/modules/auth/strategies/jwt-auth.strategy';
 import { JwtRefreshStrategy } from '@/modules/auth/strategies/jwt-refresh.strategy';
+import { StudentModule } from '@/modules/student/student.module';
 
 @Module({
   imports: [

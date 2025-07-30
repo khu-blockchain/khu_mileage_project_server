@@ -1,3 +1,4 @@
+import { Hex } from '@kaiachain/viem-ext';
 import {
   BadRequestException,
   ForbiddenException,
@@ -5,36 +6,34 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Hex } from '@kaiachain/viem-ext';
-import { Transactional, runOnTransactionRollback } from 'typeorm-transactional';
-
-import { TRANSACTION_STATUS } from '@/shared/constants/enums';
-import { cleanupUploadedFiles } from '@/shared/utils/file.utils';
+import { runOnTransactionRollback, Transactional } from 'typeorm-transactional';
 
 import { AuthUserContext } from '@/modules/auth/auth.types';
 import { Role } from '@/modules/auth/constants/role.constants';
 import { KaiaService } from '@/modules/kaia/kaia.service';
-import { MileageRubricService } from '@/modules/mileage-rubric/mileage-rubric.service';
-import { StudentService } from '@/modules/student/student.service';
-import { MileagePointHistoryService } from '@/modules/mileage-point-history/mileage-point-history.service';
 import { MILEAGE_POINT_HISTORY_TYPE } from '@/modules/mileage-point-history/constants/mileage-point-history-type.enum';
+import { MileagePointHistoryService } from '@/modules/mileage-point-history/mileage-point-history.service';
+import { MileageRubricService } from '@/modules/mileage-rubric/mileage-rubric.service';
 import { MileageTokenService } from '@/modules/mileage-token/mileage-token.service';
+import { StudentService } from '@/modules/student/student.service';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
+import { cleanupUploadedFiles } from '@/shared/utils/file.utils';
 
 import { MILEAGE_STATUS } from './constants/mileage-status.enum';
-import { Mileage } from './entities/mileage.entity';
 import {
+  ApproveMileageRequest,
+  ApproveMileageResponse,
+  BurnMileageRequest,
+  BurnMileageResponse,
   CreateMileageRequest,
   CreateMileageResponse,
-  ApproveMileageResponse,
-  ApproveMileageRequest,
   GetMileagesRequest,
-  MintMileageResponse,
   MintMileageRequest,
+  MintMileageResponse,
   RejectMileageRequest,
   RejectMileageResponse,
-  BurnMileageResponse,
-  BurnMileageRequest,
 } from './dto';
+import { Mileage } from './entities/mileage.entity';
 import {
   CreateMileageFileParams,
   CreateMileageInitParams,
@@ -176,7 +175,7 @@ export class MileageService {
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_APPROVED,
-      mileageTokenName  : currentToken.name,
+      mileageTokenName: currentToken.name,
       mileageActivityName: mileage.mileage_activity_name,
       mileageCategoryName: mileage.mileage_category_name,
       mileagePoint: mileagePoint,

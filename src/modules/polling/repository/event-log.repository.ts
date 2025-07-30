@@ -1,7 +1,8 @@
-import { DataSource, Repository } from 'typeorm';
-import { EventLog } from '../entities/event-log.entity';
 import { Injectable } from '@nestjs/common';
+import { DataSource, Repository } from 'typeorm';
+
 import { EventStatus } from '../constants/event-status.enum';
+import { EventLog } from '../entities/event-log.entity';
 import { EventLogsParams } from '../polling.types';
 
 @Injectable()

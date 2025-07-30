@@ -1,17 +1,19 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
-import { MileageTokenService } from '@/modules/mileage-token/mileage-token.service';
-import {
-  CreateMileageTokenRequest,
-  ActivateMileageTokenRequest,
-  ActivateMileageTokenResponse,
-} from '@/modules/mileage-token/dto';
-import { JwtAuthGuard, RolesGuard } from '@/modules/auth/guards';
+import { Hex } from '@kaiachain/viem-ext';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
+
 import { Role } from '@/modules/auth/constants/role.constants';
 import { Roles } from '@/modules/auth/decorators';
-import { BaseApiResponse } from '@/shared/dtos';
+import { JwtAuthGuard, RolesGuard } from '@/modules/auth/guards';
+import {
+  ActivateMileageTokenRequest,
+  ActivateMileageTokenResponse,
+  CreateMileageTokenRequest,
+} from '@/modules/mileage-token/dto';
 import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';
-import { Hex } from '@kaiachain/viem-ext';
-import { plainToInstance } from 'class-transformer';
+import { MileageTokenService } from '@/modules/mileage-token/mileage-token.service';
+import { BaseApiResponse } from '@/shared/dtos';
+
 import { BaseMileageTokenDto } from './dto/response/base-mileage-token.dto';
 
 @Controller('mileage-token')
