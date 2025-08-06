@@ -10,7 +10,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "APP_TYPE=main nest start --watch",
-    "start:poller:dev": "APP_TYPE=poller ts-node -r tsconfig-paths/register src/poller.ts",
+    "start:poller:dev": "APP_TYPE=poller ts-node -r tsconfig-paths/register src/poller.ts --watch",
     "start:debug": "APP_TYPE=main nest start --debug --watch",
     "start:prod": "APP_TYPE=main node dist/src/main",
     "start:poller:prod": "APP_TYPE=poller node dist/src/poller.js",
@@ -76,6 +76,7 @@
     "@types/node": "^22.10.7",
     "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^6.0.2",
+    "concurrently": "^8.2.2",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
@@ -90,7 +91,6 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0",
-    "concurrently": "^8.2.2"
+    "typescript-eslint": "^8.20.0"
   }
 }

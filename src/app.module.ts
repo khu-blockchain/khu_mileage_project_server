@@ -57,13 +57,12 @@ const mainImports = [
 
 const pollerImports = [
   ...coreImports,
-  // PollingModule의 의존성 모듈들
-  AdminModule,
   StudentModule,
+  AdminModule,
   MileageRubricModule,
   MileageModule,
-  MileagePointHistoryModule,
   WalletLostModule,
+  MileagePointHistoryModule,
   PollingModule,
 ];
 

@@ -4,7 +4,7 @@ import { Event } from './constants/event.enum';
 
 type account = Address;
 type targetAccount = Address;
-type studentHash = string;
+type studentId = string;
 type documentIndex = number;
 type docHash = string;
 type amount = number;
@@ -12,15 +12,23 @@ type reasonHash = string;
 type admin = Address;
 
 export type EventArgsMap = {
-  [Event.AdminAdded]: [account];
-  [Event.StudentRegistered]: [studentHash, account];
-  [Event.DocSubmitted]: [documentIndex, studentHash, docHash];
-  [Event.DocApproved]: [documentIndex, studentHash, amount];
-  [Event.DocRejected]: [documentIndex, studentHash, reasonHash];
-  [Event.MileageBurned]: [studentHash, account, admin, amount];
-  [Event.MileageMinted]: [studentHash, account, admin, amount];
-  [Event.AccountChanged]: [studentHash, account, targetAccount];
-  [Event.AccountChangeConfirmed]: [studentHash, account, targetAccount];
+  [Event.AdminAdded]: { account: account };
+  [Event.StudentRegistered]: { studentId: studentId; account: account };
+  [Event.DocSubmitted]: { documentIndex: documentIndex; studentId: studentId; docHash: docHash };
+  [Event.DocApproved]: { documentIndex: documentIndex; studentId: studentId; amount: amount };
+  [Event.DocRejected]: {
+    documentIndex: documentIndex;
+    studentId: studentId;
+    reasonHash: reasonHash;
+  };
+  [Event.MileageBurned]: { studentId: studentId; account: account; admin: admin; amount: amount };
+  [Event.MileageMinted]: { studentId: studentId; account: account; admin: admin; amount: amount };
+  [Event.AccountChanged]: { studentId: studentId; account: account; targetAccount: targetAccount };
+  [Event.AccountChangeConfirmed]: {
+    studentId: studentId;
+    account: account;
+    targetAccount: targetAccount;
+  };
 };
 
 export type EventHandler<E extends Event> = (

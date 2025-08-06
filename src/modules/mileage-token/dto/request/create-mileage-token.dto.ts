@@ -16,9 +16,9 @@ export class CreateMileageTokenRequest {
 
   @IsNotEmpty()
   @IsString()
-  image_url: string;
+  imageUrl: string;
 
   @IsNotEmpty()
   @IsString()
-  raw_transaction: Hex;
+  rawTransaction: Hex;
 }

@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { Transactional } from 'typeorm-transactional';
@@ -14,9 +15,11 @@ import { AdminRepository } from '@/modules/admin/repository/admin.repository';
 import { hashPassword } from '@/modules/auth/utils/hash.utils';
 import { KaiaService } from '@/modules/kaia/kaia.service';
 import { TRANSACTION_STATUS } from '@/shared/constants/enums';
+import { convertToLowercase } from '@/shared/utils/address.utils';
 
 @Injectable()
 export class AdminService {
+  private readonly logger = new Logger(AdminService.name);
   constructor(
     private readonly adminRepository: AdminRepository,
     private readonly kaiaService: KaiaService,
@@ -42,7 +45,7 @@ export class AdminService {
       admin_id: adminId,
       name: input.name,
       email: input.email,
-      wallet_address: walletAddress,
+      wallet_address: convertToLowercase(walletAddress),
       password: hashedPassword,
       transaction_status: TRANSACTION_STATUS.PROCESSING,
     };
@@ -67,12 +70,8 @@ export class AdminService {
     return updatedAdmin;
   }
 
-  async findAdminByAdminId(adminId: string): Promise<Admin> {
-    const admin = await this.adminRepository.findAdminByAdminId(adminId);
-    if (!admin) {
-      throw new NotFoundException('관리자를 찾을 수 없습니다.');
-    }
-    return admin;
+  async findAdminByAdminId(adminId: string): Promise<Admin | null> {
+    return await this.adminRepository.findAdminByAdminId(adminId);
   }
 
   //========== Event Callback ============
@@ -92,6 +91,7 @@ export class AdminService {
       admin.admin_id,
       TRANSACTION_STATUS.CONFIRMED,
     );
+
     if (!updatedAdmin) {
       throw new InternalServerErrorException('Failed to update admin');
     }
@@ -100,11 +100,10 @@ export class AdminService {
 
   //========== Private Methods ============
 
-  private async findAdminByWalletAddress(walletAddress: Address): Promise<Admin> {
-    const admin = await this.adminRepository.findAdminByWalletAddress(walletAddress);
-    if (!admin) {
-      throw new NotFoundException('관리자를 찾을 수 없습니다.');
-    }
+  private async findAdminByWalletAddress(walletAddress: Address): Promise<Admin | null> {
+    const admin = await this.adminRepository.findAdminByWalletAddress(
+      convertToLowercase(walletAddress),
+    );
     return admin;
   }
 }

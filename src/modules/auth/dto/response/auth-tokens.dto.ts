@@ -1,19 +1,9 @@
-import { Expose, Type } from 'class-transformer';
-
-class TokenDetails {
-  @Expose()
-  token: string;
-
-  @Expose()
-  expires_in: number;
-}
+import { Expose } from 'class-transformer';
 
 export class AuthTokensDto {
   @Expose()
-  @Type(() => TokenDetails)
-  access_token: TokenDetails;
+  access_token: string;
 
   @Expose()
-  @Type(() => TokenDetails)
-  refresh_token: TokenDetails;
+  refresh_token: string;
 }

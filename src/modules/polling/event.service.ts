@@ -106,7 +106,7 @@ export class EventService {
 
       await this.callEventHandler(
         parsedEventName,
-        args as EventArgsMap[typeof parsedEventName],
+        args as unknown as EventArgsMap[typeof parsedEventName],
         transactionHash,
       );
     } catch (error) {
@@ -124,29 +124,29 @@ export class EventService {
   }
 
   private async AdminAdded(args: EventArgsMap[Event.AdminAdded]) {
-    this.logger.debug('Handling AdminAdded event...', args);
-    const account = args[0];
+    const account = args.account;
+    this.logger.debug('Handling AdminAdded event...', account);
     await this.adminService.handleAdminAddedEvent(account);
   }
 
   private async StudentRegistered(args: EventArgsMap[Event.StudentRegistered]) {
+    const student_hash = args.studentId;
     this.logger.debug('Handling StudentRegistered event...', args);
-    const student_hash = args[0];
     await this.studentService.handleStudentRegisteredEvent(student_hash);
   }
 
   private async DocSubmitted(args: EventArgsMap[Event.DocSubmitted]) {
     this.logger.debug('Handling DocSubmitted event...', args);
-    const docuemnt_index = Number(args[0]);
-    const doc_hash = args[2];
+    const docuemnt_index = Number(args.documentIndex);
+    const doc_hash = args.docHash;
 
     await this.mileageService.handleDocSubmittedEvent(docuemnt_index, doc_hash);
   }
 
   private async DocApproved(args: EventArgsMap[Event.DocApproved], transaction_hash: Hex) {
     this.logger.debug('Handling DocApproved event...', args);
-    const document_index = Number(args[0]);
-    const student_hash = args[1];
+    const document_index = Number(args.documentIndex);
+    const student_hash = args.studentId;
 
     const student = await this.studentService.getStudentByStudentHash(student_hash);
     const { student_id } = student;
@@ -158,8 +158,8 @@ export class EventService {
 
   private async DocRejected(args: EventArgsMap[Event.DocRejected], transaction_hash: Hex) {
     this.logger.debug('Handling DocRejected event...', args);
-    const document_index = Number(args[0]);
-    const student_hash = args[1];
+    const document_index = Number(args.documentIndex);
+    const student_hash = args.studentId;
 
     const student = await this.studentService.getStudentByStudentHash(student_hash);
     const { student_id } = student;
@@ -182,8 +182,8 @@ export class EventService {
   }
 
   private async AccountChanged(args: EventArgsMap[Event.AccountChanged], transaction_hash: Hex) {
-    const student_hash = args[0];
-    const target_account = args[2];
+    const student_hash = args.studentId;
+    const target_account = args.targetAccount;
     const student = await this.studentService.getStudentByStudentHash(student_hash);
     const { student_id } = student;
 
@@ -193,8 +193,8 @@ export class EventService {
 
   // 학생 주관 변경
   private async AccountChangeConfirmed(args: EventArgsMap[Event.AccountChangeConfirmed]) {
-    const student_hash = args[0];
-    const target_account = args[2];
+    const student_hash = args.studentId;
+    const target_account = args.targetAccount;
     const student = await this.studentService.getStudentByStudentHash(student_hash);
     const { student_id } = student;
 

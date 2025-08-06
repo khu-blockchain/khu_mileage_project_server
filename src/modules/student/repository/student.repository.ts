@@ -49,7 +49,7 @@ export class StudentRepository extends Repository<Student> {
   }
 
   async getStudentByStudentHash(student_hash: string): Promise<Student | null> {
-    return await this.findOneBy({ student_hash });
+    return await this.findOne({ where: { student_hash } });
   }
 
   async getStudentByStudentId(student_id: string): Promise<Student | null> {

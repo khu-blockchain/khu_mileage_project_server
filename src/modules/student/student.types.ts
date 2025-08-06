@@ -10,6 +10,7 @@ export type CreateStudentParams = {
   bank_account_number: string;
   bank_code: string;
   personal_information_consent: boolean;
+  personal_information_consent_date: Date;
   student_hash: string;
 };
 

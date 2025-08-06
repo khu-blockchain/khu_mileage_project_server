@@ -65,9 +65,14 @@ export class KaiaService {
         params: [feePayerSignedTx],
       });
 
-      console.log('fee payer contract execution tx', sentFeePayerTx);
+      const result = await this.publicClient.waitForTransactionReceipt({
+        hash: sentFeePayerTx as Hex,
+      });
+
+      console.log('fee payer contract execution tx', result);
       return sentFeePayerTx as Hex;
     } catch (error) {
+      console.error('Failed to send transaction:', error);
       throw new InternalServerErrorException(
         `Failed to send transaction: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );

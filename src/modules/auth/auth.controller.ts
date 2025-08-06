@@ -1,10 +1,12 @@
 import { Body, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 
 import { BaseApiResponse } from '@/shared/dtos';
 import { CookieInterceptor } from '@/shared/interceptors/cookie.interceptor';
 
 import { AuthService } from './auth.service';
 import { AuthUserContext } from './auth.types';
+import { Role } from './constants/role.constants';
 import { CurrentUser } from './decorators';
 import { AuthStudentDto, StudentLoginRequest } from './dto';
 import { AdminLoginRequest } from './dto/request/admin-login.dto';
@@ -23,7 +25,9 @@ export class AuthController {
     const result = await this.authService.studentLogin(request);
 
     return {
-      data: result,
+      data: plainToInstance(AuthStudentDto, result, {
+        excludeExtraneousValues: true,
+      }),
       meta: {},
     };
   }
@@ -34,7 +38,9 @@ export class AuthController {
     const result = await this.authService.adminLogin(request);
 
     return {
-      data: result,
+      data: plainToInstance(AuthAdminDto, result, {
+        excludeExtraneousValues: true,
+      }),
       meta: {},
     };
   }
@@ -47,8 +53,18 @@ export class AuthController {
   ): Promise<BaseApiResponse<AuthStudentDto | AuthAdminDto>> {
     const result = await this.authService.refreshToken(user);
 
+    if (user.role === Role.STUDENT) {
+      return {
+        data: plainToInstance(AuthStudentDto, result, {
+          excludeExtraneousValues: true,
+        }),
+        meta: {},
+      };
+    }
     return {
-      data: result,
+      data: plainToInstance(AuthAdminDto, result, {
+        excludeExtraneousValues: true,
+      }),
       meta: {},
     };
   }

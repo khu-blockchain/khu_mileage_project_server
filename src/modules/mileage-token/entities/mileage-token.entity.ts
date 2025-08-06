@@ -19,7 +19,7 @@ export class MileageToken {
   @Column()
   description: string;
 
-  @Column()
+  @Column({ nullable: true })
   contract_address: string;
 
   @Column()
@@ -35,7 +35,7 @@ export class MileageToken {
   })
   transaction_status: TRANSACTION_STATUS;
 
-  @Column()
+  @Column({ nullable: true })
   transaction_hash: string;
 
   @CreateDateColumn({ name: 'created_at' })

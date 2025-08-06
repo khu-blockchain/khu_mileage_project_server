@@ -31,7 +31,9 @@ export class MileageTokenRepository extends Repository<MileageToken> {
   }
 
   async findAll(): Promise<MileageToken[]> {
-    return await this.findBy({ transaction_status: TRANSACTION_STATUS.CONFIRMED });
+    //TODO: MileageTokenAdd Event 추가 후 수정
+    // return await this.findBy({ transaction_status: TRANSACTION_STATUS.CONFIRMED });
+    return await this.find();
   }
 
   async findById(id: number): Promise<MileageToken | null> {

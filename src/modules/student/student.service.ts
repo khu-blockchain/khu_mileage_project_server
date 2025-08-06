@@ -1,5 +1,11 @@
 import { Address } from '@kaiachain/viem-ext';
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { Transactional } from 'typeorm-transactional';
 
 import { KaiaService } from '@/modules/kaia/kaia.service';
@@ -18,6 +24,8 @@ import { CreateStudentParams, GetStudentsParams } from './student.types';
 
 @Injectable()
 export class StudentService {
+  private readonly logger = new Logger(StudentService.name);
+
   constructor(
     private readonly studentRepository: StudentRepository,
     private readonly kaiaService: KaiaService,
@@ -47,6 +55,7 @@ export class StudentService {
       bank_account_number: request.bankAccountNumber,
       bank_code: request.bankCode,
       personal_information_consent: request.personalInformationConsentStatus,
+      personal_information_consent_date: new Date(),
       student_hash: request.studentHash,
     };
 
@@ -131,7 +140,16 @@ export class StudentService {
 
   //========== Event Callback ============
   async handleStudentRegisteredEvent(student_hash: string): Promise<{ success: boolean }> {
-    const student = await this.getStudentByStudentHash(student_hash);
+    if (!student_hash) {
+      this.logger.debug(`Failed to handle StudentRegistered event. Tx: ${student_hash}`);
+      throw new BadRequestException('잘못된 학생 해시입니다.');
+    }
+
+    const student = await this.studentRepository.getStudentByStudentHash(student_hash);
+    if (!student) {
+      this.logger.debug(`Failed to handle StudentRegistered event. Tx: ${student_hash}`);
+      throw new NotFoundException('학생을 찾을 수 없습니다.');
+    }
     await this.studentRepository.handleStudentRegisteredEvent(
       student.student_id,
       TRANSACTION_STATUS.CONFIRMED,

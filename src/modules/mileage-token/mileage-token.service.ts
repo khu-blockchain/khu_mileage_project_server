@@ -1,5 +1,5 @@
 import { Hex } from '@kaiachain/viem-ext';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Transactional } from 'typeorm-transactional';
 
 import { KaiaService } from '@/modules/kaia/kaia.service';
@@ -21,22 +21,31 @@ export class MileageTokenService {
 
   @Transactional()
   async create(input: CreateMileageTokenRequest): Promise<MileageToken> {
-    const { raw_transaction, ...rest } = input;
+    try {
+      const { rawTransaction, ...rest } = input;
 
-    const createMileageTokenParams: CreateMileageTokenParams = {
-      ...rest,
-      transaction_status: TRANSACTION_STATUS.PROCESSING,
-    };
+      console.log('rawTransaction', rawTransaction);
+      console.log('rest', rest);
 
-    const pendingMileageToken =
-      await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
+      const createMileageTokenParams: CreateMileageTokenParams = {
+        ...rest,
+        image_url: rest.imageUrl,
+        transaction_status: TRANSACTION_STATUS.PROCESSING,
+      };
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(raw_transaction);
+      const pendingMileageToken =
+        await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
 
-    return await this.mileageTokenRepository.updateMileageTokenTransactionHash(
-      pendingMileageToken.id,
-      txHash,
-    );
+      const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+
+      return await this.mileageTokenRepository.updateMileageTokenTransactionHash(
+        pendingMileageToken.id,
+        txHash,
+      );
+    } catch (error) {
+      console.error('Failed to create mileage token:', error);
+      throw new InternalServerErrorException('Failed to create mileage token');
+    }
   }
 
   async findAll(): Promise<MileageToken[]> {
@@ -49,9 +58,9 @@ export class MileageTokenService {
       throw new NotFoundException('Mileage token not found');
     }
 
-    const { raw_transaction } = input;
+    const { rawTransaction } = input;
 
-    await this.kaiaService.sendTransactionWithFeePayerSign(raw_transaction);
+    await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
     return {
       success: true,
