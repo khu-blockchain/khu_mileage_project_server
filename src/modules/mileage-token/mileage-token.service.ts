@@ -27,8 +27,10 @@ export class MileageTokenService {
       transaction_status: TRANSACTION_STATUS.PROCESSING,
     };
 
+    // const pendingMileageToken =
+    //   await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
     const pendingMileageToken =
-      await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
+      await this.mileageTokenRepository.createMileageTokenInitNotNull(createMileageTokenParams);
 
     const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(raw_transaction);
 
