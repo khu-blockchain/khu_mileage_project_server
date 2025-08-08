@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import {
   CreateMileageTokenRequest,
   ActivateMileageTokenRequest,
@@ -66,5 +66,29 @@ export class MileageTokenService {
     }
 
     return mileageToken;
+  }
+
+  async handleMileageTokenCreatedEvent(
+    tokenAddress: Hex,
+    transactionHash: Hex,
+  ): Promise<{ success: boolean }> {
+    const mileageToken =
+      await this.mileageTokenRepository.getMileageTokenByTransactionHash(transactionHash);
+    if (!mileageToken) {
+      throw new NotFoundException('Mileage token not found');
+    }
+    const updatedMileageToken = await this.mileageTokenRepository.updateMileageToken(
+      mileageToken.id,
+      {
+        contract_address: tokenAddress,
+        transaction_status: TRANSACTION_STATUS.CONFIRMED,
+      },
+    );
+
+    if (!updatedMileageToken) {
+      throw new InternalServerErrorException('Failed to update mileage token');
+    }
+
+    return { success: true };
   }
 }

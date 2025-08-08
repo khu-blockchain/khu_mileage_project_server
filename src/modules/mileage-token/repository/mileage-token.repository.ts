@@ -49,4 +49,26 @@ export class MileageTokenRepository extends Repository<MileageToken> {
   async findByContractAddress(contractAddress: Hex): Promise<MileageToken | null> {
     return this.findOneBy({ contract_address: contractAddress });
   }
+
+  async getMileageTokenByTransactionHash(transaction_hash: Hex): Promise<MileageToken | null> {
+    const mileageToken = await this.findOneBy({ transaction_hash });
+    if (!mileageToken) {
+      return null;
+    }
+    return mileageToken;
+  }
+
+  async updateMileageToken(
+    id: number,
+    params: Partial<MileageToken>,
+  ): Promise<MileageToken | null> {
+    const mileageToken = await this.findOneBy({ id });
+    if (!mileageToken) {
+      return null;
+    }
+    return this.save({
+      ...mileageToken,
+      ...params,
+    });
+  }
 }
