@@ -19,6 +19,15 @@ export class MileageTokenRepository extends Repository<MileageToken> {
     return this.save(newMileageToken);
   }
 
+  async createMileageTokenInitNotNull(data: CreateMileageTokenParams): Promise<MileageToken> {
+    const newMileageToken = this.create({
+      ...data,
+      contract_address: '0x',
+      transaction_hash: '0x',
+    });
+    return this.save(newMileageToken);
+  }
+
   async updateMileageTokenTransactionHash(
     id: number,
     transaction_hash: string,
@@ -42,5 +51,27 @@ export class MileageTokenRepository extends Repository<MileageToken> {
 
   async findByContractAddress(contractAddress: Hex): Promise<MileageToken | null> {
     return this.findOneBy({ contract_address: contractAddress });
+  }
+
+  async getMileageTokenByTransactionHash(transaction_hash: Hex): Promise<MileageToken | null> {
+    const mileageToken = await this.findOneBy({ transaction_hash });
+    if (!mileageToken) {
+      return null;
+    }
+    return mileageToken;
+  }
+
+  async updateMileageToken(
+    id: number,
+    params: Partial<MileageToken>,
+  ): Promise<MileageToken | null> {
+    const mileageToken = await this.findOneBy({ id });
+    if (!mileageToken) {
+      return null;
+    }
+    return this.save({
+      ...mileageToken,
+      ...params,
+    });
   }
 }

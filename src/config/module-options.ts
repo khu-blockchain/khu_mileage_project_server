@@ -25,5 +25,6 @@ export const configModuleOptions: ConfigModuleOptions = {
     KAIROS_CHAIN_ID: Joi.number().required(),
     KAIROS_RPC_URL: Joi.string().required(),
     STUDENT_MANAGER_CONTRACT_ADDRESS: Joi.string().required(),
+    SW_MILEAGE_TOKEN_FACTORY_CONTRACT_ADDRESS: Joi.string().required(),
   }),
 };

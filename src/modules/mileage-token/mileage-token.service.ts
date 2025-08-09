@@ -1,8 +1,4 @@
-import { Hex } from '@kaiachain/viem-ext';
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { Transactional } from 'typeorm-transactional';
-
-import { KaiaService } from '@/modules/kaia/kaia.service';
+import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import {
   ActivateMileageTokenRequest,
   CreateMileageTokenRequest,
@@ -33,8 +29,10 @@ export class MileageTokenService {
         transaction_status: TRANSACTION_STATUS.PROCESSING,
       };
 
-      const pendingMileageToken =
-        await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
+    // const pendingMileageToken =
+    //   await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
+    const pendingMileageToken =
+      await this.mileageTokenRepository.createMileageTokenInitNotNull(createMileageTokenParams);
 
       const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
@@ -78,5 +76,29 @@ export class MileageTokenService {
     }
 
     return mileageToken;
+  }
+
+  async handleMileageTokenCreatedEvent(
+    tokenAddress: Hex,
+    transactionHash: Hex,
+  ): Promise<{ success: boolean }> {
+    const mileageToken =
+      await this.mileageTokenRepository.getMileageTokenByTransactionHash(transactionHash);
+    if (!mileageToken) {
+      throw new NotFoundException('Mileage token not found');
+    }
+    const updatedMileageToken = await this.mileageTokenRepository.updateMileageToken(
+      mileageToken.id,
+      {
+        contract_address: tokenAddress,
+        transaction_status: TRANSACTION_STATUS.CONFIRMED,
+      },
+    );
+
+    if (!updatedMileageToken) {
+      throw new InternalServerErrorException('Failed to update mileage token');
+    }
+
+    return { success: true };
   }
 }

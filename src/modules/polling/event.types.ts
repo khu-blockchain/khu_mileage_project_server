@@ -11,6 +11,7 @@ type docHash = string;
 type amount = number;
 type reasonHash = string;
 type admin = Address;
+type tokenAddress = Address;
 
 export type EventArgsMap = {
   [Event.AdminAdded]: { account: account };
