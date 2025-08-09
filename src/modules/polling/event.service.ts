@@ -1,7 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Log, decodeEventLog, Abi, Hex } from '@kaiachain/viem-ext';
+import { ConfigService } from '@nestjs/config';
 
 import StudentManagerAbi from '@/shared/constants/contract/StudentManager.abi.json';
+import SwMileageFactoryAbi from '@/shared/constants/contract/SwMileageTokenFactory.abi.json';
 import { AdminService } from '@/modules/admin/admin.service';
 import { StudentService } from '@/modules/student/student.service';
 
@@ -12,22 +14,30 @@ import { EventArgsMap, EventHandlers } from './event.types';
 import { MileageService } from '../mileage/mileage.service';
 import { MileagePointHistoryService } from '../mileage-point-history/mileage-point-history.service';
 import { WalletLostService } from '../wallet-lost/wallet-lost.service';
+import { MileageTokenService } from '../mileage-token/mileage-token.service';
 
 @Injectable()
 export class EventService {
   private readonly logger = new Logger(EventService.name);
   private studentManagerAbi: Abi;
+  private swMileageFactoryAbi: Abi;
   private readonly eventHandlers: EventHandlers;
+  private studentManagerContractAddress: Hex;
 
   constructor(
+    private readonly configService: ConfigService,
     private readonly eventLogRepository: EventLogRepository,
     private readonly adminService: AdminService,
     private readonly studentService: StudentService,
     private readonly mileageService: MileageService,
     private readonly mileagePointHistoryService: MileagePointHistoryService,
     private readonly walletLostService: WalletLostService,
+    private readonly mileageTokenService: MileageTokenService,
   ) {
     this.studentManagerAbi = StudentManagerAbi as Abi;
+    this.swMileageFactoryAbi = SwMileageFactoryAbi as Abi;
+    this.studentManagerContractAddress =
+      this.configService.getOrThrow<Hex>('contract.studentManager');
     this.eventHandlers = this.createEventHandlers();
   }
 
@@ -42,6 +52,7 @@ export class EventService {
       [Event.MileageMinted]: this.MileageMinted.bind(this),
       [Event.AccountChanged]: this.AccountChanged.bind(this),
       [Event.AccountChangeConfirmed]: this.AccountChangeConfirmed.bind(this),
+      [Event.MileageTokenCreated]: this.MileageTokenCreated.bind(this),
     };
   }
 
@@ -61,8 +72,12 @@ export class EventService {
 
   async routeEventHandler(log: Log) {
     try {
+      const isStudentManager =
+        log.address.toLowerCase() === this.studentManagerContractAddress.toLowerCase();
+      const abi = isStudentManager ? this.studentManagerAbi : this.swMileageFactoryAbi;
+
       const decodedLog = decodeEventLog({
-        abi: this.studentManagerAbi,
+        abi,
         data: log.data,
         topics: log.topics,
       });
@@ -199,6 +214,17 @@ export class EventService {
     const { student_id } = student;
 
     await this.studentService.handleAccountChangedEvent(student_id, target_account);
+  }
+
+  private async MileageTokenCreated(
+    args: EventArgsMap[Event.MileageTokenCreated],
+    transaction_hash: Hex,
+  ) {
+    const tokenAddress = (args as any).tokenAddress as Hex;
+
+    this.logger.debug('Handling MileageTokenCreated event...', args, tokenAddress);
+
+    await this.mileageTokenService.handleMileageTokenCreatedEvent(tokenAddress, transaction_hash);
   }
 
   private parseLogDataToSafeValue(data: any): string {

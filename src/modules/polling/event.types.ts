@@ -9,6 +9,7 @@ type docHash = string;
 type amount = number;
 type reasonHash = string;
 type admin = Address;
+type tokenAddress = Address;
 
 export type EventArgsMap = {
   [Event.AdminAdded]: [account];
@@ -20,6 +21,7 @@ export type EventArgsMap = {
   [Event.MileageMinted]: [studentHash, account, admin, amount];
   [Event.AccountChanged]: [studentHash, account, targetAccount];
   [Event.AccountChangeConfirmed]: [studentHash, account, targetAccount];
+  [Event.MileageTokenCreated]: [tokenAddress];
 };
 
 export type EventHandler<E extends Event> = (
