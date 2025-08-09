@@ -49,7 +49,11 @@ export class MileageTokenService {
   }
 
   async findAll(): Promise<MileageToken[]> {
-    return await this.mileageTokenRepository.findAll();
+    return await this.mileageTokenRepository.find({
+      where: {
+        transaction_status: TRANSACTION_STATUS.CONFIRMED,
+      },
+    });
   }
 
   async activate(id: number, input: ActivateMileageTokenRequest): Promise<{ success: boolean }> {

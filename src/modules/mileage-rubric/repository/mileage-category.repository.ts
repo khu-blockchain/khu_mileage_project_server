@@ -40,6 +40,11 @@ export class MileageCategoryRepository extends Repository<MileageCategory> {
   }
 
   async findAllWithActivities(): Promise<MileageCategory[]> {
-    return this.find({ relations: ['mileage_activities'] });
+    return this.find({
+      relations: ['mileage_activities'],
+      order: {
+        id: 'ASC',
+      },
+    });
   }
 }

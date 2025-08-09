@@ -10,6 +10,7 @@ import { Transactional } from 'typeorm-transactional';
 
 import { KaiaService } from '@/modules/kaia/kaia.service';
 import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { convertToLowercase } from '@/shared/utils/address.utils';
 
 import { hashPassword } from '../auth/utils/hash.utils';
 import {
@@ -50,7 +51,7 @@ export class StudentService {
       name: request.name,
       password: hashedPassword,
       email: request.email,
-      wallet_address: walletAddress,
+      wallet_address: convertToLowercase(walletAddress),
       department: request.department,
       bank_account_number: request.bankAccountNumber,
       bank_code: request.bankCode,
@@ -162,6 +163,11 @@ export class StudentService {
     student_id: string,
     target_account: Address,
   ): Promise<{ success: boolean }> {
+    if (!student_id || !target_account) {
+      this.logger.debug(`Failed to handle AccountChanged event. Tx: ${student_id}`);
+      throw new BadRequestException('잘못된 학생 해시 또는 지갑 주소입니다.');
+    }
+
     const student = await this.getStudentByStudentId(student_id);
     if (!student) {
       throw new NotFoundException('학생을 찾을 수 없습니다.');

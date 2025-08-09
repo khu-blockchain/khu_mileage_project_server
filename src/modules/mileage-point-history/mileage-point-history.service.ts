@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
@@ -87,8 +87,15 @@ export class MileagePointHistoryService {
   //==============Event callback===================
 
   async handleDocApprovedEvent(transaction_hash: string): Promise<{ success: boolean }> {
+    if (!transaction_hash) {
+      throw new BadRequestException('잘못된 트랜잭션 해시입니다.');
+    }
+
     const mileagePointHistory =
       await this.getMileagePointHistoryByTransactionHash(transaction_hash);
+    if (!mileagePointHistory) {
+      throw new NotFoundException('Mileage point history not found');
+    }
     await this.mileagePointHistoryRepository.confirmMileagePointHistory(
       mileagePointHistory.id,
       TRANSACTION_STATUS.CONFIRMED,
@@ -97,6 +104,10 @@ export class MileagePointHistoryService {
   }
 
   async handleDocRejectedEvent(transaction_hash: string): Promise<{ success: boolean }> {
+    if (!transaction_hash) {
+      throw new BadRequestException('잘못된 트랜잭션 해시입니다.');
+    }
+
     const mileagePointHistory =
       await this.getMileagePointHistoryByTransactionHash(transaction_hash);
     await this.mileagePointHistoryRepository.confirmMileagePointHistory(
@@ -107,6 +118,10 @@ export class MileagePointHistoryService {
   }
 
   async handleMileageMintedEvent(transaction_hash: string): Promise<{ success: boolean }> {
+    if (!transaction_hash) {
+      throw new BadRequestException('잘못된 트랜잭션 해시입니다.');
+    }
+
     const mileagePointHistory =
       await this.getMileagePointHistoryByTransactionHash(transaction_hash);
     await this.mileagePointHistoryRepository.confirmMileagePointHistory(
@@ -117,6 +132,10 @@ export class MileagePointHistoryService {
   }
 
   async handleMileageBurnedEvent(transaction_hash: string): Promise<{ success: boolean }> {
+    if (!transaction_hash) {
+      throw new BadRequestException('잘못된 트랜잭션 해시입니다.');
+    }
+
     const mileagePointHistory =
       await this.getMileagePointHistoryByTransactionHash(transaction_hash);
     await this.mileagePointHistoryRepository.confirmMileagePointHistory(

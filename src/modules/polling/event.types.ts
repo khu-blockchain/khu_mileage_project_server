@@ -3,6 +3,7 @@ import { Address, Hex } from '@kaiachain/viem-ext';
 import { Event } from './constants/event.enum';
 
 type account = Address;
+type tokenAddress = Address;
 type targetAccount = Address;
 type studentId = string;
 type documentIndex = number;
@@ -29,6 +30,7 @@ export type EventArgsMap = {
     account: account;
     targetAccount: targetAccount;
   };
+  [Event.MileageTokenCreated]: { tokenAddress: tokenAddress };
 };
 
 export type EventHandler<E extends Event> = (

@@ -4,13 +4,16 @@ import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.
 
 export class BaseStudentDto {
   @Expose()
-  id: string;
+  student_id: string;
 
   @Expose()
   name: string;
 
   @Expose()
   department: string;
+
+  @Expose()
+  email: string;
 
   @Expose()
   wallet_address: string;
@@ -29,6 +32,9 @@ export class BaseStudentDto {
 
   @Expose()
   personal_information_consent_date: Date;
+
+  @Expose()
+  student_hash: string;
 
   @Expose()
   created_at: Date;

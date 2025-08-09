@@ -4,7 +4,7 @@ import { POINT_TYPE } from '@/modules/mileage-rubric/constants/point-type.enum';
 
 export class CreateMileageActivityResponse {
   @Expose()
-  id: string;
+  id: number;
 
   @Expose()
   name: string;

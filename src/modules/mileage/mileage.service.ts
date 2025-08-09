@@ -289,6 +289,10 @@ export class MileageService {
     doc_index: number,
     doc_hash: string,
   ): Promise<{ success: boolean }> {
+    if (!doc_index || !doc_hash) {
+      throw new BadRequestException('잘못된 문서 인덱스 또는 해시입니다.');
+    }
+
     const mileage = await this.mileageRepository.findMileageByDocHash(doc_hash);
     if (!mileage) {
       throw new NotFoundException('Mileage not found');

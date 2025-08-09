@@ -42,6 +42,7 @@ export class EventService {
       [Event.MileageMinted]: this.MileageMinted.bind(this),
       [Event.AccountChanged]: this.AccountChanged.bind(this),
       [Event.AccountChangeConfirmed]: this.AccountChangeConfirmed.bind(this),
+      [Event.MileageTokenCreated]: this.MileageTokenCreated.bind(this),
     };
   }
 
@@ -121,6 +122,12 @@ export class EventService {
         );
       }
     }
+  }
+
+  private async MileageTokenCreated(args: EventArgsMap[Event.MileageTokenCreated]) {
+    const tokenAddress = args.tokenAddress;
+    this.logger.debug('Handling MileageTokenCreated event...', tokenAddress);
+    // await this.mileageService.handleMileageTokenCreatedEvent(tokenAddress);
   }
 
   private async AdminAdded(args: EventArgsMap[Event.AdminAdded]) {

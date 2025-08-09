@@ -8,4 +8,5 @@ export enum Event {
   MileageMinted = 'MileageMinted',
   AccountChanged = 'AccountChanged',
   AccountChangeConfirmed = 'AccountChangeConfirmed',
+  MileageTokenCreated = 'MileageTokenCreated',
 }
