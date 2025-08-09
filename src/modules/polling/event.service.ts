@@ -1,18 +1,21 @@
 import { Abi, decodeEventLog, Hex, Log } from '@kaiachain/viem-ext';
 import { Injectable, Logger } from '@nestjs/common';
-import { Log, decodeEventLog, Abi, Hex } from '@kaiachain/viem-ext';
 import { ConfigService } from '@nestjs/config';
 
 import StudentManagerAbi from '@/shared/constants/contract/StudentManager.abi.json';
 import SwMileageFactoryAbi from '@/shared/constants/contract/SwMileageTokenFactory.abi.json';
 import { AdminService } from '@/modules/admin/admin.service';
 import { StudentService } from '@/modules/student/student.service';
-import StudentManagerAbi from '@/shared/constants/contract/StudentManager.abi.json';
 
 import { MileageService } from '../mileage/mileage.service';
 import { MileagePointHistoryService } from '../mileage-point-history/mileage-point-history.service';
 import { WalletLostService } from '../wallet-lost/wallet-lost.service';
 import { MileageTokenService } from '../mileage-token/mileage-token.service';
+import { EventHandlers } from './event.types';
+import { EventLogRepository } from './repository/event-log.repository';
+import { Event } from './constants/event.enum';
+import { EventStatus } from './constants/event-status.enum';
+import { EventArgsMap } from './event.types';
 
 @Injectable()
 export class EventService {
@@ -136,10 +139,15 @@ export class EventService {
     }
   }
 
-  private async MileageTokenCreated(args: EventArgsMap[Event.MileageTokenCreated]) {
-    const tokenAddress = args.tokenAddress;
-    this.logger.debug('Handling MileageTokenCreated event...', tokenAddress);
-    // await this.mileageService.handleMileageTokenCreatedEvent(tokenAddress);
+  private async MileageTokenCreated(
+    args: EventArgsMap[Event.MileageTokenCreated],
+    transaction_hash: Hex,
+  ) {
+    const tokenAddress = (args as any).tokenAddress as Hex;
+
+    this.logger.debug('Handling MileageTokenCreated event...', args, tokenAddress);
+
+    await this.mileageTokenService.handleMileageTokenCreatedEvent(tokenAddress, transaction_hash);
   }
 
   private async AdminAdded(args: EventArgsMap[Event.AdminAdded]) {
@@ -218,17 +226,6 @@ export class EventService {
     const { student_id } = student;
 
     await this.studentService.handleAccountChangedEvent(student_id, target_account);
-  }
-
-  private async MileageTokenCreated(
-    args: EventArgsMap[Event.MileageTokenCreated],
-    transaction_hash: Hex,
-  ) {
-    const tokenAddress = (args as any).tokenAddress as Hex;
-
-    this.logger.debug('Handling MileageTokenCreated event...', args, tokenAddress);
-
-    await this.mileageTokenService.handleMileageTokenCreatedEvent(tokenAddress, transaction_hash);
   }
 
   private parseLogDataToSafeValue(data: any): string {

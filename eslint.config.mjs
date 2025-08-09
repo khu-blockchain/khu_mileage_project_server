@@ -15,7 +15,6 @@ export default [
   {
     plugins: {
       prettier,
-      'simple-import-sort': simpleImportSort,
     },
 
     languageOptions: {

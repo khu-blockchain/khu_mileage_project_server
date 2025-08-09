@@ -10,9 +10,13 @@ import { MileageModule } from '../mileage/mileage.module';
 import { MileagePointHistoryModule } from '../mileage-point-history/mileage-point-history.module';
 import { StudentModule } from '../student/student.module';
 import { WalletLostModule } from '../wallet-lost/wallet-lost.module';
-import { MileageTokenService } from '../mileage-token/mileage-token.service';
 import { MileageTokenModule } from '../mileage-token/mileage-token.module';
-import { MileageTokenRepository } from '../mileage-token/repository/mileage-token.repository';
+import { EventLog } from './entities/event-log.entity';
+import { Block } from './entities/block.entity';
+import { PollingService } from './polling.service';
+import { EventService } from './event.service';
+import { EventLogRepository } from './repository/event-log.repository';
+import { BlockRepository } from './repository/block.repository';
 
 @Module({
   imports: [
@@ -27,14 +31,7 @@ import { MileageTokenRepository } from '../mileage-token/repository/mileage-toke
     WalletLostModule,
     MileageTokenModule,
   ],
-  providers: [
-    PollingService,
-    EventService,
-    MileageTokenService,
-    EventLogRepository,
-    BlockRepository,
-    MileageTokenRepository,
-  ],
+  providers: [PollingService, EventService, EventLogRepository, BlockRepository],
   exports: [PollingService],
 })
 export class PollingModule {}

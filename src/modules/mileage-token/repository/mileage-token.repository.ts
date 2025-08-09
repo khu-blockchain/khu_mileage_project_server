@@ -4,7 +4,6 @@ import { DataSource, Repository } from 'typeorm';
 
 import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';
 import { CreateMileageTokenParams } from '@/modules/mileage-token/mileage-token.types';
-import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 @Injectable()
 export class MileageTokenRepository extends Repository<MileageToken> {

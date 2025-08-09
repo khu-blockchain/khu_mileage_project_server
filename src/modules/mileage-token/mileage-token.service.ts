@@ -7,6 +7,9 @@ import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.ent
 import { CreateMileageTokenParams } from '@/modules/mileage-token/mileage-token.types';
 import { MileageTokenRepository } from '@/modules/mileage-token/repository/mileage-token.repository';
 import { TRANSACTION_STATUS } from '@/shared/constants/enums';
+import { Transactional } from 'typeorm-transactional';
+import { KaiaService } from '../kaia/kaia.service';
+import { Hex } from '@kaiachain/viem-ext';
 
 @Injectable()
 export class MileageTokenService {
@@ -29,10 +32,10 @@ export class MileageTokenService {
         transaction_status: TRANSACTION_STATUS.PROCESSING,
       };
 
-    // const pendingMileageToken =
-    //   await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
-    const pendingMileageToken =
-      await this.mileageTokenRepository.createMileageTokenInitNotNull(createMileageTokenParams);
+      // const pendingMileageToken =
+      //   await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
+      const pendingMileageToken =
+        await this.mileageTokenRepository.createMileageTokenInitNotNull(createMileageTokenParams);
 
       const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
