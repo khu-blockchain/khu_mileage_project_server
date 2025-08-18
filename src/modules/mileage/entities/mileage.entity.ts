@@ -59,6 +59,9 @@ export class Mileage {
   })
   transaction_status: TRANSACTION_STATUS;
 
+  @Column({ nullable: true, default: null })
+  transaction_hash: string;
+
   @CreateDateColumn({ name: 'created_at', nullable: true })
   created_at: Date;
 

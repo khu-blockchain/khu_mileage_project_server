@@ -3,7 +3,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 import StudentManagerAbi from '@/shared/constants/contract/StudentManager.abi.json';
-import SwMileageFactoryAbi from '@/shared/constants/contract/SwMileageTokenFactory.abi.json';
 import { AdminService } from '@/modules/admin/admin.service';
 import { StudentService } from '@/modules/student/student.service';
 
@@ -21,7 +20,6 @@ import { EventArgsMap } from './event.types';
 export class EventService {
   private readonly logger = new Logger(EventService.name);
   private studentManagerAbi: Abi;
-  private swMileageFactoryAbi: Abi;
   private readonly eventHandlers: EventHandlers;
   private studentManagerContractAddress: Hex;
 
@@ -36,7 +34,6 @@ export class EventService {
     private readonly mileageTokenService: MileageTokenService,
   ) {
     this.studentManagerAbi = StudentManagerAbi as Abi;
-    this.swMileageFactoryAbi = SwMileageFactoryAbi as Abi;
     this.studentManagerContractAddress =
       this.configService.getOrThrow<Hex>('contract.studentManager');
     this.eventHandlers = this.createEventHandlers();
@@ -73,12 +70,8 @@ export class EventService {
 
   async routeEventHandler(log: Log) {
     try {
-      const isStudentManager =
-        log.address.toLowerCase() === this.studentManagerContractAddress.toLowerCase();
-      const abi = isStudentManager ? this.studentManagerAbi : this.swMileageFactoryAbi;
-
       const decodedLog = decodeEventLog({
-        abi,
+        abi: this.studentManagerAbi,
         data: log.data,
         topics: log.topics,
       });
@@ -130,6 +123,7 @@ export class EventService {
         this.logger.error(
           `Failed to decode or handle event log. Tx: ${log.transactionHash}`,
           error.message,
+          error,
         );
       } else {
         this.logger.error(
@@ -143,7 +137,9 @@ export class EventService {
     args: EventArgsMap[Event.MileageTokenCreated],
     transaction_hash: Hex,
   ) {
-    const tokenAddress = (args as any).tokenAddress as Hex;
+    const tokenAddress = args.tokenAddress;
+    console.log('tokenAddress', tokenAddress);
+    console.log('transaction_hash', transaction_hash);
 
     this.logger.debug('Handling MileageTokenCreated event...', args, tokenAddress);
 
@@ -183,7 +179,7 @@ export class EventService {
     await this.mileagePointHistoryService.handleDocApprovedEvent(transaction_hash);
   }
 
-  private async DocRejected(args: EventArgsMap[Event.DocRejected], transaction_hash: Hex) {
+  private async DocRejected(args: EventArgsMap[Event.DocRejected]) {
     this.logger.debug('Handling DocRejected event...', args);
     const document_index = Number(args.documentIndex);
     const student_hash = args.studentId;
@@ -192,8 +188,6 @@ export class EventService {
     const { student_id } = student;
 
     await this.mileageService.handleDocRejectedEvent(student_id, document_index);
-
-    await this.mileagePointHistoryService.handleDocRejectedEvent(transaction_hash);
   }
 
   private async MileageMinted(args: EventArgsMap[Event.MileageMinted], transaction_hash: Hex) {

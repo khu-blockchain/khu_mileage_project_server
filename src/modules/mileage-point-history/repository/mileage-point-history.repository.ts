@@ -18,10 +18,11 @@ export class MileagePointHistoryRepository extends Repository<MileagePointHistor
   async getMileagePointHistories(
     params: GetMileagePointHistoriesParams,
   ): Promise<[MileagePointHistory[], number]> {
-    const { take, skip, studentId, mileageId, mileageTokenName } = params;
+    const { take, skip, studentId, mileageId, mileageTokenName, all, type } = params;
 
     const [mileagePointHistories, total] = await this.findAndCount({
       where: {
+        ...(type && { type }),
         ...(mileageTokenName && { mileage_token_name: mileageTokenName }),
         ...((mileageId || studentId) && {
           mileage: {
@@ -30,13 +31,13 @@ export class MileagePointHistoryRepository extends Repository<MileagePointHistor
           },
         }),
       },
-      take,
-      skip,
+      ...(!all && { take }),
+      ...(!all && { skip }),
+      relations: ['mileage', 'mileage.student'],
       order: {
         created_at: 'DESC',
       },
     });
-
     return [mileagePointHistories, total];
   }
 

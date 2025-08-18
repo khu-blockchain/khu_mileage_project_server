@@ -84,6 +84,9 @@ export class StudentService {
   }
 
   async getStudentByStudentHash(studentHash: string): Promise<Student> {
+    if (!studentHash) {
+      throw new BadRequestException('잘못된 학생 해시입니다.');
+    }
     const student = await this.studentRepository.getStudentByStudentHash(studentHash);
     if (!student) {
       throw new NotFoundException('학생을 찾을 수 없습니다.');

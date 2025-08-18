@@ -29,33 +29,48 @@ export class MileageRepository extends Repository<Mileage> {
 
   async getMyMileages(studentId: string): Promise<Mileage[]> {
     return this.find({
-      where: { student: { student_id: studentId } },
-      relations: ['student'],
+      where: {
+        student: { student_id: studentId },
+        transaction_status: TRANSACTION_STATUS.CONFIRMED,
+      },
+      order: {
+        created_at: 'DESC',
+      },
+      relations: ['student', 'mileage_activity'],
     });
   }
 
   async getMileages(params: GetMileagesParams): Promise<[Mileage[], number]> {
-    const { take, skip, student_id, status } = params;
+    const { take, skip, student_id, status, all } = params;
 
     const [mileages, total] = await this.findAndCount({
       where: {
+        transaction_status: TRANSACTION_STATUS.CONFIRMED,
         ...(student_id && { student_id }),
         ...(status && { status }),
       },
-      take,
-      skip,
+      ...(!all && { take, skip }),
       order: {
         created_at: 'DESC',
       },
+      relations: ['student', 'mileage_activity'],
     });
 
     return [mileages, total];
   }
 
+  async findMileageWithPointHistories(id: number): Promise<Mileage | null> {
+    const mileage = await this.findOne({
+      where: { id },
+      relations: ['student', 'mileage_files', 'mileage_activity','mileage_point_histories'],
+    });
+    return mileage;
+  }
+
   async findMileageById(id: number): Promise<Mileage | null> {
     const mileage = await this.findOne({
       where: { id },
-      relations: ['student', 'mileage_files'],
+      relations: ['student', 'mileage_files', 'mileage_activity'],
     });
     return mileage;
   }
@@ -124,6 +139,7 @@ export class MileageRepository extends Repository<Mileage> {
     student_id: string,
     document_index: number,
   ): Promise<Mileage | null> {
+    console.log('student_id22222', student_id);
     const mileage = await this.findOneBy({
       student: { student_id },
       doc_index: document_index,

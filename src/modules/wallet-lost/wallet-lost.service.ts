@@ -36,6 +36,7 @@ export class WalletLostService {
     const createWalletLostParams: CreateWalletLostParams = {
       student_id: studentId,
       student_name: student.name,
+      student_hash: student.student_hash,
       previous_wallet_address: student.wallet_address,
       request_wallet_address: targetAddress,
     };

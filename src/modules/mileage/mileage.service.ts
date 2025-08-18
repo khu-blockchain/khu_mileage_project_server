@@ -63,6 +63,8 @@ export class MileageService {
     runOnTransactionRollback(async () => {
       await cleanupUploadedFiles(mileageFiles);
     });
+    console.log('mileageFiles', mileageFiles);
+    console.log('input', input);
     const { mileageActivityId, studentId, rawTransaction } = input;
 
     const mileageActivity = await this.mileageRubricService.findActivityById(+mileageActivityId);
@@ -97,7 +99,7 @@ export class MileageService {
       return {
         stored_file_name: file.filename,
         url: `${serverUrl}${file.filename}`,
-        original_file_name: file.originalname,
+        original_file_name: Buffer.from(file.originalname, 'latin1').toString('utf8'),
         mileage: newMileage,
       };
     });
@@ -116,7 +118,7 @@ export class MileageService {
   }
 
   async getMileages(query: GetMileagesRequest): Promise<{ mileages: Mileage[]; total: number }> {
-    const { limit, page, studentId, status } = query;
+    const { limit, page, studentId, status, all } = query;
     const take = limit;
     const skip = (page - 1) * limit;
 
@@ -125,19 +127,26 @@ export class MileageService {
       skip,
       student_id: studentId,
       status,
+      all: Boolean(all),
     };
     const [mileages, total] = await this.mileageRepository.getMileages(getMileagesParams);
 
     return { mileages, total };
   }
 
-  async getMileageByAuth(id: number, user: AuthUserContext): Promise<Mileage> {
+  async getMileageDetail(id: number): Promise<Mileage> {
     const mileage = await this.getMileageById(id);
+    return mileage;
+  }
 
+  async getMyMileageDetail(id: number, user: AuthUserContext): Promise<Mileage> {
+    const mileage = await this.mileageRepository.findMileageWithPointHistories(id);
+    if (!mileage) {
+      throw new NotFoundException('Mileage not found');
+    }
     if (user.role === Role.STUDENT && mileage.student.student_id !== user.student_id) {
       throw new ForbiddenException('You are not allowed to access this mileage');
     }
-
     return mileage;
   }
 
@@ -289,8 +298,8 @@ export class MileageService {
     doc_index: number,
     doc_hash: string,
   ): Promise<{ success: boolean }> {
-    if (!doc_index || !doc_hash) {
-      throw new BadRequestException('잘못된 문서 인덱스 또는 해시입니다.');
+    if (!doc_hash) {
+      throw new BadRequestException('잘못된 문서 해시입니다.');
     }
 
     const mileage = await this.mileageRepository.findMileageByDocHash(doc_hash);
@@ -313,23 +322,16 @@ export class MileageService {
       throw new NotFoundException('Mileage not found');
     }
     this.checkMileageStatus(mileage, MILEAGE_STATUS.APPROVED);
-    await this.mileageRepository.handleDocApprovedEvent(
-      mileage.student.student_id,
-      mileage.doc_index,
-    );
     return mileage;
   }
 
   async handleDocRejectedEvent(student_id: string, document_index: number): Promise<Mileage> {
+    console.log('student_id111111', student_id);
     const mileage = await this.mileageRepository.handleDocRejectedEvent(student_id, document_index);
     if (!mileage) {
       throw new NotFoundException('Mileage not found');
     }
     this.checkMileageStatus(mileage, MILEAGE_STATUS.REJECTED);
-    await this.mileageRepository.handleDocRejectedEvent(
-      mileage.student.student_id,
-      mileage.doc_index,
-    );
     return mileage;
   }
 }

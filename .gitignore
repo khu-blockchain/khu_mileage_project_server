@@ -132,4 +132,6 @@ dist
 .pnp.*
 
 # uploads
-/uploads/*
+/public/*
+/legacy
+/.claude/*

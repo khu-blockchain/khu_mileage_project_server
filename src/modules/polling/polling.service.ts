@@ -13,7 +13,6 @@ export class PollingService implements OnModuleInit, OnModuleDestroy {
   private httpProvider: PublicClient<FallbackTransport>;
   private confirmationBlockCount = 3n;
   private studentManagerContractAddress: Hex;
-  private mileageTokenFactoryContractAddress: Hex;
 
   constructor(
     private readonly configService: ConfigService,
@@ -35,9 +34,6 @@ export class PollingService implements OnModuleInit, OnModuleDestroy {
 
     this.studentManagerContractAddress =
       this.configService.getOrThrow<Hex>('contract.studentManager');
-    this.mileageTokenFactoryContractAddress = this.configService.getOrThrow<Hex>(
-      'contract.mileageTokenFactory',
-    );
   }
 
   onModuleDestroy() {
@@ -89,7 +85,7 @@ export class PollingService implements OnModuleInit, OnModuleDestroy {
     this.logger.log(`Running confirmation poll from block ${fromBlock} to ${toBlock}`);
 
     const logs = await this.httpProvider.getLogs({
-      address: [this.studentManagerContractAddress, this.mileageTokenFactoryContractAddress],
+      address: [this.studentManagerContractAddress],
       fromBlock,
       toBlock,
     });

@@ -11,6 +11,10 @@ export class GetMileagesRequest extends PaginationParamsDto {
 
   @IsString()
   @IsOptional()
+  all?: string;
+
+  @IsString()
+  @IsOptional()
   @IsNotEmpty()
   studentId?: string;
 

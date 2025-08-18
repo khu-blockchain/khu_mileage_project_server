@@ -32,9 +32,7 @@ export class WalletLostController {
     const result = await this.walletLostService.createWalletLost(student_id, request);
 
     return {
-      data: plainToInstance(CreateWalletLostResponse, result, {
-        excludeExtraneousValues: true,
-      }),
+      data: plainToInstance(CreateWalletLostResponse, result),
       meta: {},
     };
   }
@@ -48,12 +46,11 @@ export class WalletLostController {
       await this.walletLostService.checkHasPendingWalletLost(student_id);
 
     return {
-      result: hasPendingWalletLost,
-      data: data
-        ? plainToInstance(CheckHasPendingWalletLostResponse, data, {
-            excludeExtraneousValues: true,
-          })
-        : null,
+      data: {
+        result: hasPendingWalletLost,
+        data: data ? plainToInstance(CheckHasPendingWalletLostResponse, data) : null,
+      },
+      meta: {},
     };
   }
 
@@ -63,9 +60,7 @@ export class WalletLostController {
   async getWalletLostList(@Query() query: GetWalletLostListRequest) {
     const { walletLosts, total } = await this.walletLostService.getWalletLostList(query);
     return {
-      data: plainToInstance(BaseWalletLost, walletLosts, {
-        excludeExtraneousValues: true,
-      }),
+      data: plainToInstance(BaseWalletLost, walletLosts),
       meta: {
         total,
         lastPage: Math.ceil(total / query.limit),
@@ -79,7 +74,8 @@ export class WalletLostController {
   async approveWalletLost(@Body() request: ApproveWalletLostRequest) {
     const result = await this.walletLostService.approveWalletLost(request);
     return {
-      data: result,
+      data: plainToInstance(BaseWalletLost, result),
+      meta: {},
     };
   }
 }

@@ -4,6 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 
 import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';
 import { CreateMileageTokenParams } from '@/modules/mileage-token/mileage-token.types';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 @Injectable()
 export class MileageTokenRepository extends Repository<MileageToken> {
@@ -14,15 +15,6 @@ export class MileageTokenRepository extends Repository<MileageToken> {
   async createMileageTokenInit(data: CreateMileageTokenParams): Promise<MileageToken> {
     const newMileageToken = this.create({
       ...data,
-    });
-    return this.save(newMileageToken);
-  }
-
-  async createMileageTokenInitNotNull(data: CreateMileageTokenParams): Promise<MileageToken> {
-    const newMileageToken = this.create({
-      ...data,
-      contract_address: '0x',
-      transaction_hash: '0x',
     });
     return this.save(newMileageToken);
   }
@@ -39,9 +31,7 @@ export class MileageTokenRepository extends Repository<MileageToken> {
   }
 
   async findAll(): Promise<MileageToken[]> {
-    //TODO: MileageTokenAdd Event 추가 후 수정
-    // return await this.findBy({ transaction_status: TRANSACTION_STATUS.CONFIRMED });
-    return await this.find();
+    return await this.findBy({ transaction_status: TRANSACTION_STATUS.CONFIRMED });
   }
 
   async findById(id: number): Promise<MileageToken | null> {
@@ -52,7 +42,7 @@ export class MileageTokenRepository extends Repository<MileageToken> {
     return this.findOneBy({ contract_address: contractAddress });
   }
 
-  async getMileageTokenByTransactionHash(transaction_hash: Hex): Promise<MileageToken | null> {
+  async findByTransactionHash(transaction_hash: Hex): Promise<MileageToken | null> {
     const mileageToken = await this.findOneBy({ transaction_hash });
     if (!mileageToken) {
       return null;

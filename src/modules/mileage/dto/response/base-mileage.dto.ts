@@ -19,6 +19,9 @@ export class BaseMileageDto {
   mileage_description: string;
 
   @Expose()
+  mileage_activity_id: number;
+
+  @Expose()
   admin_comment: string | null;
 
   @Expose()

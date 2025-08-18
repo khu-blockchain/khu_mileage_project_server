@@ -31,6 +31,5 @@ export default (): any => ({
   },
   contract: {
     studentManager: process.env.STUDENT_MANAGER_CONTRACT_ADDRESS,
-    mileageTokenFactory: process.env.SW_MILEAGE_TOKEN_FACTORY_CONTRACT_ADDRESS,
   },
 });

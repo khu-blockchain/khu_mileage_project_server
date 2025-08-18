@@ -8,6 +8,8 @@ export type GetMileagePointHistoriesParams = {
   studentId?: string;
   mileageId?: number;
   mileageTokenName?: string;
+  all?: boolean;
+  type?: MILEAGE_POINT_HISTORY_TYPE;
 };
 
 export type CreateMileagePointHistoryParams = {

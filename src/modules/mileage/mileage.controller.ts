@@ -12,7 +12,7 @@ import {
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { plainToInstance } from 'class-transformer';
 
-import { AuthUserContext, StudentJwtPayload } from '@/modules/auth/auth.types';
+import { StudentJwtPayload } from '@/modules/auth/auth.types';
 import { Role } from '@/modules/auth/constants/role.constants';
 import { CurrentUser, Roles } from '@/modules/auth/decorators';
 import { JwtAuthGuard, RolesGuard } from '@/modules/auth/guards';
@@ -26,6 +26,7 @@ import {
   CreateMileageResponse,
   GetMileageResponse,
   GetMileagesRequest,
+  GetMyMileageResponse,
   MintMileageRequest,
   MintMileageResponse,
   RejectMileageRequest,
@@ -69,6 +70,21 @@ export class MileageController {
     };
   }
 
+  @Get('my/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.STUDENT)
+  async getMyMileageDetail(
+    @Param('id') id: number,
+    @CurrentUser() user: StudentJwtPayload,
+  ): Promise<BaseApiResponse<GetMyMileageResponse>> {
+    const mileage = await this.mileageService.getMyMileageDetail(id, user);
+
+    return {
+      data: plainToInstance(GetMyMileageResponse, mileage),
+      meta: {},
+    };
+  }
+
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
@@ -78,26 +94,22 @@ export class MileageController {
     const { mileages, total } = await this.mileageService.getMileages(query);
 
     return {
-      data: plainToInstance(BaseMileageDto, mileages, {
-        excludeExtraneousValues: true,
-      }),
+      data: plainToInstance(BaseMileageDto, mileages),
       meta: {
         total,
-        lastPage: Math.ceil(total / query.limit),
+        ...(!query.all && { lastPage: Math.ceil(total / query.limit) }),
       },
     };
   }
 
   @Get(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN, Role.STUDENT)
-  async getMileage(@Param('id') id: number, @CurrentUser() user: AuthUserContext) {
-    const mileage = await this.mileageService.getMileageByAuth(id, user);
+  @Roles(Role.ADMIN)
+  async getMileageDetail(@Param('id') id: number): Promise<BaseApiResponse<GetMileageResponse>> {
+    const mileage = await this.mileageService.getMileageDetail(id);
 
     return {
-      data: plainToInstance(GetMileageResponse, mileage, {
-        excludeExtraneousValues: true,
-      }),
+      data: plainToInstance(GetMileageResponse, mileage),
       meta: {},
     };
   }

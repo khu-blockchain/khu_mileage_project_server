@@ -18,7 +18,7 @@ export class MileagePointHistoryService {
     mileagePointHistories: MileagePointHistory[];
     total: number;
   }> {
-    const { limit, page, studentId, mileageId, mileageTokenName } = query;
+    const { limit, page, studentId, mileageId, mileageTokenName, all, type } = query;
     const take = limit;
     const skip = (page - 1) * limit;
 
@@ -26,8 +26,10 @@ export class MileagePointHistoryService {
       take,
       skip,
       studentId,
-      mileageId,
+      mileageId: Number(mileageId),
       mileageTokenName,
+      all: Boolean(all),
+      type,
     };
     const [mileagePointHistories, total] =
       await this.mileagePointHistoryRepository.getMileagePointHistories(

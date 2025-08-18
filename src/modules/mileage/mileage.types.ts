@@ -28,4 +28,5 @@ export type GetMileagesParams = {
   skip: number;
   student_id?: string;
   status?: MILEAGE_STATUS;
+  all?: boolean;
 };

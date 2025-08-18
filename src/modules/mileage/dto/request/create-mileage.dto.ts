@@ -7,7 +7,7 @@ export class CreateMileageRequest {
 
   @IsString()
   @IsNotEmpty()
-  mileageActivityId: string; // need to change to number
+  mileageActivityId: string;
 
   @IsString()
   @IsNotEmpty()

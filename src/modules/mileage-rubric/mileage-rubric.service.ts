@@ -49,7 +49,7 @@ export class MileageRubricService {
       point_type: input.pointType,
       point_description: input.pointDescription,
       fixed_point: input.fixedPoint,
-      mileage_category_id: input.mileageCategoryId,
+      mileage_category: category,
     };
 
     return await this.mileageActivityRepository.createActivity(activityParams);

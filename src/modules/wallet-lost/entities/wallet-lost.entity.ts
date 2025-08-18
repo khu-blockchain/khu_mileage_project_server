@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 import { WALLET_LOST_STATUS } from '../constants/wallet-lost-status.enum';
 
@@ -20,6 +20,9 @@ export class WalletLost {
 
   @Column()
   student_name: string;
+
+  @Column()
+  student_hash: string;
 
   @Column()
   previous_wallet_address: string;
@@ -42,7 +45,7 @@ export class WalletLost {
   })
   transaction_status: TRANSACTION_STATUS;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   transaction_hash: string;
 
   @CreateDateColumn({ name: 'created_at' })

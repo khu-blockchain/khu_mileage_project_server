@@ -1,11 +1,15 @@
 import { Expose } from 'class-transformer';
 
 import { Mileage } from '@/modules/mileage/entities/mileage.entity';
+import { MILEAGE_POINT_HISTORY_TYPE } from '../../constants/mileage-point-history-type.enum';
 import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
 export class BaseMileagePointHistoryDto {
   @Expose()
   id: number;
+
+  @Expose()
+  type: MILEAGE_POINT_HISTORY_TYPE;
 
   @Expose()
   mileage_token_name: string;
@@ -29,10 +33,7 @@ export class BaseMileagePointHistoryDto {
   note: string;
 
   @Expose()
-  student_id?: string;
-
-  @Expose()
-  mileage?: Mileage;
+  mileage: Mileage;
 
   @Expose()
   created_at: Date;

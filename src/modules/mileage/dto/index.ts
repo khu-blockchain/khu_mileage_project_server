@@ -9,5 +9,7 @@ export * from './response/base-mileage.dto';
 export * from './response/burn-mileage.dto';
 export * from './response/create-mileage.dto';
 export * from './response/get-mileage.dto';
+export * from './response/get-my-mileage.dto';
 export * from './response/mint-mileage.dto';
 export * from './response/reject-mileage.dto';
+

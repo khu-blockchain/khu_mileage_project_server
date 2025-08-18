@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+  BadRequestException,
+} from '@nestjs/common';
 import {
   ActivateMileageTokenRequest,
   CreateMileageTokenRequest,
@@ -23,9 +28,6 @@ export class MileageTokenService {
     try {
       const { rawTransaction, ...rest } = input;
 
-      console.log('rawTransaction', rawTransaction);
-      console.log('rest', rest);
-
       const createMileageTokenParams: CreateMileageTokenParams = {
         ...rest,
         image_url: rest.imageUrl,
@@ -35,7 +37,7 @@ export class MileageTokenService {
       // const pendingMileageToken =
       //   await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
       const pendingMileageToken =
-        await this.mileageTokenRepository.createMileageTokenInitNotNull(createMileageTokenParams);
+        await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
 
       const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
@@ -85,8 +87,13 @@ export class MileageTokenService {
     tokenAddress: Hex,
     transactionHash: Hex,
   ): Promise<{ success: boolean }> {
-    const mileageToken =
-      await this.mileageTokenRepository.getMileageTokenByTransactionHash(transactionHash);
+    if (!tokenAddress || !transactionHash) {
+      throw new BadRequestException('Invalid token address or transaction hash');
+    }
+    console.log('tokenAddress', tokenAddress);
+    console.log('transactionHash', transactionHash);
+    const mileageToken = await this.mileageTokenRepository.findByTransactionHash(transactionHash);
+    console.log('mileageToken', mileageToken);
     if (!mileageToken) {
       throw new NotFoundException('Mileage token not found');
     }

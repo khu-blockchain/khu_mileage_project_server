@@ -16,12 +16,10 @@ export class MileagePointHistoryController {
       await this.mileagePointHistoryService.getMileagePointHistories(query);
 
     return {
-      data: plainToInstance(BaseMileagePointHistoryDto, mileagePointHistories, {
-        excludeExtraneousValues: true,
-      }),
+      data: plainToInstance(BaseMileagePointHistoryDto, mileagePointHistories),
       meta: {
         total,
-        lastPage: Math.ceil(total / query.limit),
+        ...(!query.all && { lastPage: Math.ceil(total / query.limit) }),
       },
     };
   }
