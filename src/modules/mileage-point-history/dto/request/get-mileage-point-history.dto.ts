@@ -15,6 +15,10 @@ export class GetMileagePointHistoriesRequest extends PaginationParamsDto {
 
   @IsString()
   @IsOptional()
+  studentId: string;
+
+  @IsString()
+  @IsOptional()
   studentName: string;
 
   @IsString()

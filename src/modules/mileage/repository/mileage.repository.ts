@@ -46,7 +46,7 @@ export class MileageRepository extends Repository<Mileage> {
     const [mileages, total] = await this.findAndCount({
       where: {
         transaction_status: TRANSACTION_STATUS.CONFIRMED,
-        ...(student_id && { student_id }),
+        ...(student_id && { student: { student_id } }),
         ...(status && { status }),
       },
       ...(!all && { take, skip }),

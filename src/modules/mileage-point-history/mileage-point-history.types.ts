@@ -6,6 +6,7 @@ export type GetMileagePointHistoriesParams = {
   take: number;
   skip: number;
   studentName?: string;
+  studentId?: string;
   mileageId?: number;
   all?: boolean;
   type?: MILEAGE_POINT_HISTORY_TYPE;
