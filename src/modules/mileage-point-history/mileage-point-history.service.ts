@@ -18,16 +18,15 @@ export class MileagePointHistoryService {
     mileagePointHistories: MileagePointHistory[];
     total: number;
   }> {
-    const { limit, page, studentId, mileageId, mileageTokenName, all, type } = query;
+    const { limit, page, studentName, mileageId, all, type } = query;
     const take = limit;
     const skip = (page - 1) * limit;
 
     const getMileagePointHistoriesParams: GetMileagePointHistoriesParams = {
       take,
       skip,
-      studentId,
+      studentName,
       mileageId: Number(mileageId),
-      mileageTokenName,
       all: Boolean(all),
       type,
     };

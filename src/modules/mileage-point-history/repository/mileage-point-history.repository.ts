@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, ILike, Repository } from 'typeorm';
 
 import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
 
@@ -18,16 +18,14 @@ export class MileagePointHistoryRepository extends Repository<MileagePointHistor
   async getMileagePointHistories(
     params: GetMileagePointHistoriesParams,
   ): Promise<[MileagePointHistory[], number]> {
-    const { take, skip, studentId, mileageId, mileageTokenName, all, type } = params;
+    const { take, skip, studentName, mileageId, all } = params;
 
     const [mileagePointHistories, total] = await this.findAndCount({
       where: {
-        ...(type && { type }),
-        ...(mileageTokenName && { mileage_token_name: mileageTokenName }),
-        ...((mileageId || studentId) && {
+        ...((mileageId || studentName) && {
           mileage: {
             ...(mileageId && { id: mileageId }),
-            ...(studentId && { student: { student_id: studentId } }),
+            ...(studentName && { student: { name: ILike(`%${studentName}%`) } }),
           },
         }),
       },

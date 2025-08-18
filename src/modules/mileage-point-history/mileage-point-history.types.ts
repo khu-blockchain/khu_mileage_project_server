@@ -5,9 +5,8 @@ import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 export type GetMileagePointHistoriesParams = {
   take: number;
   skip: number;
-  studentId?: string;
+  studentName?: string;
   mileageId?: number;
-  mileageTokenName?: string;
   all?: boolean;
   type?: MILEAGE_POINT_HISTORY_TYPE;
 };

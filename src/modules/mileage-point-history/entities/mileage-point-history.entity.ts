@@ -10,6 +10,7 @@ import {
 
 import { Mileage } from '@/modules/mileage/entities/mileage.entity';
 import { MILEAGE_POINT_HISTORY_TYPE } from '@/modules/mileage-point-history/constants/mileage-point-history-type.enum';
+import { TRANSACTION_STATUS } from '@/shared/constants/enums/transaction-status.enum';
 
 @Entity('mileage_point_history')
 export class MileagePointHistory {
@@ -36,6 +37,14 @@ export class MileagePointHistory {
 
   @Column()
   transaction_hash: string;
+
+  @Column({
+    type: 'enum',
+    enum: TRANSACTION_STATUS,
+    nullable: true,
+    default: null,
+  })
+  transaction_status: TRANSACTION_STATUS;
 
   @Column({ type: 'text', nullable: true, default: null })
   note: string;
