@@ -62,7 +62,10 @@ export class StudentService {
 
     const student = await this.studentRepository.createStudent(newStudentParams);
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(request.rawTransaction);
+    // const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(request.rawTransaction);
+    const { txHash, feePayerSignedTx } = await this.kaiaService.calcTxHashFromRawTransaction(
+      request.rawTransaction,
+    );
 
     const updatedStudent = await this.studentRepository.updateStudent(student.student_id, {
       transaction_hash: txHash,
@@ -71,6 +74,11 @@ export class StudentService {
     if (!updatedStudent) {
       throw new NotFoundException('학생을 찾을 수 없습니다.');
     }
+
+    console.log(`txHash: ${txHash}`);
+
+    const _hash = await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
+    console.log(`_hash: ${_hash}`);
 
     return updatedStudent;
   }
@@ -105,7 +113,9 @@ export class StudentService {
       student_id: studentId,
       name,
     };
+    console.log('getStudentsParams:', getStudentsParams);
     const [students, total] = await this.studentRepository.getStudents(getStudentsParams);
+    console.log('students:', students, 'total:', total);
 
     return { students, total };
   }
