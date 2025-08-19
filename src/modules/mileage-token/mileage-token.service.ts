@@ -39,12 +39,16 @@ export class MileageTokenService {
       const pendingMileageToken =
         await this.mileageTokenRepository.createMileageTokenInit(createMileageTokenParams);
 
-      const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
-
-      return await this.mileageTokenRepository.updateMileageTokenTransactionHash(
+      const { txHash, feePayerSignedTx } =
+        await this.kaiaService.calcTxHashFromRawTransaction(rawTransaction);
+      const mileageToken = await this.mileageTokenRepository.updateMileageTokenTransactionHash(
         pendingMileageToken.id,
         txHash,
       );
+
+      await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
+
+      return mileageToken;
     } catch (error) {
       console.error('Failed to create mileage token:', error);
       throw new InternalServerErrorException('Failed to create mileage token');

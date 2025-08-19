@@ -1,4 +1,4 @@
-import { Hex } from '@kaiachain/viem-ext';
+import { Hex, keccak256, toBytes } from '@kaiachain/viem-ext';
 import {
   BadRequestException,
   ForbiddenException,
@@ -92,7 +92,9 @@ export class MileageService {
 
     const newMileage = await this.mileageRepository.createMileageInit(mileageInitParams);
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction as Hex);
+    const { txHash, feePayerSignedTx } = await this.kaiaService.calcTxHashFromRawTransaction(
+      rawTransaction as Hex,
+    );
 
     const uploadedFiles: CreateMileageFileParams[] = mileageFiles.map((file) => {
       const serverUrl = this.configService.get('app.publicFileUrl');
@@ -107,6 +109,8 @@ export class MileageService {
     await this.mileageFileRepository.createMileageFiles(uploadedFiles);
 
     await this.mileageRepository.updatePendingMileage(newMileage.id, txHash);
+
+    await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
 
     return {
       success: true,
@@ -180,7 +184,9 @@ export class MileageService {
       TRANSACTION_STATUS.PROCESSING,
     );
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+    // const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+    const { txHash, feePayerSignedTx } =
+      await this.kaiaService.calcTxHashFromRawTransaction(rawTransaction);
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_APPROVED,
@@ -192,6 +198,8 @@ export class MileageService {
       transactionHash: txHash,
       mileage,
     });
+
+    await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
 
     return {
       success: true,
@@ -236,7 +244,9 @@ export class MileageService {
     const currentToken =
       await this.mileageTokenService.getMileageTokenByContractAddress(currentTokenAddress);
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+    // const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+    const { txHash, feePayerSignedTx } =
+      await this.kaiaService.calcTxHashFromRawTransaction(rawTransaction);
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_MINTED,
@@ -249,6 +259,8 @@ export class MileageService {
       note,
       mileage,
     });
+
+    await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
 
     return {
       success: true,
@@ -267,7 +279,10 @@ export class MileageService {
     const currentToken =
       await this.mileageTokenService.getMileageTokenByContractAddress(currentTokenAddress);
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+    // const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+
+    const { txHash, feePayerSignedTx } =
+      await this.kaiaService.calcTxHashFromRawTransaction(rawTransaction);
 
     await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_BURNED,
@@ -280,6 +295,8 @@ export class MileageService {
       note,
       mileage,
     });
+
+    await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
 
     return {
       success: true,
