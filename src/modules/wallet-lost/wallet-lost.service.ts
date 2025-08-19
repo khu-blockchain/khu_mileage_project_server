@@ -61,14 +61,16 @@ export class WalletLostService {
     walletLosts: WalletLost[];
     total: number;
   }> {
-    const { limit, page, studentId } = query;
+    const { limit, page, studentId, status, all } = query;
     const take = limit;
     const skip = (page - 1) * limit;
 
     const getWalletLostListParams: GetWalletLostListQuery = {
       take,
       skip,
-      studentId,
+      student_id: studentId,
+      status,
+      all: Boolean(all),
     };
 
     const [walletLosts, total] =

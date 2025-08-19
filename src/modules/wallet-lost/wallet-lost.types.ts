@@ -1,3 +1,5 @@
+import { WALLET_LOST_STATUS } from './constants/wallet-lost-status.enum';
+
 export type CreateWalletLostParams = {
   student_id: string;
   student_name: string;
@@ -9,5 +11,7 @@ export type CreateWalletLostParams = {
 export type GetWalletLostListQuery = {
   take: number;
   skip: number;
-  studentId: string;
+  student_id?: string;
+  status?: WALLET_LOST_STATUS;
+  all?: boolean;
 };

@@ -35,11 +35,13 @@ export class WalletLostRepository extends Repository<WalletLost> {
   }
 
   async getWalletLostList(params: GetWalletLostListQuery): Promise<[WalletLost[], number]> {
-    const { take, skip, studentId } = params;
+    const { take, skip, student_id, status, all } = params;
     return this.findAndCount({
-      where: { student_id: studentId },
-      take,
-      skip,
+      where: {
+        ...(student_id && { student_id }),
+        ...(status && { status }),
+      },
+      ...(!all && { take, skip }),
       order: {
         created_at: 'DESC',
       },
