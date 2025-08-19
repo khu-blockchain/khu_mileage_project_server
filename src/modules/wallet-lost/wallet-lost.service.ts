@@ -92,7 +92,9 @@ export class WalletLostService {
       throw new BadRequestException('Wallet lost is not pending');
     }
 
-    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+    // const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+    const { txHash, feePayerSignedTx } =
+      await this.kaiaService.calcTxHashFromRawTransaction(rawTransaction);
 
     const updatedWalletLost = await this.walletLostRepository.updateWallet(id, {
       transaction_hash: txHash,
@@ -102,6 +104,8 @@ export class WalletLostService {
     if (!updatedWalletLost) {
       throw new InternalServerErrorException('Failed to update wallet lost');
     }
+
+    await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
 
     return updatedWalletLost;
   }

@@ -1,7 +1,7 @@
 import { createWalletClient, Hex, http, kairos, privateKeyToAccount } from '@kaiachain/viem-ext';
 import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Address, createPublicClient } from 'viem';
+import { Address, createPublicClient, keccak256, toBytes } from 'viem';
 
 import StudentManagerABI from '@/shared/constants/contract/StudentManager.abi.json';
 
@@ -70,6 +70,38 @@ export class KaiaService {
       console.error('Failed to send transaction:', error);
       throw new InternalServerErrorException(
         `Failed to send transaction: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+    }
+  }
+
+  async sendFeepayerSignedTransaction(feePayerSignedTx: Hex): Promise<Hex> {
+    try {
+      const sentFeePayerTx = await this.feePayerClient.request({
+        method: 'klay_sendRawTransaction',
+        params: [feePayerSignedTx],
+      });
+      return sentFeePayerTx as Hex;
+    } catch (error) {
+      console.error('Failed to send transaction:', error);
+      throw new InternalServerErrorException(
+        `Failed to send transaction: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      );
+    }
+  }
+
+  async calcTxHashFromRawTransaction(
+    rawTransaction: Hex,
+  ): Promise<{ txHash: Hex; feePayerSignedTx: Hex }> {
+    try {
+      const feePayerSignedTx = (await this.feePayerClient.signTransactionAsFeePayer(
+        rawTransaction,
+      )) as Hex;
+      const txHash = keccak256(toBytes(feePayerSignedTx as Hex));
+      return { txHash, feePayerSignedTx };
+    } catch (error) {
+      console.error('Failed to calculate transaction hash:', error);
+      throw new InternalServerErrorException(
+        `Failed to calculate transaction hash: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
     }
   }
