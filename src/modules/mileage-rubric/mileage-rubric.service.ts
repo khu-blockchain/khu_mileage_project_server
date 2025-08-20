@@ -84,7 +84,7 @@ export class MileageRubricService {
     this.validateActivityFixedPoint(input.pointType, input.fixedPoint);
 
     const activityParams: UpdateMileageActivityParam = {
-      mileage_category_id: input.mileageCategoryId,
+      mileage_category: category,
       name: input.name,
       point_type: input.pointType,
       point_description: input.pointDescription,

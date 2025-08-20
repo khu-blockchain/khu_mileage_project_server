@@ -20,7 +20,7 @@ export type UpdateMileageCategoryParam = {
 };
 
 export type UpdateMileageActivityParam = {
-  mileage_category_id: number;
+  mileage_category: MileageCategory;
   name: string;
   point_type: POINT_TYPE;
   point_description: string;
