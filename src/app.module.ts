@@ -38,7 +38,20 @@ const coreImports = [
       if (!options) {
         throw new Error('Invalid options passed');
       }
-      return addTransactionalDataSource(new DataSource(options));
+      const ds = new DataSource(options)
+      if (!ds.isInitialized) {
+        await ds.initialize()
+      }
+      try{
+        return addTransactionalDataSource(ds);
+      }
+      catch (e:any){
+        if(String(e?.message || e).includes("has already added")){
+          return ds;
+        }
+        throw e;
+      }
+      //return addTransactionalDataSource(new DataSource(options));
     },
   }),
   SharedModule,
