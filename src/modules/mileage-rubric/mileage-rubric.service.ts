@@ -88,7 +88,7 @@ export class MileageRubricService {
       name: input.name,
       point_type: input.pointType,
       point_description: input.pointDescription,
-      fixed_point: input.fixedPoint,
+      fixed_point: input.pointType === POINT_TYPE.FIXED ? input.fixedPoint : null,
     };
 
     await this.mileageActivityRepository.updateActivity(id, activityParams);

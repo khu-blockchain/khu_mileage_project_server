@@ -24,5 +24,5 @@ export type UpdateMileageActivityParam = {
   name: string;
   point_type: POINT_TYPE;
   point_description: string;
-  fixed_point?: number;
+  fixed_point?: number | null;
 };
