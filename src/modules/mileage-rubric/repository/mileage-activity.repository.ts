@@ -28,7 +28,11 @@ export class MileageActivityRepository extends Repository<MileageActivity> {
       throw new NotFoundException(`Activity with ID "${id}" not found`);
     }
 
-    return this.save({ ...activity, ...data });
+    return this.save({
+      ...activity,
+      ...data,
+      fixed_point: data.fixed_point ?? undefined,
+    });
   }
 
   async deleteActivity(id: number): Promise<void> {
