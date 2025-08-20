@@ -42,7 +42,9 @@ export class MileageRubricService {
       throw new NotFoundException('Category not found');
     }
 
-    this.validateActivityFixedPoint(input.pointType, input.fixedPoint);
+    if (input.pointType === POINT_TYPE.FIXED && input.fixedPoint === null) {
+      throw new BadRequestException('Fixed point is required');
+    }
 
     const activityParams: CreateMileageActivityParam = {
       name: input.name,
@@ -81,14 +83,16 @@ export class MileageRubricService {
       throw new NotFoundException('Category not found');
     }
 
-    this.validateActivityFixedPoint(input.pointType, input.fixedPoint);
+    if (input.pointType === POINT_TYPE.FIXED && input.fixedPoint === null) {
+      throw new BadRequestException('Fixed point is required');
+    }
 
     const activityParams: UpdateMileageActivityParam = {
       mileage_category: category,
       name: input.name,
       point_type: input.pointType,
       point_description: input.pointDescription,
-      ...(input.pointType === POINT_TYPE.FIXED && { fixed_point: input.fixedPoint }),
+      fixed_point: input.pointType === POINT_TYPE.FIXED ? input.fixedPoint : null,
     };
 
     await this.mileageActivityRepository.updateActivity(id, activityParams);
@@ -113,11 +117,5 @@ export class MileageRubricService {
 
   async getRubric(): Promise<MileageCategory[]> {
     return this.mileageCategoryRepository.findAllWithActivities();
-  }
-
-  private validateActivityFixedPoint(point_type: POINT_TYPE, fixed_point: number | undefined) {
-    if (point_type === POINT_TYPE.FIXED && fixed_point === null) {
-      throw new BadRequestException('Fixed point is required');
-    }
   }
 }

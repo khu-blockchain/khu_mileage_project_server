@@ -31,7 +31,7 @@ export class MileageActivityRepository extends Repository<MileageActivity> {
     return this.save({
       ...activity,
       ...data,
-      fixed_point: data.fixed_point ?? undefined,
+      fixed_point: data.fixed_point ?? null,
     });
   }
 

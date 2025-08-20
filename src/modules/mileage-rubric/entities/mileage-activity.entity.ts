@@ -22,8 +22,8 @@ export class MileageActivity {
   @Column({ type: 'text', nullable: true, default: null })
   point_description: string; // 배점과 관련한 설명입니다.
 
-  @Column({ nullable: true, default: null })
-  fixed_point: number; // 기본 배점, 선택 배점일 경우 null입니다.
+  @Column({ type: 'integer', nullable: true, default: null })
+  fixed_point: number | null; // 기본 배점, 선택 배점일 경우 null입니다.
 
   @OneToMany(() => Mileage, (mileage) => mileage.mileage_activity)
   mileages: Mileage[];

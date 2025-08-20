@@ -21,5 +21,5 @@ export class UpdateMileageActivityRequest {
 
   @IsOptional()
   @IsNumber()
-  fixedPoint?: number;
+  fixedPoint: number | null;
 }
