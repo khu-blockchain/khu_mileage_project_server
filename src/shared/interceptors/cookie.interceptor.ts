@@ -27,7 +27,8 @@ export class CookieInterceptor implements NestInterceptor {
 
           response.cookie('khu-sw-mileage-refresh', refreshToken, {
             httpOnly: true,
-            secure: this.configService.get('app.env') === 'production',
+            secure: false,
+            path: '/',
             sameSite: 'lax',
             maxAge: expiresIn * 1000, // ms
           });
