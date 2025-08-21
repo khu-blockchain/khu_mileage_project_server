@@ -1,5 +1,6 @@
-import { Body, Controller, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards, UseInterceptors, Res } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+import { Response } from 'express';
 
 import { BaseApiResponse } from '@/shared/dtos';
 import { CookieInterceptor } from '@/shared/interceptors/cookie.interceptor';
@@ -71,7 +72,8 @@ export class AuthController {
 
   @Post('/logout')
   @UseGuards(JwtAuthGuard)
-  async logout(): Promise<BaseApiResponse<{ success: boolean }>> {
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('khu-sw-mileage-refresh');
     return {
       data: {
         success: true,
@@ -80,4 +82,3 @@ export class AuthController {
     };
   }
 }
-
