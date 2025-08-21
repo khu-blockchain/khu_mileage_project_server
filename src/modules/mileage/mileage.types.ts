@@ -13,7 +13,7 @@ export type CreateMileageInitParams = {
   status: MILEAGE_STATUS;
   transaction_status: TRANSACTION_STATUS;
   student: Student;
-  mileage_activity: MileageActivity;
+  mileage_activity_id: number;
 };
 
 export type CreateMileageFileParams = {

@@ -11,7 +11,6 @@ import {
 
 import { MILEAGE_STATUS } from '@/modules/mileage/constants/mileage-status.enum';
 import { MileagePointHistory } from '@/modules/mileage-point-history/entities/mileage-point-history.entity';
-import { MileageActivity } from '@/modules/mileage-rubric/entities/mileage-activity.entity';
 import { Student } from '@/modules/student/entities/student.entity';
 import { TRANSACTION_STATUS } from '@/shared/constants/enums';
 
@@ -77,9 +76,13 @@ export class Mileage {
   @OneToMany(() => MileageFile, (mileageFile) => mileageFile.mileage)
   mileage_files: MileageFile[];
 
-  @ManyToOne(() => MileageActivity, (mileageActivity) => mileageActivity.mileages)
-  @JoinColumn({ name: 'mileage_activity_id' })
-  mileage_activity: MileageActivity;
+  // mileage_activity와의 참조 관계를 끊고 ID만 저장
+  @Column({ nullable: true, default: null })
+  mileage_activity_id: number;
+
+  // @ManyToOne(() => MileageActivity, (mileageActivity) => mileageActivity.mileages)
+  // @JoinColumn({ name: 'mileage_activity_id' })
+  // mileage_activity: MileageActivity;
 
   @OneToMany(() => MileagePointHistory, (mileagePointHistory) => mileagePointHistory.mileage)
   mileage_point_histories: MileagePointHistory[];

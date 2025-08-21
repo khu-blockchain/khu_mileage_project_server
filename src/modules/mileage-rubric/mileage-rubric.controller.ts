@@ -19,6 +19,7 @@ import {
 } from '@/modules/mileage-rubric/dto';
 import { MileageRubricService } from '@/modules/mileage-rubric/mileage-rubric.service';
 import { BaseApiResponse } from '@/shared/dtos';
+import { BaseMileageActivityResponse } from './dto/response/base-mileage-activity.dto';
 
 @Controller('mileage-rubric')
 export class MileageRubricController {
@@ -49,6 +50,17 @@ export class MileageRubricController {
 
     return {
       data: plainToInstance(CreateMileageActivityResponse, result),
+      meta: {},
+    };
+  }
+
+  @Get('activity/:id')
+  async getActivity(
+    @Param('id') id: number,
+  ): Promise<BaseApiResponse<BaseMileageActivityResponse>> {
+    const result = await this.mileageRubricService.findActivityById(id);
+    return {
+      data: plainToInstance(BaseMileageActivityResponse, result),
       meta: {},
     };
   }

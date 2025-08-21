@@ -25,8 +25,8 @@ export class MileageActivity {
   @Column({ type: 'integer', nullable: true, default: null })
   fixed_point: number | null; // 기본 배점, 선택 배점일 경우 null입니다.
 
-  @OneToMany(() => Mileage, (mileage) => mileage.mileage_activity)
-  mileages: Mileage[];
+  // @OneToMany(() => Mileage, (mileage) => mileage.mileage_activity)
+  // mileages: Mileage[];
 
   @ManyToOne(() => MileageCategory, (mileageCategory) => mileageCategory.mileage_activities, {
     onDelete: 'CASCADE',

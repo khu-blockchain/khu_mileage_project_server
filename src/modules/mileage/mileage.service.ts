@@ -1,4 +1,4 @@
-import { Hex, keccak256, toBytes } from '@kaiachain/viem-ext';
+import { Hex } from '@kaiachain/viem-ext';
 import {
   BadRequestException,
   ForbiddenException,
@@ -87,7 +87,7 @@ export class MileageService {
       status: MILEAGE_STATUS.REVIEWING,
       transaction_status: TRANSACTION_STATUS.PROCESSING,
       student,
-      mileage_activity: mileageActivity,
+      mileage_activity_id: +mileageActivity.id,
     };
 
     const newMileage = await this.mileageRepository.createMileageInit(mileageInitParams);

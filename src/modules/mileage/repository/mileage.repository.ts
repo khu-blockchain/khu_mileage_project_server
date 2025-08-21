@@ -53,7 +53,7 @@ export class MileageRepository extends Repository<Mileage> {
       order: {
         created_at: 'DESC',
       },
-      relations: ['student', 'mileage_activity'],
+      relations: ['student'],
     });
 
     return [mileages, total];
@@ -62,7 +62,7 @@ export class MileageRepository extends Repository<Mileage> {
   async findMileageWithPointHistories(id: number): Promise<Mileage | null> {
     const mileage = await this.findOne({
       where: { id },
-      relations: ['student', 'mileage_files', 'mileage_activity', 'mileage_point_histories'],
+      relations: ['student', 'mileage_files', 'mileage_point_histories'],
     });
     return mileage;
   }
@@ -70,7 +70,7 @@ export class MileageRepository extends Repository<Mileage> {
   async findMileageById(id: number): Promise<Mileage | null> {
     const mileage = await this.findOne({
       where: { id },
-      relations: ['student', 'mileage_files', 'mileage_activity'],
+      relations: ['student', 'mileage_files'],
     });
     return mileage;
   }
