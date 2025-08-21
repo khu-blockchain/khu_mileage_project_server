@@ -11,7 +11,7 @@ import { CurrentUser } from './decorators';
 import { AuthStudentDto, StudentLoginRequest } from './dto';
 import { AdminLoginRequest } from './dto/request/admin-login.dto';
 import { AuthAdminDto } from './dto/response/auth-admin.dto';
-import { JwtRefreshGuard } from './guards';
+import { JwtRefreshGuard, JwtAuthGuard } from './guards';
 
 @Controller('auth')
 export class AuthController {
@@ -69,15 +69,15 @@ export class AuthController {
     };
   }
 
-  // @Post('/logout')
-  // @UseGuards(JwtAuthGuard)
-  // async logout(@Res({ passthrough: true }) res: Response) {
-  //   res.clearCookie('refreshToken');
-  //   return {
-  //     data: {
-  //       success: true,
-  //     },
-  //     meta: {},
-  //   };
-  // }
+  @Post('/logout')
+  @UseGuards(JwtAuthGuard)
+  async logout(): Promise<BaseApiResponse<{ success: boolean }>> {
+    return {
+      data: {
+        success: true,
+      },
+      meta: {},
+    };
+  }
 }
+
