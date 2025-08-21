@@ -31,7 +31,7 @@ export class MileageRepository extends Repository<Mileage> {
     return this.find({
       where: {
         student: { student_id: studentId },
-        transaction_status: TRANSACTION_STATUS.CONFIRMED,
+        // transaction_status: TRANSACTION_STATUS.CONFIRMED,
       },
       order: {
         created_at: 'DESC',
@@ -45,7 +45,7 @@ export class MileageRepository extends Repository<Mileage> {
 
     const [mileages, total] = await this.findAndCount({
       where: {
-        transaction_status: TRANSACTION_STATUS.CONFIRMED,
+        // transaction_status: TRANSACTION_STATUS.CONFIRMED,
         ...(student_id && { student: { student_id } }),
         ...(status && { status }),
       },

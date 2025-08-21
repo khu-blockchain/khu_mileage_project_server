@@ -44,6 +44,9 @@ export class MileageCategoryRepository extends Repository<MileageCategory> {
       relations: ['mileage_activities'],
       order: {
         id: 'ASC',
+        mileage_activities: {
+          id: 'ASC',
+        },
       },
     });
   }
