@@ -32,4 +32,11 @@ export default (): any => ({
   contract: {
     studentManager: process.env.STUDENT_MANAGER_CONTRACT_ADDRESS,
   },
+  mail: {
+    admin: process.env.ADMIN_EMAIL,
+    sender: process.env.MAIL_SENDER,
+    host: process.env.MAIL_HOST,
+    user: process.env.MAIL_USER,
+    password: process.env.MAIL_PASSWORD,
+  }
 });
