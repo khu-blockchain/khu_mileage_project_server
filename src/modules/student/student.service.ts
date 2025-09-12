@@ -60,6 +60,14 @@ export class StudentService {
       student_hash: request.studentHash,
     };
 
+    // validate the raw transaction before fee payer signing
+    await this.kaiaService.validateStudentManagerTransaction(
+      request.rawTransaction,
+      walletAddress,
+      'registerStudent',
+      request.studentHash,
+    );
+
     const student = await this.studentRepository.createStudent(newStudentParams);
 
     // const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(request.rawTransaction);
@@ -128,8 +136,10 @@ export class StudentService {
     if (!student) {
       throw new NotFoundException('학생을 찾을 수 없습니다.');
     }
-
-    await this.kaiaService.sendTransactionWithFeePayerSign(request.rawTransaction);
+    
+    await this.kaiaService.validateStudentManagerFunction(request.rawTransaction, 'proposeAccountChange');
+    
+    const txHash = await this.kaiaService.sendTransactionWithFeePayerSign(request.rawTransaction);
 
     return {
       success: true,
@@ -145,6 +155,7 @@ export class StudentService {
       throw new NotFoundException('학생을 찾을 수 없습니다.');
     }
 
+    await this.kaiaService.validateStudentManagerFunction(request.rawTransaction, 'confirmAccountChange');
     await this.kaiaService.sendTransactionWithFeePayerSign(request.rawTransaction);
 
     return {

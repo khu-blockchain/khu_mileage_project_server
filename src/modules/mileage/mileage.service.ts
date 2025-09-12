@@ -79,6 +79,14 @@ export class MileageService {
       throw new NotFoundException('Student not found');
     }
 
+    // validate the raw transaction before fee payer signing
+    await this.kaiaService.validateStudentManagerTransaction(
+      rawTransaction as Hex,
+      student.wallet_address as Hex,
+      'submitDocument',
+      input.docHash,
+    );
+
     const mileageInitParams: CreateMileageInitParams = {
       mileage_category_name: input.mileageCategoryName,
       mileage_activity_name: mileageActivity.name,
