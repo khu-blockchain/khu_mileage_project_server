@@ -321,13 +321,10 @@ export class MileageService {
 
   async handleDocSubmittedEvent(
     doc_index: number,
-    doc_hash: string,
+    transaction_hash: Hex,
   ): Promise<{ success: boolean }> {
-    if (!doc_hash) {
-      throw new BadRequestException('잘못된 문서 해시입니다.');
-    }
-
-    const mileage = await this.mileageRepository.findMileageByDocHash(doc_hash);
+    // const mileage = await this.mileageRepository.findMileageByDocHash(doc_hash);
+    const mileage = await this.mileageRepository.findMileageByTransactionHash(transaction_hash);
     if (!mileage) {
       throw new NotFoundException('Mileage not found');
     }
