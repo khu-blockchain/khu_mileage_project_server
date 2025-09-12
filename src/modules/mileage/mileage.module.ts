@@ -8,6 +8,7 @@ import { MileageRubricModule } from '@/modules/mileage-rubric/mileage-rubric.mod
 import { MileageTokenModule } from '@/modules/mileage-token/mileage-token.module';
 import { StudentModule } from '@/modules/student/student.module';
 import { FileModule } from '@/shared/modules/file/file.module';
+import { MailModule } from '../mail/mail.module';
 
 import { Mileage } from './entities/mileage.entity';
 import { MileageFile } from './entities/mileage-file.entity';
@@ -26,6 +27,7 @@ import { MileageFileRepository } from './repository/mileage-file.repository';
     MileageRubricModule,
     MileagePointHistoryModule,
     MileageTokenModule,
+    MailModule,
   ],
   controllers: [MileageController],
   providers: [MileageService, MileageRepository, MileageFileRepository],

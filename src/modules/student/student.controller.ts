@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards, Put } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 
 import { BaseApiResponse } from '@/shared/dtos/base-api-response.dto';
@@ -16,6 +16,7 @@ import {
   CreateStudentRequest,
   CreateWalletChangeRequest,
   GetStudentsRequest,
+  UpdateStudentRequest,
 } from './dto';
 import { StudentService } from './student.service';
 
@@ -35,6 +36,23 @@ export class StudentController {
 
     return {
       data: result,
+      meta: {},
+    };
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.STUDENT)
+  @Put()
+  async updateStudent(
+    @CurrentUser() student: StudentJwtPayload,
+    @Body() request: UpdateStudentRequest,
+  ): Promise<BaseApiResponse<BaseStudentDto>> {
+    const updatedStudentEntity = await this.studentService.updateStudent(student.student_id, request);
+
+    return {
+      data: plainToInstance(BaseStudentDto, updatedStudentEntity, {
+        excludeExtraneousValues: true,
+      }),
       meta: {},
     };
   }
