@@ -83,6 +83,14 @@ export class MileageRepository extends Repository<Mileage> {
     return mileage;
   }
 
+  async findMileageByTransactionHash(transaction_hash: string): Promise<Mileage | null> {
+    const mileage = await this.findOneBy({ transaction_hash });
+    if (!mileage) {
+      return null;
+    }
+    return mileage;
+  }
+
   async updateMileageStatus(
     id: number,
     status: MILEAGE_STATUS,
