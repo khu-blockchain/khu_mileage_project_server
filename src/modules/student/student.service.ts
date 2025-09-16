@@ -5,6 +5,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Transactional } from 'typeorm-transactional';
 
@@ -18,6 +19,7 @@ import {
   CreateStudentRequest,
   CreateWalletChangeRequest,
   GetStudentsRequest,
+  UpdateStudentRequest,
 } from './dto';
 import { Student } from './entities/student.entity';
 import { StudentRepository } from './repository/student.repository';
@@ -161,6 +163,20 @@ export class StudentService {
     return {
       success: true,
     };
+  }
+
+  async updateStudent(studentId: string, request: UpdateStudentRequest): Promise<Student> {
+    const { changeStudentId, email, bankAccountNumber, bankCode } = request;
+    const updatedStudent = await this.studentRepository.updateStudent(studentId, {
+      student_id: changeStudentId,
+      email,
+      bank_account_number: bankAccountNumber,
+      bank_code: bankCode,
+    });
+    if (!updatedStudent) {
+      throw new InternalServerErrorException('Failed to update student');
+    }
+    return updatedStudent;
   }
 
   //========== Event Callback ============

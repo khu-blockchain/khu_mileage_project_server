@@ -14,6 +14,7 @@ import { PollingModule } from '@/modules/polling/polling.module';
 import { StudentModule } from '@/modules/student/student.module';
 import { WalletLostModule } from '@/modules/wallet-lost/wallet-lost.module';
 import { SharedModule } from '@/shared/shared.module';
+import { MailModule } from '@/modules/mail/mail.module';
 
 const imports: any[] = [];
 
@@ -66,6 +67,7 @@ const mainImports = [
   MileageModule,
   WalletLostModule,
   MileagePointHistoryModule,
+  MailModule,
 ];
 
 const pollerImports = [

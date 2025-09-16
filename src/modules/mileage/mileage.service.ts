@@ -11,6 +11,7 @@ import { runOnTransactionRollback, Transactional } from 'typeorm-transactional';
 import { AuthUserContext } from '@/modules/auth/auth.types';
 import { Role } from '@/modules/auth/constants/role.constants';
 import { KaiaService } from '@/modules/kaia/kaia.service';
+import { MailService } from '@/modules/mail/mail.service';
 import { MILEAGE_POINT_HISTORY_TYPE } from '@/modules/mileage-point-history/constants/mileage-point-history-type.enum';
 import { MileagePointHistoryService } from '@/modules/mileage-point-history/mileage-point-history.service';
 import { MileageRubricService } from '@/modules/mileage-rubric/mileage-rubric.service';
@@ -53,6 +54,7 @@ export class MileageService {
     private readonly mileageFileRepository: MileageFileRepository,
     private readonly mileagePointHistoryService: MileagePointHistoryService,
     private readonly mileageTokenService: MileageTokenService,
+    private readonly mailService: MailService,
   ) {}
 
   @Transactional()
@@ -114,11 +116,22 @@ export class MileageService {
       };
     });
 
+    const adminEmail = this.configService.get('mail.admin') ?? '';
+    if (!adminEmail) {
+      console.warn('Admin email is not configured');
+      throw new NotFoundException('Admin email is not configured');
+    }
+
     await this.mileageFileRepository.createMileageFiles(uploadedFiles);
 
     await this.mileageRepository.updatePendingMileage(newMileage.id, txHash);
 
     await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
+
+    this.mailService.sendEmail(adminEmail, {
+      subject: '[KHU마일리지] 새로운 마일리지 신청이 도착했습니다.',
+      text: `새로운 마일리지 신청이 도착했습니다.\n\n신청자: ${student.name}\n상태: ${MILEAGE_STATUS.REVIEWING}`,
+    });
 
     return {
       success: true,
@@ -208,7 +221,10 @@ export class MileageService {
     });
 
     await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
-
+    this.mailService.sendEmail(mileage.student.email, {
+      subject: '[KHU마일리지] 마일리지 신청이 승인되었습니다.',
+      text: `안녕하세요, ${mileage.student.name}님.\n\n귀하의 마일리지 신청이 승인되었습니다.\n\n마일리지 활동명: ${mileage.mileage_activity_name}\n카테고리: ${mileage.mileage_category_name}\n승인된 마일리지 포인트: ${mileagePoint}\n\n감사합니다.`,
+    });
     return {
       success: true,
     };
@@ -230,6 +246,10 @@ export class MileageService {
 
     await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
+    this.mailService.sendEmail(mileage.student.email, {
+      subject: '[KHU마일리지] 마일리지 신청이 반려되었습니다.',
+      text: `안녕하세요, ${mileage.student.name}님.\n\n귀하의 마일리지 신청이 반려되었습니다.\n\n마일리지 활동명: ${mileage.mileage_activity_name}\n카테고리: ${mileage.mileage_category_name}\n반려 사유: ${adminComment}\n\n감사합니다.`,
+    });
     // DocIndex로 추적 가능
     // Doc Status: Rejected, TxStatus: Processing으로 처리 후
     // Event로 TxStatus만 변경
