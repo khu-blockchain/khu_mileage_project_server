@@ -7,6 +7,8 @@ import {
 import {
   ActivateMileageTokenRequest,
   CreateMileageTokenRequest,
+  PauseMileageTokenRequest,
+  UnpauseMileageTokenRequest,
 } from '@/modules/mileage-token/dto';
 import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';
 import { CreateMileageTokenParams } from '@/modules/mileage-token/mileage-token.types';
@@ -73,6 +75,22 @@ export class MileageTokenService {
 
     await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
+    return {
+      success: true,
+    };
+  }
+
+  async pause(input: PauseMileageTokenRequest): Promise<{ success: boolean }> {
+    const { rawTransaction } = input;
+    await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
+    return {
+      success: true,
+    };
+  }
+
+  async unpause(input: UnpauseMileageTokenRequest): Promise<{ success: boolean }> {
+    const { rawTransaction } = input;
+    await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
     return {
       success: true,
     };

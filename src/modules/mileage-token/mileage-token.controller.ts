@@ -9,12 +9,15 @@ import {
   ActivateMileageTokenRequest,
   ActivateMileageTokenResponse,
   CreateMileageTokenRequest,
+  BaseMileageTokenDto,
+  PauseMileageTokenRequest,
+  PauseMileageTokenResponse,
+  UnpauseMileageTokenRequest,
+  UnpauseMileageTokenResponse,
 } from '@/modules/mileage-token/dto';
 import { MileageToken } from '@/modules/mileage-token/entities/mileage-token.entity';
 import { MileageTokenService } from '@/modules/mileage-token/mileage-token.service';
 import { BaseApiResponse } from '@/shared/dtos';
-
-import { BaseMileageTokenDto } from './dto/response/base-mileage-token.dto';
 
 @Controller('mileage-token')
 export class MileageTokenController {
@@ -50,6 +53,32 @@ export class MileageTokenController {
     @Body() input: ActivateMileageTokenRequest,
   ): Promise<BaseApiResponse<ActivateMileageTokenResponse>> {
     const result = await this.mileageTokenService.activate(id, input);
+    return {
+      data: result,
+      meta: {},
+    };
+  }
+
+  @Post('pause')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async pause(
+    @Body() input: PauseMileageTokenRequest,
+  ): Promise<BaseApiResponse<PauseMileageTokenResponse>> {
+    const result = await this.mileageTokenService.pause(input);
+    return {
+      data: result,
+      meta: {},
+    };
+  }
+
+  @Post('unpause')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  async unpause(
+    @Body() input: UnpauseMileageTokenRequest,
+  ): Promise<BaseApiResponse<UnpauseMileageTokenResponse>> {
+    const result = await this.mileageTokenService.unpause(input);
     return {
       data: result,
       meta: {},
