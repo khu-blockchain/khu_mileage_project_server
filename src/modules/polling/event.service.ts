@@ -158,12 +158,11 @@ export class EventService {
     await this.studentService.handleStudentRegisteredEvent(student_hash);
   }
 
-  private async DocSubmitted(args: EventArgsMap[Event.DocSubmitted]) {
+  private async DocSubmitted(args: EventArgsMap[Event.DocSubmitted], transaction_hash: Hex) {
     this.logger.debug('Handling DocSubmitted event...', args);
     const docuemnt_index = Number(args.documentIndex);
-    const doc_hash = args.docHash;
 
-    await this.mileageService.handleDocSubmittedEvent(docuemnt_index, doc_hash);
+    await this.mileageService.handleDocSubmittedEvent(docuemnt_index, transaction_hash);
   }
 
   private async DocApproved(args: EventArgsMap[Event.DocApproved], transaction_hash: Hex) {
