@@ -128,9 +128,13 @@ export class MileageService {
 
     await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
 
+    // this.mailService.sendEmail(adminEmail, {
+    //   subject: '[KHU마일리지] 새로운 마일리지 신청이 도착했습니다.',
+    //   text: `새로운 마일리지 신청이 도착했습니다.\n\n신청자: ${student.name}\n상태: ${MILEAGE_STATUS.REVIEWING}`,
+    // });
     this.mailService.sendEmail(adminEmail, {
-      subject: '[KHU마일리지] 새로운 마일리지 신청이 도착했습니다.',
-      text: `새로운 마일리지 신청이 도착했습니다.\n\n신청자: ${student.name}\n상태: ${MILEAGE_STATUS.REVIEWING}`,
+      content: mileageInitParams,
+      type: MILEAGE_STATUS.REVIEWING,
     });
 
     return {
@@ -209,7 +213,7 @@ export class MileageService {
     const { txHash, feePayerSignedTx } =
       await this.kaiaService.calcTxHashFromRawTransaction(rawTransaction);
 
-    await this.mileagePointHistoryService.createMileagePointHistoryInit({
+    const mileagePointHistory = await this.mileagePointHistoryService.createMileagePointHistoryInit({
       type: MILEAGE_POINT_HISTORY_TYPE.MILEAGE_APPROVED,
       mileageTokenName: currentToken.name,
       mileageActivityName: mileage.mileage_activity_name,
@@ -222,8 +226,8 @@ export class MileageService {
 
     await this.kaiaService.sendFeepayerSignedTransaction(feePayerSignedTx);
     this.mailService.sendEmail(mileage.student.email, {
-      subject: '[KHU마일리지] 마일리지 신청이 승인되었습니다.',
-      text: `안녕하세요, ${mileage.student.name}님.\n\n귀하의 마일리지 신청이 승인되었습니다.\n\n마일리지 활동명: ${mileage.mileage_activity_name}\n카테고리: ${mileage.mileage_category_name}\n승인된 마일리지 포인트: ${mileagePoint}\n\n감사합니다.`,
+      content: mileagePointHistory,
+      type: MILEAGE_STATUS.APPROVED,
     });
     return {
       success: true,
@@ -237,7 +241,7 @@ export class MileageService {
 
     this.checkMileageStatus(mileage, MILEAGE_STATUS.REVIEWING);
 
-    await this.mileageRepository.updateMileageStatus(
+    const result = await this.mileageRepository.updateMileageStatus(
       id,
       MILEAGE_STATUS.REJECTED,
       TRANSACTION_STATUS.PROCESSING,
@@ -247,8 +251,8 @@ export class MileageService {
     await this.kaiaService.sendTransactionWithFeePayerSign(rawTransaction);
 
     this.mailService.sendEmail(mileage.student.email, {
-      subject: '[KHU마일리지] 마일리지 신청이 반려되었습니다.',
-      text: `안녕하세요, ${mileage.student.name}님.\n\n귀하의 마일리지 신청이 반려되었습니다.\n\n마일리지 활동명: ${mileage.mileage_activity_name}\n카테고리: ${mileage.mileage_category_name}\n반려 사유: ${adminComment}\n\n감사합니다.`,
+      content: result,
+      type: MILEAGE_STATUS.REJECTED,
     });
     // DocIndex로 추적 가능
     // Doc Status: Rejected, TxStatus: Processing으로 처리 후
