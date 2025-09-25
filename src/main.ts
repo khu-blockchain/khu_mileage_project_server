@@ -32,6 +32,8 @@ async function bootstrap() {
       'http://localhost:5174',
       'http://khunggum.khu.ac.kr',
       'https://khunggum.khu.ac.kr',
+      'http://khunggum.khu.ac.kr:8443',
+      'https://khunggum.khu.ac.kr:8443'
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
