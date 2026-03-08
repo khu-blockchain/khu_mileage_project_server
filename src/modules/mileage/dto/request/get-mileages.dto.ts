@@ -1,0 +1,25 @@
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
+import { MILEAGE_STATUS } from '@/modules/mileage/constants/mileage-status.enum';
+import { PaginationParamsDto } from '@/shared/dtos';
+
+export class GetMileagesRequest extends PaginationParamsDto {
+  constructor(partial: Partial<GetMileagesRequest>) {
+    super();
+    Object.assign(this, partial);
+  }
+
+  @IsString()
+  @IsOptional()
+  all?: string;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  studentId?: string;
+
+  @IsString()
+  @IsOptional()
+  @IsNotEmpty()
+  status?: MILEAGE_STATUS;
+}

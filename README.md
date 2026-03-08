@@ -1,57 +1,98 @@
-# khu_mileage_project_server
-2024-1 기말 대체 프로젝트인 "Klaytn - KIP7을 활용한 경희대학교 SW 마일리지 홈페이지 리뉴얼" 프로젝트 서버 레포입니다.
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+</p>
 
-https://swedu.khu.ac.kr/ 의 sw 마일리지 홈페이지를 리뉴얼해 마일리지 포인트를 KIP7으로 관리하는 프로젝트입니다.
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-# KHU Mileage Project Server Setup Guide
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## 1. 프로젝트 세팅
+## Description
 
-### 요구사항
-- MySQL이 설치되어 있어야 합니다.
-- Node.js가 설치되어 있어야 합니다.
-- 관리자용 Kaikas 계정이 필요하며, KLAY를 어느정도 보유하고 있어야 합니다.
-- AWS S3 버킷과 accessKey, secretKey가 필요합니다.
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-### 필요한 환경 설정
-- [MySQL 설치 가이드](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
-- [Node.js 설치 가이드](https://nodejs.org/en/download/package-manager/)
-- [Kaikas 지갑 설정 가이드](https://docs.kaikas.io/guide/)
-- [AWS S3 버킷 설정 가이드](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html)
+## Project setup
 
-## 2. Git 클론
-다음 명령어를 사용하여 저장소를 클론합니다:
-```sh
-git clone https://github.com/PublicKSH/khu_mileage_project_server.git
+```bash
+$ npm install
 ```
 
-## 3. 의존성 주입
-다음 명령어로 의존성을 주입합니다.
-```sh
-npm install
+## Compile and run the project
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
 ```
 
-## 4. JWT Key, Admin Password 생성
-- JWT Key를 생성해야합니다. 
-    ```sh
-    node generateJWTKey.js
-    ```
-    명령어로 생성할 수 있습니다. [주의: env에 넣을때 \n을 작성해야합니다.]
+## Run tests
 
-- admin password를 생성해야합니다. 
-    ```sh
-    node generateMd5Password.js "password"
-    ```
-    명령어로 생성할 수 있습니다.
+```bash
+# unit tests
+$ npm run test
 
-## 5. env 세팅
-- .env.base 를 참고하여서 .env 파일을 작성합니다
+# e2e tests
+$ npm run test:e2e
 
-## 6. 서버 실행
-다음 명령어로 서버를 실행합니다.
-```sh
-npm run test
+# test coverage
+$ npm run test:cov
 ```
 
-## 추가 연락처
-추가로 문의하고 싶은 사항이 있을시 wjswp12347@khu.ac.kr로 메일 부탁드립니다.
+## Deployment
+
+When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+
+If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+
+```bash
+$ npm install -g @nestjs/mau
+$ mau deploy
+```
+
+With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+
+## Resources
+
+Check out a few resources that may come in handy when working with NestJS:
+
+- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
+- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
+- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
+- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
+- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
+- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
+- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
+- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
