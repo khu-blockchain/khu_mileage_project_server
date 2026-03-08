@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16
+    container_name: sw-mileage-db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - sw-mileage-data:/var/lib/postgresql/data
+
+volumes:
+  sw-mileage-data:

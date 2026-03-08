@@ -1,13 +1,14 @@
 import { createWalletClient, Hex, http, kairos, privateKeyToAccount } from '@kaiachain/viem-ext';
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Address, createPublicClient, keccak256, toBytes } from 'viem';
+import { Address, createPublicClient, keccak256, toBytes, TransactionReceipt } from 'viem';
 import { decodeFunctionData, parseTransaction } from '@kaiachain/viem-ext';
 
 import StudentManagerABI from '@/shared/constants/contract/StudentManager.abi.json';
 
 @Injectable()
 export class KaiaService {
+  private readonly logger = new Logger(KaiaService.name);
   private publicClient;
   private feePayerClient;
   private studentManagerContractAddress: Hex;
@@ -87,6 +88,30 @@ export class KaiaService {
       throw new InternalServerErrorException(
         `Failed to send transaction: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
+    }
+  }
+
+  /**
+   * 브로드캐스트된 tx의 receipt을 단기 폴링으로 확인한다.
+   * timeout 내에 receipt을 받으면 반환, 못 받으면 null 반환 (에러 아님).
+   * 도메인 엔티티 상태 변경은 하지 않음 — 기존 5초 폴링 EventService에 위임.
+   */
+  async waitForReceipt(
+    txHash: Hex,
+    timeoutMs: number = 5000,
+  ): Promise<TransactionReceipt | null> {
+    try {
+      // Kaia 블록타임 1초 → pollingInterval 1초로 설정
+      // viem 기본값(4초)이면 timeout 전에 한 번도 조회 못할 수 있음
+      const receipt = await this.publicClient.waitForTransactionReceipt({
+        hash: txHash,
+        timeout: timeoutMs,
+        pollingInterval: 1000,
+      });
+      return receipt;
+    } catch {
+      this.logger.debug(`Receipt not available within ${timeoutMs}ms for tx: ${txHash}`);
+      return null;
     }
   }
 
@@ -194,11 +219,21 @@ export class KaiaService {
     }
   }
 
-  private async parseRawTransaction(rawTransaction: Hex): Promise<{
+  /**
+   * rawTransaction을 파싱하여 주요 필드를 반환한다.
+   * TransactionLog metadata 저장 등 외부에서 tx 필드 조회가 필요할 때 사용.
+   */
+  parseTransactionFields(rawTransaction: Hex): {
     from: Address;
     to: Address;
+    nonce: number;
+    gasLimit: string;
+    gasPrice: string | undefined;
+    value: string;
+    chainId: number | undefined;
+    type: number | null | undefined;
     data: Hex;
-  }> {
+  } {
     try {
       const parsedTx = parseTransaction(rawTransaction);
 
@@ -215,15 +250,37 @@ export class KaiaService {
       }
 
       return {
-        from: parsedTx.from as Hex,
-        to: parsedTx.to as Hex,
+        from: parsedTx.from as Address,
+        to: parsedTx.to as Address,
+        nonce: parsedTx.nonce,
+        gasLimit: parsedTx.gasLimit,
+        gasPrice: parsedTx.gasPrice,
+        value: parsedTx.value,
+        chainId: parsedTx.chainId,
+        type: parsedTx.type,
         data: parsedTx.data as Hex,
       };
     } catch (error) {
+      if (error instanceof InternalServerErrorException) {
+        throw error;
+      }
       throw new InternalServerErrorException(
         `Failed to parse raw transaction: ${error instanceof Error ? error.message : 'Unknown error'}`,
       );
     }
+  }
+
+  private parseRawTransaction(rawTransaction: Hex): {
+    from: Address;
+    to: Address;
+    data: Hex;
+  } {
+    const fields = this.parseTransactionFields(rawTransaction);
+    return {
+      from: fields.from,
+      to: fields.to,
+      data: fields.data,
+    };
   }
 
   async addAdmin(adminWalletAddress: string): Promise<Hex> {

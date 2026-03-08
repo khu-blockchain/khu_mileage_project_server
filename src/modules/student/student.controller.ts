@@ -28,15 +28,15 @@ export class StudentController {
   async createStudent(
     @Body() request: CreateStudentRequest,
   ): Promise<BaseApiResponse<BaseStudentDto>> {
-    const newStudentEntity = await this.studentService.createStudent(request);
+    const { student, confirmed } = await this.studentService.createStudent(request);
 
-    const result = plainToInstance(BaseStudentDto, newStudentEntity, {
+    const result = plainToInstance(BaseStudentDto, student, {
       excludeExtraneousValues: true,
     });
 
     return {
       data: result,
-      meta: {},
+      meta: { confirmed },
     };
   }
 
